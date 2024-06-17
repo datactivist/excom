@@ -1,0 +1,130 @@
+---
+title: "Projet EXCOM"
+subtitle: "Analyse des résultats d'une enquête sur les effets du commerce de proximité "
+author: "Auteur"
+date: "Dernière modification le `r format(Sys.time(), '%d %B %Y')`"
+output:
+    rmarkdown::html_document:
+      #number_sections: true
+      theme: paper
+      toc: true
+      toc_depth: 4
+      collapsed: true
+      smooth_scroll: true
+      css: styles.css
+      includes:
+        in_header: header.html
+        after_body: footer.html
+---
+
+```{r setup, include=FALSE}
+# Paramètres généraux
+knitr::opts_chunk$set(eval = TRUE,
+                      echo = FALSE,
+                      fig.align = "center",
+                      fig.show = "hold",
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      results = 'asis',  # pour un dfSummary propre
+                      out.width = "100%")
+
+# Couleur arrière-plan des graphs rosée
+library(thematic)
+thematic_on(bg = "#FFF1EB")
+```
+
+```{r logo}
+# Logo Datactivist haut de page
+htmltools::img(src = "https://nextcloud.datactivist.coop/s/o53wzfMNnFosQni/preview", 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:0.5; padding-top:10px;') #padding=taille des espaces autour
+```
+
+# Import des données
+
+
+```{r}
+library(tidyverse)
+raw_data <- read_csv("[Fillout] EXCOM Enquête sur les effets du commerce de proximité results.csv")
+```
+
+
+# Visualisations
+
+```{r}
+ggplot(raw_data) +
+  aes(
+    x = `Hors période de fêtes,
+    quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+  ) +
+  geom_bar(fill = "#0C4C8A") +
+  labs(
+    y = "Nombre de commerces",
+    title = "Catégorie des commerces répondants"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 19L,
+    face = "bold"),
+    axis.title.y = element_text(size = 15L,
+    face = "bold"),
+    axis.title.x = element_text(size = 15L,
+    face = "bold"),
+    axis.text.y = element_text(size = 14L),
+    axis.text.x = element_text(size = 14L)
+  )
+```
+
+```{r}
+ggplot(raw_data) +
+  aes(
+    x = `Quelle est la catégorie de votre commerce ?`,
+    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
+  ) +
+  geom_bar() +
+  scale_fill_hue(direction = 1) +
+  labs(
+    y = "Nombre de commerces",
+    title = "Catégorie des commerces répondants",
+    fill = "Collaboration avec des micro-commerçants"
+  ) +
+  coord_flip() +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 19L,
+    face = "bold"),
+    axis.title.y = element_text(size = 15L,
+    face = "bold"),
+    axis.title.x = element_text(size = 15L,
+    face = "bold"),
+    axis.text.y = element_text(size = 14L),
+    axis.text.x = element_text(size = 14L)
+  )
+```
+
+```{r}
+ggplot(raw_data) +
+  aes(x = `Quelle est la catégorie de votre commerce ?`) +
+  geom_bar(fill = "#0C4C8A") +
+  labs(
+    y = "Nombre de commerces",
+    title = "Catégorie des commerces répondants"
+  ) +
+  coord_flip() +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 19L,
+    face = "bold"),
+    axis.title.y = element_text(size = 15L,
+    face = "bold"),
+    axis.title.x = element_text(size = 15L,
+    face = "bold"),
+    axis.text.y = element_text(size = 14L),
+    axis.text.x = element_text(size = 14L)
+  )
+```
+
+</div>
+
