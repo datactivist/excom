@@ -96,16 +96,31 @@ data <- raw_data |>
          code_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "41") ~ "Autres",
                                                  .default = code_departement)) |> 
   ungroup() |> 
+    # Modifications de variables existantes
+  # mutate(across(everything(), ~str_replace_all(., c("Ponctuellement (1 à 2 fois par semaine)" = "1 à 2 fois par semaine",
+  #                                                 "Rarement (1 à 2 fois par mois)" = "1 à 2 fois par mois",
+  #                                                 "Régulièrement (3 à 5 fois par semaine)" = "3 à 5 fois par semaine",
+  #                                                 "Très rarement (moins d'une fois par mois)" = "Moins d'une fois par mois",
+  #                                                 "Très régulièrement (plusieurs fois par jour)" = "Plusieurs fois par jour",
+  #                                                 .default = NA_character_)))) |> 
     # Création de variables catégorielles à partir des variables existantes
       ## Ce que propose le commerce
-  mutate(is_services = case_when(grepl("Des services", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
-                                 .default = 0),
-         is_biens_propres = case_when(grepl("Des produits fabriqués ou élaborés par moi(nous)-même(s)", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
-                                 .default = 0),
-         is_biens_dautres = case_when(grepl("Des produits fabriqués ou élaborés par d'autres", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
-                                 .default = 0)) |>
+  mutate(is_services = case_when(grepl("Des services", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ "1",
+                                 .default = "0"),
+         is_biens_propres = case_when(grepl("Des produits fabriqués ou élaborés par moi(nous)-même(s)", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ "1",
+                                 .default = "0"),
+         is_biens_dautres = case_when(grepl("Des produits fabriqués ou élaborés par d'autres", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ "1",
+                                 .default = "0")) |>
       ## Fréquentation du commerce
-  mutate()
+  mutate(frequentation_commerce = case_match(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`,
+                                             "50 à 100" ~ "Plus de 50",
+                                             "100 et 200" ~ "Plus de 50",
+                                             "Plus de 200" ~ "Plus de 50",
+                                             .default = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`)) |> 
+      ## Collaboration avec des associations
+  mutate(collab_asso = case_when(grepl("Oui", `Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) == TRUE ~ "Oui",
+                                 `Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)` == "Je n'ai pas l'habitude de collaborer avec des associations" ~ "Non",
+                                 .default = NA_character_))
 
 
 
@@ -151,7 +166,7 @@ repartition_reelle |>
 
 <br>
 
-Les départements "Autres" sont les suivants : 
+**Les départements "Autres" sont les suivants :**
 
 ```{r}
 # Départements "Autres"
@@ -165,7 +180,9 @@ reactable(table)
 
 
 
-# Visualisations
+# Visualisations 
+
+## Visualisations simples
 
 ```{r}
 # Thème pour les graphs
@@ -198,45 +215,6 @@ custom_theme <- function (){
 
 # Premier graphique
 ggplot(raw_data) +
-  aes(
-    x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
-  ) +
-  geom_bar(fill = "#0C4C8A") +
-  labs(
-    y = "Nombre de commerces", x = "Fréquentation moyenne du commerce par jour",
-    title = "Catégorie des commerces répondants"
-  ) +
-  theme_minimal() +
-  custom_theme()
-```
-
-<br>
-
-```{r}
-ggplot(raw_data) +
-  aes(
-    x = `Quelle est la catégorie de votre commerce ?`,
-    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
-  ) +
-  geom_bar() +
-  scale_fill_hue(direction = 1) +
-  labs(
-    y = "Nombre de commerces",
-    title = str_wrap("Catégorie des commerces répondants selon la collaboration avec des micro-commerçants", width = 45),
-    fill = "Collaboration avec \ndes micro-commerçants"
-  ) +
-  coord_flip() +
-  theme_minimal() +
-  custom_theme() +
-  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-      panel.grid.major.y = ggplot2::element_blank(),
-      axis.title.y = element_blank())
-```
-
-<br>
-
-```{r}
-ggplot(raw_data) +
   aes(x = `Quelle est la catégorie de votre commerce ?`) +
   geom_bar(fill = "#0C4C8A") +
   labs(
@@ -254,43 +232,176 @@ ggplot(raw_data) +
 <br>
 
 ```{r}
-ggplot(data) +
+raw_data |> 
+  mutate(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)` = 
+           factor(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`,
+                  levels = c("1 à 20", "20 à 50", "50 à 100", "100 et 200", "Plus de 200"))) |> 
+  filter(!is.na(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`)) |> 
+  ggplot() +
+    aes(
+      x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+    ) +
+    geom_bar(fill = "#0C4C8A") +
+    labs(
+      y = "Nombre de commerces", 
+      x = "Fréquentation moyenne du commerce par jour",
+      title = "Fréquentation des commerces répondants"
+    ) +
+    theme_minimal() +
+    custom_theme()
+```
+
+<br>
+
+```{r}
+data |> 
+  mutate(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` = factor(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+  ggplot() +
   aes(
-    x = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`,
-    fill = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+    x = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`
   ) +
-  geom_bar() +
-  scale_fill_brewer(palette = "Blues", direction = 1) +
+  geom_bar(fill = "#0C4C8A") +
   labs(
-    x = "Fréquence des discussions informelles",
+    x = "Fréquence",
     y = "Nombre de commerces",
-    title = "Discussions informelles avec les cients selon la fréquentation du commerce",
-    fill = "Fréquentation \ndu commerce"
+    title = str_wrap("Fréquence d'échange sur des sujets privés avec les clients", width = 45)
   ) +
   coord_flip() +
   theme_minimal() +
-  theme(
-    legend.position = "top",
-    axis.text.y = element_text(size = 11L),
-    axis.text.x = element_text(size = 11L)
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank()) +
+  custom_theme()
+```
+
+<br>
+
+```{r}
+# Table
+table <- data |> 
+  summarise(nb= n(), .by = `Êtes-vous indépendant ?`) |> na.omit()
+  
+
+# Dataviz
+table |> 
+    ggplot(aes(x="", y=nb, fill=`Êtes-vous indépendant ?`)) +  
+      geom_bar(stat="identity", width=1, color="white", size = 2) +
+      coord_polar("y") +
+      scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+      labs(title = str_wrap("Répartition des commerces répondants selon s'ils sont indépendants ou non", width = 45)) +
+      theme_classic() + 
+      theme(legend.position = "top",
+            strip.text.x = element_text(size = 12, face = "bold"),
+            strip.background = element_blank(),
+            axis.title = element_blank(),
+            axis.ticks = element_blank(),
+            axis.line = element_blank(),
+            axis.text = element_blank(),
+            legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
+            text = element_text(family = "Montserrat", size = 12),
+            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
+            plot.caption = ggplot2::element_text(face = "italic", size = 18, 
+                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
+            plot.title.position = "plot", 
+            plot.caption.position = "plot") +
+      guides(fill = guide_legend(reverse = F, title = " "))
+
+```
+
+## Visualisations croisées
+
+
+
+```{r}
+ggplot(raw_data) +
+  aes(
+    x = `Quelle est la catégorie de votre commerce ?`,
+    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
   ) +
+  geom_bar() +
+  scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+  labs(
+    y = "Nombre de commerces",
+    title = str_wrap("Collaboration avec des micro-commerçants selon la catégorie de commerce", width = 45),
+    fill = "Collaboration avec \ndes micro-commerçants"
+  ) +
+  coord_flip() +
+  theme_minimal() +
   custom_theme() +
   theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-      panel.grid.major.y = ggplot2::element_blank())
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.title.y = element_blank()) + 
+  guides(fill = guide_legend(reverse = TRUE))
+```
+
+<br>
+
+```{r}
+data |> 
+  filter(!is.na(frequentation_commerce)) |> 
+  ggplot() +
+    aes(
+      x = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`,
+      fill = frequentation_commerce
+    ) +
+    geom_bar() +
+    scale_fill_brewer(palette = "Blues", direction = 1) +
+    labs(
+      x = "Fréquence des \ndiscussions informelles",
+      y = "Nombre de commerces",
+      title = str_wrap("Fréquence des discussions informelles avec les clients selon le nombre de visites quotidiennes", width = 45),
+      fill = "Fréquentation \ndu commerce"
+    ) +
+    coord_flip() +
+    theme_minimal() +
+    theme(
+      legend.position = "top",
+      axis.text.y = element_text(size = 11L),
+      axis.text.x = element_text(size = 11L)
+    ) +
+    custom_theme() +
+    theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+        panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = guide_legend(nrow = 3, byrow = TRUE))
 ```
 
 
 <br>
 
 ```{r}
-
+data |> 
+  filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) |> 
+  ggplot() +
+  aes(
+    x = `Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`,
+    y = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`
+  ) +
+  geom_violin(fill = "#0C4C8A") +
+  labs(
+    x = "Nombre d'évènements organisés",
+    y = "Utilisation de techniques \ntraditionnelles ou artisanales",
+    title = str_wrap("Nombre d'évènements organisés dans le commerce selon l'utilisation de techniques traditionnelles ou artisanales", width = 45)
+  ) +
+  theme_minimal() +
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank()) 
 ```
 
 
 <br>
 
 ```{r}
-
+data |> 
+  summarise(n= n(), .by = c(nom_departement_partenaires, `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+ggplot(aes(x=nom_departement_partenaires, y=`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, fill=n)) + 
+  geom_tile() +
+    theme_classic() +
+    guides(fill = guide_legend(title = "Nombre de commerces", reverse = TRUE)) +
+    scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
+    labs(title = "Échange sur des sujets privés avec les clients selon le territoire", y = "Fréquence des échanges") +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
+    custom_theme()
 ```
 
 
