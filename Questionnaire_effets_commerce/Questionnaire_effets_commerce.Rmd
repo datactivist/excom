@@ -8,6 +8,7 @@ output:
       #number_sections: true
       theme: paper
       toc: true
+      toc_float: true
       toc_depth: 4
       collapsed: true
       smooth_scroll: true
@@ -27,11 +28,7 @@ knitr::opts_chunk$set(eval = TRUE,
                       warning = FALSE,
                       collapse = TRUE,
                       results = 'asis',  # pour un dfSummary propre
-                      out.width = "100%")
-
-# Couleur arrière-plan des graphs rosée
-library(thematic)
-thematic_on(bg = "#FFF1EB")
+                      out.width = "70%")
 ```
 
 ```{r logo}
@@ -45,36 +42,175 @@ htmltools::img(src = "https://nextcloud.datactivist.coop/s/o53wzfMNnFosQni/previ
 
 
 ```{r}
+# Librairies
 library(tidyverse)
+library(esquisse)
+library(readxl)
+library(gt)
+library(gtExtras)
+library(janitor)
+library(reactable)
+
+# Données
 raw_data <- read_csv("[Fillout] EXCOM Enquête sur les effets du commerce de proximité results.csv")
+repartition_theorique <- read_excel("Repartition_theorique_repondants.xlsx")
+departements_dg <- read_csv("https://www.data.gouv.fr/fr/datasets/r/67432189-8426-42e6-9ddb-8d21631df9c5")
+
 ```
+
+Diffusée à partir du 4 avril 2024, l'enquête sur les effets du commerce de proximité vise à rendre visible l'impact de l'activité commerciale sur le quartier, la ville et ses habitants.
+
+Composée de près de 40 questions, l'enquête se divise en 6 sections reprenant les grandes catégories d'externalités identifiées dans la première phase du [projet de recherche-action EXCOM](https://projet-excom.fr/) :
+
+- Lien Social ;
+- Solidarités ;
+- Vie de quartier ;
+- Santé et Sécurité ;
+- Environnement ;
+- Espace public.
+
+Au `r format(Sys.time(), '%d %B %Y')`, `r nrow(raw_data)` réponses ont été récoltées.
+
+
+## Aperçu des données
+
+```{r}
+# Nom des colonnes
+noms_cols <- names(raw_data) |> as.data.frame()
+
+# Nettoyage / mise en qualité / création de nouvelles variables
+data <- raw_data |> 
+    # Extraction code postal de l'adresse
+  rowwise() |> 
+  mutate(`Quelle est l'adresse de votre commerce ?` = ifelse(`Quelle est l'adresse de votre commerce ?` == "\n  \n", NA, `Quelle est l'adresse de votre commerce ?`),
+         adresses = coalesce(`Quelle est l'adresse de votre commerce ?`, 
+                             as.character(`Dans quelle ville intervenez-vous le plus régulièrement ? (Renseigner le code postal)`),
+                             as.character(`Dans quelle ville travaillez-vous le plus régulièrement ? (Renseigner le code postal)`)),
+         adresses = str_replace_all(adresses, "\\b(\\d{2}) (\\d{3})\\b", "\\1\\2"), #formattage zip code mal renseigné
+         zip_code = str_extract(adresses, "\\d{5}"),
+         code_departement = substr(zip_code, 1, 2)) |> 
+  left_join(departements_dg |> select(nom, COG), by = c("code_departement" = "COG")) |> 
+  rename(nom_departement = nom) |> 
+  mutate(nom_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "41") ~ "Autres",
+                                                 .default = nom_departement),
+         code_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "41") ~ "Autres",
+                                                 .default = code_departement)) |> 
+  ungroup() |> 
+    # Création de variables catégorielles à partir des variables existantes
+      ## Ce que propose le commerce
+  mutate(is_services = case_when(grepl("Des services", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
+                                 .default = 0),
+         is_biens_propres = case_when(grepl("Des produits fabriqués ou élaborés par moi(nous)-même(s)", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
+                                 .default = 0),
+         is_biens_dautres = case_when(grepl("Des produits fabriqués ou élaborés par d'autres", `Que propose votre commerce ? (Plusieurs réponses sont possibles)`) == TRUE ~ 1,
+                                 .default = 0)) |>
+      ## Fréquentation du commerce
+  mutate()
+
+
+
+  #select(`Que propose votre commerce ? (Plusieurs réponses sont possibles)`, is_services, is_biens_propres, is_biens_dautres)
+
+```
+
+
+La répartition des réponses par type de commerce et par territoire géographique (département) est la suivante : 
+
+```{r}
+# Calcul de la répartition de notre échantillon
+repartition_reelle <- data |> 
+  summarise(`Échantillon réel de l'enquête` = n(), .by = code_departement_partenaires) |> 
+  right_join(repartition_theorique, by = c("code_departement_partenaires" = "Code département")) |> 
+  relocate(code_departement_partenaires, .after = Ville) |> 
+  relocate(`Échantillon réel de l'enquête`, .after = `Échantillon théorique de l’enquête`) |> 
+  arrange(code_departement_partenaires) |> 
+  mutate(`Répartition des commerces français en %` = round(`Répartition des commerces français en %`, 1),
+         `Échantillon théorique de l’enquête` = round(`Échantillon théorique de l’enquête`, 0),
+         `Échantillon réel de l'enquête` = replace_na(`Échantillon réel de l'enquête`, 0),
+         `Répartition de l'échantillon réel en %` = round(`Échantillon réel de l'enquête` / sum(`Échantillon réel de l'enquête`) * 100, 1)) |> 
+  adorn_totals() |> 
+  mutate(`% de l'objectif de réponses atteint` = round(`Échantillon réel de l'enquête` / `Échantillon théorique de l’enquête` * 100, 1),
+         `% de l'objectif de réponses atteint` = replace_na(`% de l'objectif de réponses atteint`, 0),
+         Ville = replace_na(Ville, "")) |> 
+  mutate(across(-c(Ville, code_departement_partenaires), ~ if_else(Ville == "Total", round(., 0), .))) |> 
+  mutate_at(vars(-`% de l'objectif de réponses atteint`), as.character) |> 
+  mutate_at(vars(-`% de l'objectif de réponses atteint`), ~replace_na(., "")) 
+
+# Affichage de la table
+repartition_reelle |> 
+  gt() |>
+  gt_theme_nytimes() |> 
+  tab_header(title = "Répartition des réponses à l'enquête selon le département") |>
+  tab_style(style = list(cell_text(weight = "bold")), #en gras
+    locations = cells_body(columns = `Échantillon théorique de l’enquête`)) |> 
+  cols_align(align = "center", columns = everything()) |> 
+  cols_align(align = "left", columns = Ville) |> 
+  gt_plt_bar_pct(`% de l'objectif de réponses atteint`, scaled = TRUE, labels=TRUE, decimals = 0, #attention à remplacer les NA par 0 sinon erreur
+           font_size = "14px", fill = "#FA535C", height = 20)
+```
+
+<br>
+
+Les départements "Autres" sont les suivants : 
+
+```{r}
+# Départements "Autres"
+table <- data |> 
+  filter(code_departement_partenaires == "Autres") |> 
+  summarise(`Nombre de commerces` = n(), .by = nom_departement) |> 
+  arrange(desc(`Nombre de commerces`)) |> 
+  rename(Département = nom_departement)
+reactable(table)
+```
+
 
 
 # Visualisations
 
 ```{r}
+# Thème pour les graphs
+font <- "Helvetica"
+custom_theme <- function (){
+    font <- "Helvetica"
+    ggplot2::theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"), 
+        plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
+        plot.caption = ggplot2::element_text(family = font,size = 18, margin = ggplot2::margin(9, 0, 9, 0)), 
+        plot.title.position = "plot",
+        plot.caption.position = "plot",
+        legend.title = ggplot2::element_text(family = font, size = 18, color = "#222222"), 
+        legend.position = "top", 
+        legend.text.align = 0, 
+        legend.background = ggplot2::element_blank(),
+        legend.key = ggplot2::element_blank(),
+        legend.text = ggplot2::element_text(family = font, size = 18,color = "#222222"), 
+        axis.text = ggplot2::element_text(family = font, size = 15,color = "#222222"), 
+        axis.text.x = ggplot2::element_text(margin = ggplot2::margin(5,b = 10)), 
+        axis.title = ggplot2::element_text(family = font, size = 18,color = "#222222"),
+        axis.ticks = ggplot2::element_blank(),
+        axis.line = ggplot2::element_blank(), 
+        panel.grid.minor = ggplot2::element_blank(),
+        panel.grid.major.y = ggplot2::element_line(color = "#cbcbcb"),
+        panel.grid.major.x = ggplot2::element_blank(), 
+        panel.background = ggplot2::element_blank(),
+        strip.background = ggplot2::element_rect(fill = "white"),
+        strip.text = ggplot2::element_text(size = 22, hjust = 0, face = "bold"))
+}
+
+# Premier graphique
 ggplot(raw_data) +
   aes(
-    x = `Hors période de fêtes,
-    quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+    x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
   ) +
   geom_bar(fill = "#0C4C8A") +
   labs(
-    y = "Nombre de commerces",
+    y = "Nombre de commerces", x = "Fréquentation moyenne du commerce par jour",
     title = "Catégorie des commerces répondants"
   ) +
   theme_minimal() +
-  theme(
-    plot.title = element_text(size = 19L,
-    face = "bold"),
-    axis.title.y = element_text(size = 15L,
-    face = "bold"),
-    axis.title.x = element_text(size = 15L,
-    face = "bold"),
-    axis.text.y = element_text(size = 14L),
-    axis.text.x = element_text(size = 14L)
-  )
+  custom_theme()
 ```
+
+<br>
 
 ```{r}
 ggplot(raw_data) +
@@ -86,23 +222,18 @@ ggplot(raw_data) +
   scale_fill_hue(direction = 1) +
   labs(
     y = "Nombre de commerces",
-    title = "Catégorie des commerces répondants",
-    fill = "Collaboration avec des micro-commerçants"
+    title = str_wrap("Catégorie des commerces répondants selon la collaboration avec des micro-commerçants", width = 45),
+    fill = "Collaboration avec \ndes micro-commerçants"
   ) +
   coord_flip() +
   theme_minimal() +
-  theme(
-    legend.position = "top",
-    plot.title = element_text(size = 19L,
-    face = "bold"),
-    axis.title.y = element_text(size = 15L,
-    face = "bold"),
-    axis.title.x = element_text(size = 15L,
-    face = "bold"),
-    axis.text.y = element_text(size = 14L),
-    axis.text.x = element_text(size = 14L)
-  )
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.title.y = element_blank())
 ```
+
+<br>
 
 ```{r}
 ggplot(raw_data) +
@@ -114,17 +245,61 @@ ggplot(raw_data) +
   ) +
   coord_flip() +
   theme_minimal() +
-  theme(
-    plot.title = element_text(size = 19L,
-    face = "bold"),
-    axis.title.y = element_text(size = 15L,
-    face = "bold"),
-    axis.title.x = element_text(size = 15L,
-    face = "bold"),
-    axis.text.y = element_text(size = 14L),
-    axis.text.x = element_text(size = 14L)
-  )
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.title.y = element_blank())
 ```
+
+<br>
+
+```{r}
+ggplot(data) +
+  aes(
+    x = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`,
+    fill = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+  ) +
+  geom_bar() +
+  scale_fill_brewer(palette = "Blues", direction = 1) +
+  labs(
+    x = "Fréquence des discussions informelles",
+    y = "Nombre de commerces",
+    title = "Discussions informelles avec les cients selon la fréquentation du commerce",
+    fill = "Fréquentation \ndu commerce"
+  ) +
+  coord_flip() +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    axis.text.y = element_text(size = 11L),
+    axis.text.x = element_text(size = 11L)
+  ) +
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank())
+```
+
+
+<br>
+
+```{r}
+
+```
+
+
+<br>
+
+```{r}
+
+```
+
+
+<br>
+
+```{r}
+
+```
+
 
 </div>
 
