@@ -44,8 +44,8 @@ htmltools::img(src = "https://nextcloud.datactivist.coop/s/o53wzfMNnFosQni/previ
 ```{r}
 # Librairies
 library(tidyverse)
-library(esquisse)
 library(readxl)
+library(esquisse)
 library(gt)
 library(gtExtras)
 library(janitor)
@@ -58,7 +58,14 @@ library(tm)
 # Données
 raw_data <- read_csv("[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
 repartition_theorique <- read_excel("Repartition_theorique_repondants.xlsx")
+  # identifiant des départements
 departements_dg <- read_csv("https://www.data.gouv.fr/fr/datasets/r/67432189-8426-42e6-9ddb-8d21631df9c5")
+  # OFGL - données de population
+communes_pop <- read_delim("https://data.ofgl.fr/api/explore/v2.1/catalog/datasets/ofgl-base-communes-consolidee/exports/csv?lang=fr&refine=exer%3A%222023%22&refine=agregat%3A%22Achats%20et%20charges%20externes%22&facet=facet(name%3D%22agregat%22%2C%20disjunctive%3Dtrue)&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B", ";") |> 
+  rename(cog_commune = `Code Insee 2023 Commune`,
+         nom_commune = `Nom 2023 Commune`,
+         population = `Population totale`) |> 
+  select(cog_commune, nom_commune, population)
 ```
 
 Diffusée à partir du 4 avril 2024, l'enquête sur les effets du commerce de proximité vise à rendre visible l'impact de l'activité commerciale sur le quartier, la ville et ses habitants.
@@ -126,12 +133,25 @@ data <- raw_data |>
                                  .default = NA_character_)) |> 
       ## Aide aux autres commerçants
   mutate(aide_commercants = case_when(grepl("Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services", `L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`) == TRUE ~ "Non",
-                                      .default = "Oui"))
+                                      .default = "Oui")) |> 
+    # Données de population
+  mutate(zip_code_general = case_when(substr(zip_code, 1, 2) == "75" ~ "75056",
+                                      zip_code == "13001|13002|13003|13004|13005|13006|13007|13008|13009|13010|13011|13012|13013|13014|13015|13016|13000" ~ "13055",
+                                      .default = zip_code)) |> 
+  left_join(communes_pop, by = c("zip_code_general" = "cog_commune")) |> 
+  mutate(categorie_population = case_when(population <= median(population, na.rm = TRUE) ~ "population moyenne",
+                                          population > median(population, na.rm = TRUE) ~ "population élevée",
+                                          .default = NA_character_))
+
+#data |> filter(is.na(population)) |> nrow()
+#test <- data |> filter(is.na(population))
+
 
 
 # Filtre sur l'Ile de France
 idf <- data |> 
   filter(code_region == "11") # ile de france
+rio::export(idf, "export_reponses_idf.csv")
 
 
 # Nom des colonnes
@@ -286,57 +306,6 @@ data |>
 
 <br>
 
-```{r fig.height=7}
-# Graphique factorisé
-graph_discussions <- function(data, title_name, y_n, valeur_ressortir){
-    data |> 
-        left_join(ref_discussions, by = "Var") |> 
-        mutate(n_ref = percent_ref/100 * sum(n),
-               ecart = round((percent - percent_ref), 0),
-               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
-        mutate(Var = factor(Var, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
-        ggplot() + 
-        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
-                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
-        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
-                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
-        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
-        scale_alpha_manual(values=c(1, .4)) +
-        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
-        labs(x = "", y = "Nombre d'utilisateurs", linetype = "",
-             subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence des échanges sur des sujets privés avec les clients", width = 55),
-             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
-             title = stringr::str_wrap(title_name, width = 50)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
-                   size = 5, fill = "white", label.size = NA) +
-        theme_classic() +
-        custom_theme() +
-        theme(legend.position = "top", axis.title.x = element_blank()) +
-        guides(alpha = "none") +
-        coord_flip()
-}
-
-# Données de référence de balayage des abords du commerce
-table <- data |>  
-  summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
-  filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_discussions <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de la sous-population : IdF
-table <- idf |>  
-  summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
-  filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_discussions(table, "En Ile-de-France, les commerçants discutent moins de sujet privés avec leurs clients que les commerçants de l'ensemble du territoire", 1, "Très rarement (moins d'une fois par mois)")
-```
-
-<br>
-
 ```{r}
 # Table
 table <- data |> 
@@ -406,7 +375,6 @@ ggVennDiagram(table, label_alpha = 0) +
                                              color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
         plot.title.position = "plot", 
         plot.caption.position = "plot")
-
 ```
 
 <br>
@@ -446,55 +414,6 @@ word_data |>
 ```
 
 <br>
-
-```{r fig.height=7}
-# Graphique factorisé
-graph_nettoyage <- function(data, title_name, y_n, valeur_ressortir){
-    data |> 
-        left_join(ref_nettoyage_abords, by = "Var") |> 
-        mutate(n_ref = percent_ref/100 * sum(n),
-               ecart = round((percent - percent_ref), 0),
-               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
-        mutate(Var = factor(Var, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
-        ggplot() + 
-        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
-                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
-        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
-                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
-        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
-        scale_alpha_manual(values=c(1, .4)) +
-        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
-        labs(x = "", y = "Nombre d'utilisateurs", linetype = "",
-             subtitle = stringr::str_wrap("Répartition des commerces selon leur soin à nettoyer les abords extérieurs", width = 55),
-             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
-             title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
-                   size = 5, fill = "white", label.size = NA) +
-        theme_classic() +
-        custom_theme() +
-        theme(legend.position = "top", axis.title.x = element_blank()) +
-        guides(alpha = "none") +
-        coord_flip()
-}
-
-# Données de référence de balayage des abords du commerce
-table <- data |>  
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_nettoyage_abords <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de la sous-population : IdF
-table <- idf |>  
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_nettoyage(table, "En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 1, "Très régulièrement (plusieurs fois par jour)")
-```
 
 
 ## Visualisations croisées
@@ -688,5 +607,192 @@ table |>
   guides(fill = guide_legend(reverse = TRUE))
 ```
 
-</div>
+
+## Sous-populations
+
+Les sous-populations "Population moyenne" et "Population élevée" ont été calculées à partir des données de population de 2023 :
+
+- *population moyenne* correspond aux villes dont la population est inférieure ou égale à la médiane qui est de `r median(data$population, na.rm = T)` ;
+- *population élevée* correspond aux villes dont la population est supérieure à la médiane.
+
+### Nettoyage des abords du commerce{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Graphique factorisé
+graph_nettoyage <- function(data, title_name, y_n, valeur_ressortir){
+    data |> 
+        left_join(ref_nettoyage_abords, by = "Var") |> 
+        mutate(n_ref = percent_ref/100 * sum(n),
+               ecart = round((percent - percent_ref), 0),
+               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+        mutate(Var = factor(Var, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+        ggplot() + 
+        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+        scale_alpha_manual(values=c(1, .4)) +
+        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+        labs(x = "", y = "Nombre d'utilisateurs", linetype = "",
+             subtitle = stringr::str_wrap("Répartition des commerces selon leur soin à nettoyer les abords extérieurs", width = 55),
+             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+             title = stringr::str_wrap(title_name, width = 45)) +
+        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+                   size = 5, fill = "white", label.size = NA) +
+        theme_classic() +
+        custom_theme() +
+        theme(legend.position = "top", axis.title.x = element_blank()) +
+        guides(alpha = "none") +
+        coord_flip()
+}
+
+# Données de référence de balayage des abords du commerce
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_nettoyage_abords <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_nettoyage(table, "Ensemble des répondants", 1, "") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+1.5, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+#### IDF
+
+```{r}
+# Données de la sous-population : IdF
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_nettoyage(table, "En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 1, "Très régulièrement (plusieurs fois par jour)")
+
+```
+
+#### Population moyenne
+
+#### Population élevée
+
+```{r fig.height=7}
+# Graphique factorisé
+graph_nettoyage <- function(data, title_name, y_n, valeur_ressortir){
+    data |> 
+        left_join(ref_nettoyage_abords, by = "Var") |> 
+        mutate(n_ref = percent_ref/100 * sum(n),
+               ecart = round((percent - percent_ref), 0),
+               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+        mutate(Var = factor(Var, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+        ggplot() + 
+        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+        scale_alpha_manual(values=c(1, .4)) +
+        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+        labs(x = "", y = "Nombre d'utilisateurs", linetype = "",
+             subtitle = stringr::str_wrap("Répartition des commerces selon leur soin à nettoyer les abords extérieurs", width = 55),
+             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+             title = stringr::str_wrap(title_name, width = 45)) +
+        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+                   size = 5, fill = "white", label.size = NA) +
+        theme_classic() +
+        custom_theme() +
+        theme(legend.position = "top", axis.title.x = element_blank()) +
+        guides(alpha = "none") +
+        coord_flip()
+}
+
+# Données de référence de balayage des abords du commerce
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_nettoyage_abords <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de la sous-population : IdF
+table <- idf |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_nettoyage(table, "En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 1, "Très régulièrement (plusieurs fois par jour)")
+```
+
+
+
+<br>
+
+```{r fig.height=7}
+# Graphique factorisé
+graph_discussions <- function(data, title_name, y_n, valeur_ressortir){
+    data |> 
+        left_join(ref_discussions, by = "Var") |> 
+        mutate(n_ref = percent_ref/100 * sum(n),
+               ecart = round((percent - percent_ref), 0),
+               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+        mutate(Var = factor(Var, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+        ggplot() + 
+        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+        scale_alpha_manual(values=c(1, .4)) +
+        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+        labs(x = "", y = "Nombre d'utilisateurs", linetype = "",
+             subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence des échanges sur des sujets privés avec les clients", width = 55),
+             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+             title = stringr::str_wrap(title_name, width = 50)) +
+        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+                   size = 5, fill = "white", label.size = NA) +
+        theme_classic() +
+        custom_theme() +
+        theme(legend.position = "top", axis.title.x = element_blank()) +
+        guides(alpha = "none") +
+        coord_flip()
+}
+
+# Données de référence de balayage des abords du commerce
+table <- data |>  
+  summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
+  filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_discussions <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de la sous-population : IdF
+table <- idf |>  
+  summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
+  filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_discussions(table, "En Ile-de-France, les commerçants discutent moins de sujet privés avec leurs clients que les commerçants de l'ensemble du territoire", 1, "Très rarement (moins d'une fois par mois)")
+```
+
+
+<br>
+
 
