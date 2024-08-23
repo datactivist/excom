@@ -1,7 +1,6 @@
 ---
 title: "Projet EXCOM"
 subtitle: "Analyse des résultats d'une enquête sur les effets du commerce de proximité "
-author: "Auteur"
 date: "Dernière modification le `r format(Sys.time(), '%d %B %Y')`"
 output:
     rmarkdown::html_document:
