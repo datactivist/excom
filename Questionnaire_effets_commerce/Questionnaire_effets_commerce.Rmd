@@ -55,8 +55,8 @@ library(ggwordcloud)
 library(tm)
 
 # Données
-raw_data <- read_csv("[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
-repartition_theorique <- read_excel("Repartition_theorique_repondants.xlsx")
+raw_data <- read_csv("data/[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
+repartition_theorique <- read_excel("data/Repartition_theorique_repondants.xlsx")
   # identifiant des départements
 departements_dg <- read_csv("https://www.data.gouv.fr/fr/datasets/r/67432189-8426-42e6-9ddb-8d21631df9c5")
   # OFGL - données de population
@@ -66,7 +66,7 @@ communes_pop <- read_delim("https://data.ofgl.fr/api/explore/v2.1/catalog/datase
          population = `Population totale`) |> 
   select(cog_commune, nom_commune, population)
   # Datagouv - codes postaux : https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/
-codes_postaux_dg <- read_csv("codes_postaux_datagouv.csv") |>
+codes_postaux_dg <- read_csv("data/codes_postaux_datagouv.csv") |>
   select(-Ligne_5) |> distinct() |> 
   mutate(Code_commune_INSEE = ifelse(nchar(Code_commune_INSEE) == 4, paste0("0", Code_commune_INSEE), Code_commune_INSEE),
          Code_postal = ifelse(nchar(Code_postal) == 4, paste0("0", Code_postal), Code_postal)) |> 
@@ -166,19 +166,17 @@ data <- raw_data |>
                                           population >= 100000 ~ "population très élevée",
                                           .default = NA_character_))
 
-#data |> filter(is.na(population)) |> nrow()
-#test <- data |> filter(is.na(population))
-# test <- data |> 
-#   mutate(n_rep=n(), .by = Libelle_acheminement) |> 
-#   distinct(Libelle_acheminement, population, n_rep) |> arrange(desc(population))
-#table(data$categorie_population)
-
-
 
 # Filtre sur l'Ile de France
 idf <- data |> 
   filter(code_region == "11") # ile de france
-rio::export(idf, "export_reponses_idf.csv")
+rio::export(idf, "data/export_reponses_idf.csv")
+
+# Filtre sur PAris
+paris <- data |> 
+  filter(Libelle_acheminement == "PARIS") |> 
+  select(`Quel est le nom de votre commerce ?`, adresses, zip_code, Nom_de_la_commune)
+rio::export(paris, "data/export_commerces_paris.csv")
 
 
 # Nom des colonnes
