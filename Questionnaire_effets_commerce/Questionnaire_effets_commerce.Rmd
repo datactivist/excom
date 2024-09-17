@@ -1,6 +1,6 @@
 ---
-title: "Projet EXCOM"
 subtitle: "Analyse des résultats d'une enquête sur les effets du commerce de proximité "
+title: "![](images/Logo_excom_complet.png){width=20%} Projet EXCOM"
 date: "Dernière modification le `r format(Sys.time(), '%d %B %Y')`"
 output:
     rmarkdown::html_document:
@@ -32,7 +32,7 @@ knitr::opts_chunk$set(eval = TRUE,
 
 ```{r logo}
 # Logo Datactivist haut de page
-htmltools::img(src = "https://nextcloud.datactivist.coop/s/o53wzfMNnFosQni/preview", 
+htmltools::img(src = "images/logos_partenaires.png", 
                alt = 'logo', 
                style = 'position:absolute; top:0; left:0.5; padding-top:10px;') #padding=taille des espaces autour
 ```
@@ -184,39 +184,42 @@ noms_cols_data <- names(data) |> as.data.frame()
 ```
 
 
-La répartition des réponses par type de commerce et par territoire géographique (département) est la suivante : 
 
 ```{r}
 # Calcul de la répartition de notre échantillon
 repartition_reelle <- data |> 
   summarise(`Échantillon réel de l'enquête` = n(), .by = code_departement_partenaires) |> 
-  right_join(repartition_theorique, by = c("code_departement_partenaires" = "Code département")) |> 
+  right_join(repartition_theorique |> mutate(`Code département` = as.character(`Code département`)), 
+             by = c("code_departement_partenaires" = "Code département")) |> 
   relocate(code_departement_partenaires, .after = Ville) |> 
   relocate(`Échantillon réel de l'enquête`, .after = `Échantillon théorique de l’enquête`) |> 
   arrange(code_departement_partenaires) |> 
-  mutate(`Répartition des commerces français en %` = round(`Répartition des commerces français en %`, 1),
+  mutate(`Répartition des commerces français` = round(`Répartition des commerces français`, 1),
          `Échantillon théorique de l’enquête` = round(`Échantillon théorique de l’enquête`, 0),
          `Échantillon réel de l'enquête` = replace_na(`Échantillon réel de l'enquête`, 0),
-         `Répartition de l'échantillon réel en %` = round(`Échantillon réel de l'enquête` / sum(`Échantillon réel de l'enquête`) * 100, 1)) |> 
+         `Répartition de l'échantillon réel` = round(`Échantillon réel de l'enquête` / sum(`Échantillon réel de l'enquête`) * 100, 1)) |> 
   adorn_totals() |> 
-  mutate(`% de l'objectif de réponses atteint` = round(`Échantillon réel de l'enquête` / `Échantillon théorique de l’enquête` * 100, 1),
-         `% de l'objectif de réponses atteint` = replace_na(`% de l'objectif de réponses atteint`, 0),
-         Ville = replace_na(Ville, "")) |> 
+  mutate(`% de l'objectif de réponses atteint` = round(`Échantillon réel de l'enquête` / `Échantillon théorique de l’enquête` * 100, 0),
+         `% de l'objectif de réponses atteint` = replace_na(`% de l'objectif de réponses atteint`, 0)) |> 
   mutate(across(-c(Ville, code_departement_partenaires), ~ if_else(Ville == "Total", round(., 0), .))) |> 
+  mutate(`Répartition des commerces français` = paste0(`Répartition des commerces français`, "%"),
+         `Répartition de l'échantillon réel` = paste0(`Répartition de l'échantillon réel`, "%")) |> 
   mutate_at(vars(-`% de l'objectif de réponses atteint`), as.character) |> 
-  mutate_at(vars(-`% de l'objectif de réponses atteint`), ~replace_na(., "")) 
+  mutate_at(vars(-`% de l'objectif de réponses atteint`), ~replace_na(., "")) |> 
+  rename(`Code département` = code_departement_partenaires) |> 
+  arrange(`Échantillon réel de l'enquête`)
 
 # Affichage de la table
 repartition_reelle |> 
   gt() |>
   gt_theme_nytimes() |> 
-  tab_header(title = "Répartition des réponses à l'enquête selon le département") |>
+  tab_header(title = "Répartition des réponses à l'enquête par département") |>
   tab_style(style = list(cell_text(weight = "bold")), #en gras
     locations = cells_body(columns = `Échantillon théorique de l’enquête`)) |> 
   cols_align(align = "center", columns = everything()) |> 
   cols_align(align = "left", columns = Ville) |> 
   gt_plt_bar_pct(`% de l'objectif de réponses atteint`, scaled = TRUE, labels=TRUE, decimals = 0, #attention à remplacer les NA par 0 sinon erreur
-           font_size = "14px", fill = "#FA535C", height = 20)
+           font_size = "14px", fill = "#00F193", height = 20)
 ```
 
 <br>
@@ -248,13 +251,20 @@ Quelques manipulations ont été faites sur les données en amont de leur analys
   - *Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)*
   - *L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)*
 - **Enrichissement de la population** :
-  - jointure de codes postaux extraits des adresses avec les données externes datagouv [* Base officielle des codes postaux*](https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/) dans lesquelles apparaissent les données de population
+  - jointure de codes postaux extraits des adresses avec les données externes datagouv [*Base officielle des codes postaux*](https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/) dans lesquelles apparaissent les données de population
   - gestion des communes multiples avec un même code postal : il a été décidé de garder la commune avec la population la plus élevée
   - création d'une nouvelle variable de la catégorie de population avec 4 niveaux : faible, moyenne, élevée, très élevée.
+  
+Les tranches de population sont les suivantes :
 
-# Visualisations 
+- '***population faible***' correspond aux villes dont la population est inférieure à 1.000 habitants, soit `r data |> filter(categorie_population == "population faible") |> nrow()` communes ;
+- '***population moyenne***' correspond aux villes dont la population est comprise entre 1.000 et 9.999 habitants, soit `r data |> filter(categorie_population == "population moyenne") |> nrow()` communes;
+- '***population élevée***' correspond aux villes dont la population est comprise entre 10.000 et 99.999 habitants, soit `r data |> filter(categorie_population == "population élevée") |> nrow()` communes;
+- '***population très élevée***' correspond aux villes dont la population est supérieure ou égale à 100.000 habitants, soit `r data |> filter(categorie_population == "population très élevée") |> nrow()` communes.
 
-## Visualisations simples
+
+
+# Aperçu des données
 
 ```{r}
 # Thème pour les graphs
@@ -328,6 +338,8 @@ raw_data |>
 ```{r}
 data |> 
   mutate(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` = factor(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+  select(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
+  na.omit() |> 
   ggplot() +
   aes(
     x = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`
@@ -338,6 +350,7 @@ data |>
     y = "Nombre de commerces",
     title = str_wrap("Fréquence d'échange sur des sujets privés avec les clients", width = 45)
   ) +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
   coord_flip() +
   theme_minimal() +
   theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
@@ -458,94 +471,18 @@ word_data |>
 <br>
 
 
-## Visualisations croisées
 
 
-
-```{r}
-table <- data |> 
-  summarise(n=n(), .by = c(`Quelle est la catégorie de votre commerce ?`, `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`)) |> 
-  mutate(percent = round(n/sum(n)*100, 0), .by = `Quelle est la catégorie de votre commerce ?`)
-
-ggplot(table) +
-  aes(
-    x = `Quelle est la catégorie de votre commerce ?`,
-    y = n,
-    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
-  ) +
-  geom_col() +
-  scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-  labs(
-    y = "Nombre de commerces",
-    title = str_wrap("Collaboration avec des micro-commerçants selon la catégorie de commerce", width = 50),
-    fill = "Collaboration avec \ndes micro-commerçants"
-  ) +
-  geom_text(aes(label = paste0(percent, "%")), position = position_stack(vjust = 0.5)) +
-  coord_flip() +
-  theme_minimal() +
-  custom_theme() +
-  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-      panel.grid.major.y = ggplot2::element_blank(),
-      axis.title.y = element_blank()) + 
-  guides(fill = guide_legend(reverse = TRUE))
-```
-
-<br>
-
-```{r fig.height=5}
-# Stats
-stats_discu_info <- data |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  na.omit() |> 
-  arrange(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)
-
-# Data
-table <- data |> 
-  filter(!is.na(frequentation_commerce),
-         `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` != "Je ne sais pas") |> 
-  summarise(n=n(), .by = c(frequentation_commerce, `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = round(n/sum(n), 2), .by =`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  mutate(discu_nb_commerces = case_match(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, "Très rarement (moins d'une fois par semaine)" ~ paste0("Moins d'une fois par semaine \n(", stats_discu_info[5,2], " commerces)"), "Rarement (1 à 2 fois par mois)" ~ paste0("1 à 2 fois par mois \n(", stats_discu_info[3,2], " commerces)"), "Ponctuellement (1 à 2 fois par semaine)" ~ paste0("1 à 2 fois par semaine \n(", stats_discu_info[2,2], " commerces)"), "Régulièrement (3 à 5 fois par semaine)" ~ paste0("3 à 5 fois par semaine \n(", stats_discu_info[4,2], " commerces)"), "Très régulièrement (plusieurs fois par jour)" ~ paste0("Plusieurs fois par jour \n(", stats_discu_info[6,2], " commerces)")))
-
-# Viz
-table |> 
-  #mutate(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` = factor(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
-  ggplot() +
-    aes(x = discu_nb_commerces, fill = frequentation_commerce, y = percent) +
-    geom_col() +
-    scale_fill_brewer(palette = "Blues", direction = 1) +
-    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
-    labs(
-      x = "Fréquence des \ndiscussions informelles",
-      y = "Nombre de commerces",
-      title = str_wrap("Fréquence des discussions informelles avec les clients selon le nombre de visites quotidiennes", width = 50),
-      fill = "Fréquentation \ndu commerce"
-    ) +
-    coord_flip() +
-    theme_minimal() +
-    theme(
-      legend.position = "top",
-      axis.text.y = element_text(size = 11L),
-      axis.text.x = element_text(size = 11L)
-    ) +
-    custom_theme() +
-    theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-        panel.grid.major.y = ggplot2::element_blank()) +
-    guides(fill = guide_legend(nrow = 3, byrow = TRUE))
-```
-
-
-<br>
-
-```{r}
+```{r eval=FALSE, include=FALSE}
 data |> 
-  filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) |> 
+  filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`) &
+             !is.na(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`)) |> 
   ggplot() +
   aes(
-    x = `Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`,
-    y = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`
+    x = as.numeric(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`),
+    #group = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`
   ) +
-  geom_violin(fill = "#0C4C8A") +
+  geom_curve(fill = "#0C4C8A") +
   labs(
     x = "Nombre d'évènements organisés",
     y = "Utilisation de techniques \ntraditionnelles ou artisanales",
@@ -558,52 +495,6 @@ data |>
 ```
 
 
-<br>
-
-```{r fig.height=7, fig.width=10}
-# Data
-table <- data |> 
-  summarise(n= n(), .by = c(nom_departement_partenaires, `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
-  mutate(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` = factor(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) 
-
-# Viz
-table |> 
-  ggplot(aes(x=nom_departement_partenaires, y=`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, fill=n)) + 
-    geom_tile() +
-    theme_classic() +
-    guides(fill = guide_legend(title = "Nombre de commerces", reverse = F)) +
-    scale_fill_gradient(low = "#c7d9e8", high = "steelblue", 
-                        limits = c(floor(min(table$n)), ceiling(max(table$n))),
-                        breaks = round(seq(floor(min(table$n)), ceiling(max(table$n)), length.out = 4))) +
-    labs(title = "Échange sur des sujets privés avec les clients selon le territoire", y = "Fréquence des échanges") +
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_text(angle = 45, hjust = 1)) +
-    custom_theme()
-#ggplotly(graph)
-```
-
-
-<br>
-
-```{r}
-data |> 
-  summarise(n= n(), .by = c(collab_asso, aide_commercants)) |> 
-  mutate(percent = paste0(round(n/sum(n)* 100, 0), "%"), .by = aide_commercants) |> 
-  ggplot(aes(x=collab_asso, y=aide_commercants, fill=n)) + 
-    geom_tile() +
-    geom_text(aes(label = percent)) +
-    theme_classic() +
-    scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
-    labs(
-    x = "Collaboration à une association",
-    y = "Aide aux commerçants",
-    title = "Aide aux commerçants voisins selon la \ncollaboration avec une association",
-    fill = "Aide aux commerçants") +
-    custom_theme() +
-    guides(fill = guide_legend(title = "Nombre de commerces"))
-```
-
-<br>
 
 ```{r}
 # Data
@@ -650,18 +541,42 @@ table |>
 ```
 
 
-## Sous-populations par taille de communes
+# ![](images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT>
 
-Les sous-populations basées sur le nombre d'habitants ont été créées à partir des [données de population de l'OFGL 2023](https://data.ofgl.fr/explore/dataset/ofgl-base-communes-consolidee/table/?disjunctive.reg_name&disjunctive.dep_name&disjunctive.epci_name&disjunctive.tranche_population&disjunctive.tranche_revenu_imposable_par_habitant&disjunctive.com_name&disjunctive.agregat&sort=exer&refine.exer=2023&refine.agregat=Achats+et+charges+externes) :
 
-- '***population faible***' correspond aux villes dont la population est inférieure à 1.000 habitants, soit `r data |> filter(categorie_population == "population faible") |> nrow()` communes ;
-- '***population moyenne***' correspond aux villes dont la population est comprise entre 1.000 et 9.999 habitants, soit `r data |> filter(categorie_population == "population moyenne") |> nrow()` communes;
-- '***population élevée***' correspond aux villes dont la population est comprise entre 10.000 et 99.999 habitants, soit `r data |> filter(categorie_population == "population élevée") |> nrow()` communes ;
-- '***population très élevée***' correspond aux villes dont la population est supérieure ou égale à 100.000 habitants, soit `r data |> filter(categorie_population == "population très élevée") |> nrow()` communes.
 
-### Discussions privées avec les clients{.tabset}
+## <FONT COLOR="#B4B1B1">Discussions privées avec les clients</FONT>
 
 **Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?*".
+
+
+<br>
+
+```{r fig.height=7, fig.width=10}
+# Data
+table <- data |> 
+    filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+  summarise(n= n(), .by = c(nom_departement_partenaires, `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+  mutate(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` = factor(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) 
+
+# Viz
+table |> 
+  ggplot(aes(x=nom_departement_partenaires, y=`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, fill=n)) + 
+    geom_tile() +
+    theme_classic() +
+    guides(fill = guide_legend(title = "Nombre de commerces", reverse = F)) +
+    scale_fill_gradient(low = "#c7d9e8", high = "steelblue", 
+                        limits = c(floor(min(table$n)), ceiling(max(table$n))),
+                        breaks = round(seq(floor(min(table$n)), ceiling(max(table$n)), length.out = 4))) +
+    labs(title = "Échange sur des sujets privés avec les clients selon le territoire", y = "Fréquence des échanges") +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_text(angle = 45, hjust = 1)) +
+    custom_theme()
+#ggplotly(graph)
+```
+
+
+### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -845,1255 +760,8 @@ table <- data |>
 graph_comparaison_pop(table, "Répartition des commerces selon leurs discussions privées avec des clients")
 ```
 
+### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
 
-### Explications approfondies sur les produits{.tabset}
-
-**Question posée dans l'enquête :** "*À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_explications_produits <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 15, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Ile-de-France", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 5, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients")
-```
-
-
-
-### Sollicitations par des personnes en précarité{.tabset}
-
-**Question posée dans l'enquête :** "*Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_sollicitations_precaires <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Ensemble des commerces", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Ile-de-France", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon les sollicitations par des personnes en situation de précarité")
-```
-
-
-
-
-### Discussions informelles avec les clients{.tabset}
-
-**Question posée dans l'enquête :** "*Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_discussions_informelles <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 8, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+8, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Ile-de-France", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon leurs discussions informelles avec des clients")
-```
-
-
-
-### Redirections vers des aides extérieures{.tabset}
-
-**Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?. A quelle fréquence cela vous arrive-t-il ?*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_redirections_aides_ext <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Ensemble des commerces", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Ile-de-France", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`A quelle fréquence cela vous arrive-t-il ?`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon les redirections des clients vers des aides extérieures")
-```
-
-
-
-
-### Interventions dans des situations d'insécurité{.tabset}
-
-**Question posée dans l'enquête :** "*A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?*".
-
-#### Général
-
-```{r fig.height=7}
-# Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
-graph_questions_freq2 <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
-    data |> 
-        left_join(ref_data, by = "Var") |> 
-        mutate(n_ref = percent_ref/100 * sum(n),
-               ecart = round((percent - percent_ref), 0),
-               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
-        mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)"))) |> 
-        ggplot() + 
-        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
-                 position="dodge", stat="identity", width=.6, fill = col_barres) +
-        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
-                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
-        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
-        scale_alpha_manual(values=c(1, .4)) +
-        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
-        labs(x = "", y = "Nombre de commerces", linetype = "",
-             subtitle = stringr::str_wrap(subtitle_name, width = 55),
-             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
-             title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
-                   size = 5, fill = "white", label.size = NA) +
-        theme_classic() +
-        custom_theme() +
-        theme(legend.position = "top",
-              panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-              panel.grid.major.y = ggplot2::element_blank()) +
-        guides(alpha = "none") +
-        coord_flip()
-}
-
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_situations_precaires <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Ensemble des commerces", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Ile-de-France", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_situations_precaires, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
-graph_comparaison_pop2 <- function(data, subtitle_name){
-  data |> 
-    mutate(nb_reponses_freq = sum(n), .by = Var) |> 
-    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)")),
-           categorie_population = factor(categorie_population, levels = c("faible", "moyenne", "élevée", "très élevée"))) |> 
-    ggplot() + 
-    geom_bar(aes(y=percent_freq, x=Var, fill = categorie_population, group = categorie_population, alpha = Var != ""),
-             position="stack", stat="identity", width=.6) +
-    geom_text(aes(label = paste(nb_reponses_freq, ifelse(nb_reponses_freq <= 1, "réponse", "réponses")), x=Var, fill = categorie_population, group = categorie_population, y = 0.01), 
-              hjust = 0, color = "white", fontface = "italic", size = 5) +
-    scale_fill_manual(values = c("faible" = "#DEEBF7", "moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
-    scale_alpha_manual(values=c(1, .4)) +
-    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
-    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
-    labs(x = "", y = "Pourcentage des commerces", linetype = "",
-         subtitle = stringr::str_wrap(subtitle_name, width = 55),
-         title = stringr::str_wrap("Comparaison des communes selon leur population", width = 50)) +
-    theme_classic() +
-    custom_theme() +
-    theme(legend.position = "top",
-          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-          panel.grid.major.y = ggplot2::element_blank()) +
-    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 2, reverse = TRUE)) +
-    coord_flip()
-}
-
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop2(table, "Répartition des commerces selon les interventions dans des situations d'insécurité")
-```
-
-
-
-
-### Aide aux personnes accidentées ou souffrantes{.tabset}
-
-**Question posée dans l'enquête :** "*Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_aide_personnes <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Ensemble des commerces", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Ile-de-France", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(Var = ifelse(Var == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", Var),
-         percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop2(table, "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes")
-```
-
-
-
-### Situations d'insécurité des citoyens{.tabset}
-
-**Question posée dans l'enquête :** "*L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_insecurite_citoyens <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Ensemble des commerces", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Ile-de-France", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop2(table, "Répartition des commerces selon la confrontation à des situations d'insécurité")
-```
-
-
-### Interpellation des services de la mairie{.tabset}
-
-**Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_interpellation_mairie <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Ensemble des commerces", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 10, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Ile-de-France", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
-```
-
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#DEEBF7")
-```
-
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 3, "", "#0C4C8A")
-```
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon les interpellations des services de la mairie")
-```
-
-
-### Nettoyage des abords du commerce{.tabset}
-
-**Question posée dans l'enquête :** "*Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)*".
-
-#### Général
-
-```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_nettoyage_abords <- table |> select(-n) |> rename(percent_ref = percent)
-
-# Données de l'ensemble
-table <- data |>  
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_nettoyage_abords, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 15, "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
-```
-
-#### IDF
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- idf |>  
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "Très régulièrement (plusieurs fois par jour)", "#3182bd")
-```
-
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#DEEBF7")
-```
-
-#### Population moyenne
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population moyenne") |> 
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de 1.000 à 9.999 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 3, "", "#9ECAE1")
-```
-
-#### Population élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population élevée") |> 
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#3182BD")
-```
-
-
-#### Population très élevée
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population très élevée") |> 
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#0C4C8A")
-```
-
-
-#### Comparaison
-
-```{r fig.height=7, fig.width=8}
-# Données
-table <- data |>  
-  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
-  summarise(n = n(), .by = c(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`,
-                             categorie_population)) |> 
-  na.omit() |>
-  rename(Var = 1) |> 
-  mutate(percent_freq = n/sum(n), .by = Var) 
-
-# On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon leur soin à nettoyer les abords extérieurs")
-```
-
-
-## Sous-populations par catégorie de commerces
-
-### Discussions privées avec les clients{.tabset}
-
-**Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?*".
 
 #### Général
 
@@ -2392,9 +1060,140 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-### Explications approfondies sur les produits{.tabset}
+
+## <FONT COLOR="#B4B1B1">Explications approfondies sur les produits</FONT>
 
 **Question posée dans l'enquête :** "*À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.*".
+
+### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_explications_produits <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Ensemble des commerces", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 15, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Ile-de-France", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_explications_produits, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 5, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients")
+```
+
+### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -2617,9 +1416,143 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
                      "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
 ```
 
-### Sollicitations par des personnes en précarité{.tabset}
+# ![](images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT>
+
+
+
+## <FONT COLOR="#004654">Sollicitations par des personnes en précarité
 
 **Question posée dans l'enquête :** "*Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.*".
+
+### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_sollicitations_precaires <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Ensemble des commerces", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Ile-de-France", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon les sollicitations par des personnes en situation de précarité")
+```
+
+### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -2843,9 +1776,197 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-### Discussions informelles avec les clients{.tabset}
+
+## <FONT COLOR="#004654">Discussions informelles avec les clients</FONT>
 
 **Question posée dans l'enquête :** "*Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)*".
+
+<br>
+
+```{r fig.height=5}
+# Stats
+stats_discu_info <- data |> 
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  na.omit() |> 
+  arrange(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)
+
+# Data
+table <- data |> 
+  filter(!is.na(frequentation_commerce),
+         `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` != "Je ne sais pas") |> 
+  summarise(n=n(), .by = c(frequentation_commerce, `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = round(n/sum(n), 4), .by =`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  mutate(discu_nb_commerces = case_match(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, 
+                                         "Très rarement (moins d'une fois par mois)" ~ paste0("Moins d'une fois par mois \n(", stats_discu_info[5,2], " commerces)"), 
+                                         "Rarement (1 à 2 fois par mois)" ~ paste0("1 à 2 fois par mois \n(", stats_discu_info[3,2], " commerces)"), 
+                                         "Ponctuellement (1 à 2 fois par semaine)" ~ paste0("1 à 2 fois par semaine \n(", stats_discu_info[2,2], " commerces)"), 
+                                         "Régulièrement (3 à 5 fois par semaine)" ~ paste0("3 à 5 fois par semaine \n(", stats_discu_info[4,2], " commerces)"), 
+                                         "Très régulièrement (plusieurs fois par jour)" ~ paste0("Plusieurs fois par jour \n(", stats_discu_info[6,2], " commerces)"), 
+                                         .default = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`))
+
+# Viz
+table |> 
+  mutate(discu_nb_commerces = factor(discu_nb_commerces, 
+                                     levels = table |> 
+                                       distinct(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, discu_nb_commerces) %>%
+                                       arrange(factor(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, 
+                                                      levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+                                       pull(discu_nb_commerces))) |> 
+  ggplot() +
+    aes(x = discu_nb_commerces, fill = frequentation_commerce, y = percent) +
+    geom_col() +
+    scale_fill_brewer(palette = "Blues", direction = 1) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,1.01)) +
+    labs(
+      x = "Fréquence des \ndiscussions informelles",
+      y = "Nombre de commerces",
+      title = str_wrap("Fréquence des discussions informelles avec les clients selon le nombre de visites quotidiennes", width = 50),
+      fill = "Fréquentation \ndu commerce"
+    ) +
+    coord_flip() +
+    theme_minimal() +
+    theme(
+      legend.position = "top",
+      axis.text.y = element_text(size = 11L),
+      axis.text.x = element_text(size = 11L)
+    ) +
+    custom_theme() +
+    theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+        panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+```
+
+<br>
+
+### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_discussions_informelles <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Ensemble des commerces", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 8, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+8, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Ile-de-France", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_discussions_informelles, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon leurs discussions informelles avec des clients")
+```
+
+### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -3069,9 +2190,139 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-### Redirections vers des aides extérieures{.tabset}
+## <FONT COLOR="#004654">Redirections vers des aides extérieures</FONT>
 
-**Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?. A quelle fréquence cela vous arrive-t-il ?*".
+**Question posée dans l'enquête :** "*Vous arrive-t-il de rediriger un client vers une aide extérieure ?. A quelle fréquence cela vous arrive-t-il ?*".
+
+### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_redirections_aides_ext <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Ensemble des commerces", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Ile-de-France", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
+  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`A quelle fréquence cela vous arrive-t-il ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon les redirections des clients vers des aides extérieures")
+```
+
+### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -3294,10 +2545,252 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
+# ![](images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT>
 
-### Interventions dans des situations d'insécurité{.tabset}
+
+
+```{r}
+table <- data |> 
+  summarise(n=n(), .by = c(`Quelle est la catégorie de votre commerce ?`, `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`)) |> 
+  mutate(percent = round(n/sum(n)*100, 0), .by = `Quelle est la catégorie de votre commerce ?`)
+
+ggplot(table) +
+  aes(
+    x = `Quelle est la catégorie de votre commerce ?`,
+    y = n,
+    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
+  ) +
+  geom_col() +
+  scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+  labs(
+    y = "Nombre de commerces",
+    title = str_wrap("Collaboration avec des micro-commerçants selon la catégorie de commerce", width = 40),
+    fill = "Collaboration"
+  ) +
+  geom_text(aes(label = paste0(percent, "%")), position = position_stack(vjust = 0.5)) +
+  coord_flip() +
+  theme_minimal() +
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+      panel.grid.major.y = ggplot2::element_blank(),
+      axis.title.y = element_blank()) + 
+  guides(fill = guide_legend(reverse = TRUE))
+```
+
+<br>
+
+
+```{r}
+data |> 
+  summarise(n= n(), .by = c(collab_asso, aide_commercants)) |> 
+  mutate(percent = paste0(round(n/sum(n)* 100, 0), "%"), .by = aide_commercants) |> 
+  ggplot(aes(x=collab_asso, y=aide_commercants, fill=n)) + 
+    geom_tile() +
+    geom_text(aes(label = percent)) +
+    theme_classic() +
+    scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
+    labs(
+    x = "Collaboration à une association",
+    y = "Aide aux commerçants",
+    title = "Aide aux commerçants voisins selon la \ncollaboration avec une association",
+    fill = "Aide aux commerçants") +
+    custom_theme() +
+    guides(fill = guide_legend(title = "Nombre de commerces"))
+```
+
+<br>
+
+## <FONT COLOR="#0097B2">Interventions dans des situations d'insécurité</FONT>
 
 **Question posée dans l'enquête :** "*A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?*".
+
+### <FONT COLOR="#0097B2">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
+graph_questions_freq2 <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+    data |> 
+        left_join(ref_data, by = "Var") |> 
+        mutate(n_ref = percent_ref/100 * sum(n),
+               ecart = round((percent - percent_ref), 0),
+               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+        mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)"))) |> 
+        ggplot() + 
+        geom_bar(aes(y=n, x=Var, alpha = Var != valeur_ressortir),
+                 position="dodge", stat="identity", width=.6, fill = col_barres) +
+        geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+                 position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+        scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+        scale_alpha_manual(values=c(1, .4)) +
+        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+        labs(x = "", y = "Nombre de commerces", linetype = "",
+             subtitle = stringr::str_wrap(subtitle_name, width = 55),
+             caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+             title = stringr::str_wrap(title_name, width = 45)) +
+        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+                   size = 5, fill = "white", label.size = NA) +
+        theme_classic() +
+        custom_theme() +
+        theme(legend.position = "top",
+              panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+              panel.grid.major.y = ggplot2::element_blank()) +
+        guides(alpha = "none") +
+        coord_flip()
+}
+
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_situations_precaires <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Ensemble des commerces", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Ile-de-France", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_situations_precaires, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon les interventions dans des situations d'insécurité", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
+graph_comparaison_pop2 <- function(data, subtitle_name){
+  data |> 
+    mutate(nb_reponses_freq = sum(n), .by = Var) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)")),
+           categorie_population = factor(categorie_population, levels = c("faible", "moyenne", "élevée", "très élevée"))) |> 
+    ggplot() + 
+    geom_bar(aes(y=percent_freq, x=Var, fill = categorie_population, group = categorie_population, alpha = Var != ""),
+             position="stack", stat="identity", width=.6) +
+    geom_text(aes(label = paste(nb_reponses_freq, ifelse(nb_reponses_freq <= 1, "réponse", "réponses")), x=Var, fill = categorie_population, group = categorie_population, y = 0.01), 
+              hjust = 0, color = "white", fontface = "italic", size = 5) +
+    scale_fill_manual(values = c("faible" = "#DEEBF7", "moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap(subtitle_name, width = 55),
+         title = stringr::str_wrap("Comparaison des communes selon leur population", width = 50)) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 2, reverse = TRUE)) +
+    coord_flip()
+}
+
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop2(table, "Répartition des commerces selon les interventions dans des situations d'insécurité")
+```
+
+### <FONT COLOR="#0097B2">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -3577,11 +3070,508 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 ```
 
 
+# ![](images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT>
 
 
-### Aide aux personnes accidentées ou souffrantes{.tabset}
+
+## <FONT COLOR="#00A589">Intervention dans des situations d'insécurité</FONT>
+
+**Question posée dans l'enquête :** "*A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?*".
+
+### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_intervention_insecurite <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Ensemble des commerces", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Ile-de-France", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
+  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop2(table, "Répartition des commerces selon leur intervention dans des situations d'insécurité")
+```
+
+### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+
+
+#### Général
+
+```{r}
+# Données de référence 
+table <- data |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+ref_data_freq_agregee <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Ensemble des commerces", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 15, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### Alimentaire
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Alimentaire") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces alimentaires", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+#### Equipement de la personne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Equipement de la personne") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+#### Equipement de la maison
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Equipement de la maison") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+#### Culture, loisirs
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Culture, loisirs") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+#### Hygiène, santé, beauté
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Hygiène, santé, beauté") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+#### Services aux particuliers
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Services aux particuliers") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+
+
+#### Café, hôtels, restaurants
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Café, hôtels, restaurants") |> 
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+
+# On applique la fonction créée
+graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+
+#### Comparaison
+
+```{r fig.height=9, fig.width=12}
+# Données 
+table <- data |>  
+  mutate(Var = str_replace_all(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Rarement \\(1 à 2 fois par an\\)" = "Moins d'1 fois par mois",
+                                 "Ponctuellement \\(1 à 2 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Régulièrement \\(3 à 5 fois par mois\\)" = "1 fois par mois et plus",
+                                 "Très régulièrement \\(plusieurs fois par semaine\\)" = "1 fois par mois et plus"))) |> 
+  summarise(n = n(), .by = c(`Quelle est la catégorie de votre commerce ?`, Var)) |> 
+  filter(!is.na(Var)) |> 
+  mutate(nb_reponses = sum(n),
+         percent = n/sum(n),
+         .by = `Quelle est la catégorie de votre commerce ?`) |> 
+  mutate(`Quelle est la catégorie de votre commerce ?` = paste0(`Quelle est la catégorie de votre commerce ?`, "\n(", nb_reponses, " commerces)"))
+
+# On applique la fonction créée
+graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+```
+
+
+
+
+## <FONT COLOR="#00A589">Aide aux personnes accidentées ou souffrantes</FONT>
 
 **Question posée dans l'enquête :** "*Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?*".
+
+### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_aide_personnes <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Ensemble des commerces", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Ile-de-France", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_aide_personnes, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(Var = ifelse(Var == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", Var),
+         percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop2(table, "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes")
+```
+
+### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -3803,9 +3793,142 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
                      "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
 ```
 
-### Situations d'insécurité des citoyens{.tabset}
+
+
+## <FONT COLOR="#00A589">Situations d'insécurité des citoyens</FONT>
 
 **Question posée dans l'enquête :** "*L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?*".
+
+### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_insecurite_citoyens <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Ensemble des commerces", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Ile-de-France", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop2(table, "Répartition des commerces selon la confrontation à des situations d'insécurité")
+```
+
+### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+
+
 
 #### Général
 
@@ -4027,9 +4150,145 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
                      "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
 ```
 
-### Interpellation des services de la mairie{.tabset}
+# ![](images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT>
+
+# ![](images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT>
+
+
+## <FONT COLOR="#FF5757">Interpellation des services de la mairie</FONT>
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
+
+### <FONT COLOR="#FF5757">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_interpellation_mairie <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Ensemble des commerces", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 10, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Ile-de-France", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+```
+
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#DEEBF7")
+```
+
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_interpellation_mairie, "Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", 3, "", "#0C4C8A")
+```
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon les interpellations des services de la mairie")
+```
+
+### <FONT COLOR="#FF5757">Analyse par catégorie de commerces</FONT>{.tabset}
+
+
 
 #### Général
 
@@ -4252,9 +4511,139 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-### Nettoyage des abords du commerce{.tabset}
+## <FONT COLOR="#FF5757">Nettoyage des abords du commerce</FONT>
 
 **Question posée dans l'enquête :** "*Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)*".
+
+### <FONT COLOR="#FF5757">Analyse par taille de communes</FONT>{.tabset}
+
+#### Général
+
+```{r fig.height=7}
+# Données de référence 
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_nettoyage_abords <- table |> select(-n) |> rename(percent_ref = percent)
+
+# Données de l'ensemble
+table <- data |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# On applique la fonction créée
+graph_questions_freq(table, ref_nettoyage_abords, "Ensemble des commerces", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 15, "", "#3182bd") +
+    theme(plot.caption = element_blank()) +
+    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA)
+```
+
+#### IDF
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- idf |>  
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_questions_freq(table, ref_nettoyage_abords,"En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "Très régulièrement (plusieurs fois par jour)", "#3182bd")
+```
+
+#### Population faible
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population faible") |> 
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_questions_freq(table, ref_nettoyage_abords,"Communes de moins de 1.000 habitants", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#DEEBF7")
+```
+
+#### Population moyenne
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population moyenne") |> 
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_questions_freq(table, ref_nettoyage_abords,"Communes de 1.000 à 9.999 habitants", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 3, "", "#9ECAE1")
+```
+
+#### Population élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population élevée") |> 
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_questions_freq(table, ref_nettoyage_abords,"Communes de 10.000 à 99.999 habitants", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#3182BD")
+```
+
+
+#### Population très élevée
+
+```{r fig.height=7}
+# Données de la sous-population
+table <- data |>  
+  filter(categorie_population == "population très élevée") |> 
+  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+
+# Graphique
+graph_questions_freq(table, ref_nettoyage_abords,"Communes de 100.000 habitants et plus", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#0C4C8A")
+```
+
+
+#### Comparaison
+
+```{r fig.height=7, fig.width=8}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population ")) |> 
+  summarise(n = n(), .by = c(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`,
+                             categorie_population)) |> 
+  na.omit() |>
+  rename(Var = 1) |> 
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop(table, "Répartition des commerces selon leur soin à nettoyer les abords extérieurs")
+```
+
+
+
+### <FONT COLOR="#FF5757">Analyse par catégorie de commerces</FONT>{.tabset}
+
 
 #### Général
 
@@ -4475,3 +4864,4 @@ table <- data |>
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
                      "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
 ```
+
