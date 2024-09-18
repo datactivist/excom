@@ -4,7 +4,6 @@ title: "![](images/Logo_excom_complet.png){width=20%} Projet EXCOM"
 date: "Dernière modification le `r format(Sys.time(), '%d %B %Y')`"
 output:
     rmarkdown::html_document:
-      #number_sections: true
       theme: paper
       toc: true
       toc_float: true
@@ -37,6 +36,32 @@ htmltools::img(src = "images/logos_partenaires.png",
                style = 'position:absolute; top:0; left:0.5; padding-top:10px;') #padding=taille des espaces autour
 ```
 
+Les commerces ne sont pas de stricts acteurs économiques, dont la valeur sociale serait équivalente à la valeur marchande. Cette intuition est largement partagée dans les espaces politiques, académiques ou encore économiques.
+
+Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien
+aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les
+centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de
+ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le
+paysage territorial.
+
+Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux
+académiques ou produits par des experts se concentrent quasi exclusivement sur leur
+rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur
+rôle dans les processus de gentrification).
+En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
+
+Le **projet de recherche-action EXCOM** a pour objectif de combler ce manque en nommant
+et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
+
+Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Paris
+Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundation,
+Datactivist.
+
+<p align="center">
+ <img src="images/Roue_externalites_verte.png" width = "500">
+</p>
+
+
 # Import des données
 
 
@@ -49,6 +74,7 @@ library(gt)
 library(gtExtras)
 library(janitor)
 library(reactable)
+library(DT)
 library(plotly)
 library(ggVennDiagram) #devtools::install_github("gaospecial/ggVennDiagram")
 library(ggwordcloud)
@@ -98,7 +124,7 @@ Composée de près de 40 questions, l'enquête se divise en 6 sections reprenant
 Au `r format(Sys.time(), '%d %B %Y')`, `r a` réponses uniques ont été récoltées.
 
 
-## Aperçu des données
+## Aperçu des données{.tabset}
 
 ```{r}
 # Nom des colonnes
@@ -224,6 +250,8 @@ repartition_reelle |>
 
 <br>
 
+### Départements "Autres"
+
 **Les départements "Autres" sont les suivants :**
 
 ```{r}
@@ -233,8 +261,23 @@ table <- data |>
   summarise(`Nombre de commerces` = n(), .by = nom_departement) |> 
   arrange(desc(`Nombre de commerces`)) |> 
   rename(Département = nom_departement)
-reactable(table)
+# Affichage des données
+datatable(table, options = list(pageLength = 10))
 ```
+
+### Détail Métropole de Rouen
+
+**Au sein de la métropole de Rouen, les réponses se répartissent de la manière suivante :**
+
+```{r}
+table <- data |> 
+    filter(code_departement_partenaires == 76) |> 
+    summarise(`Nombre de réponses` = n(), .by = Nom_de_la_commune) |> 
+    arrange(desc(`Nombre de réponses`)) |> 
+    rename(Commune = Nom_de_la_commune)
+datatable(table)
+```
+
 
 ## Traitement des données
 

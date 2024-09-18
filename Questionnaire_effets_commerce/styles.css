@@ -39,7 +39,7 @@ h4.date { /*date*/
   color: #173541; /*couleur*/
   padding: 1px; /*espace autour texte*/
   padding-bottom: 10px;
-  font-size: 1.5em; /*taille*/
+  font-size: 1em; /*taille*/
   font-family: "Open Sans Regular"; /*police*/
   font-weight: normal; /*pas en gras*/
 }
