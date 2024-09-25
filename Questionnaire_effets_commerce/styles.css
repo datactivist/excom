@@ -20,7 +20,7 @@ h1.title { /*titre général du document*/
   margin-top: 30px; /*marge*/
 }
 h3.subtitle{ /*sous-titre*/
-  color: #666666; /*couleur titre*/
+  color: #0000FF; /*couleur titre*/
   font-size: 2.5em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -36,7 +36,7 @@ h4.author { /*auteur*/
   font-weight: normal; /*pas en gras*/
 }
 h4.date { /*date*/
-  color: #173541; /*couleur*/
+  color: black; /*couleur*/
   padding: 1px; /*espace autour texte*/
   padding-bottom: 10px;
   font-size: 1em; /*taille*/

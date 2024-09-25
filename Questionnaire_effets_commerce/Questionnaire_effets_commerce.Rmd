@@ -79,7 +79,9 @@ library(plotly)
 library(ggVennDiagram) #devtools::install_github("gaospecial/ggVennDiagram")
 library(ggwordcloud)
 library(tm)
-library(emojifont)
+library(treemap)
+library(treemapify)
+#library(emojifont) #pas runné car conflit avec le custom_theme() pour tous les autres graphiques sinon
 
 # Données
 raw_data <- read_csv("data/[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
@@ -125,7 +127,7 @@ Composée de près de 40 questions, l'enquête se divise en 6 sections reprenant
 Au `r format(Sys.time(), '%d %B %Y')`, `r a` réponses uniques ont été récoltées.
 
 
-## Aperçu des données{.tabset}
+## Répartition de l'échantillon{.tabset}
 
 ```{r}
 # Nom des colonnes
@@ -306,7 +308,7 @@ Les tranches de population sont les suivantes :
 ```{r}
 # Thème pour les graphs
 font <- "Open Sans"
-custom_theme <- function (){
+custom_theme <- function(){
     font <- "Open Sans"
     ggplot2::theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"), 
         plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
@@ -587,7 +589,7 @@ table |>
 
 ### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
 
-```{r out.width = '100%'}
+```{r out.width = '80%'}
 # Fonction pour les inforgraphies
 infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, valeur3, texte3, icone3){
     # Données
@@ -598,7 +600,7 @@ infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, 
         w = rep(18, 3),
         value = c(valeur1, valeur2, valeur3),
         info = c(texte1, texte2, texte3),
-        icon = c(fontawesome(icone1), fontawesome(icone2), fontawesome(icone3)),
+        icon = c(emojifont::fontawesome(icone1), emojifont::fontawesome(icone2), emojifont::fontawesome(icone3)),
         font_family = c(rep("fontawesome-webfont", 3)),
         color = factor(1:3))
     
@@ -607,42 +609,65 @@ infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, 
         ## Create the tiles using the `color` column
         geom_tile(aes(fill = color)) +
         ## Add the numeric values as text in `value` column
-        geom_text(color = c("1" = "white", "2" = "black", "3" = "white"), fontface = "bold", size = 23,
-                  aes(label = value, x = x - 4, y = y + 1), hjust = 0) +
+        geom_text(color = c("1" = "white", "2" = "black", "3" = "white"), fontface = "bold", size = 13,
+                  aes(label = value, x = x - 4.1, y = y + 1), hjust = 0) +
         ## Add the labels for each box stored in the `info` column
-        geom_text(color = c("1" = "white", "2" = "black", "3" = "white"), fontface = "bold", size = 8,
-                  aes(label = str_wrap(info, width = 55), x = x - 4, y = y - .8), hjust = 0, lineheight = 0.6) +
+        geom_text(color = c("1" = "white", "2" = "black", "3" = "white"), fontface = "bold", size = 4,
+                  aes(label = str_wrap(info, width = 50), x = x - 4.1, y = y - .8), hjust = 0, lineheight = 0.9) +
         coord_fixed() +
         scale_fill_brewer(type = "qual",palette = "Dark2") +
         ## Use `geom_text()` to add the icons by specifying the unicode symbol.
-        geom_text(size = 45, aes(label = icon, family = font_family,
-                                 x = -4.5, y = y + 0.5), alpha = 0.25) +
+        geom_text(size = 20, aes(label = icon, family = font_family,
+                                 x = -4.5, y = y + 0.15), alpha = 0.3) +
         # Couleurs
         scale_fill_manual(values = c("1" = "#465FA5", "2" = "#E6E6E6", "3" = "#85BF8F")) +
         # Titre et thème
-        labs(title = "       Dans l'échantillon de répondants :") +
+        labs(title = "     Dans l'échantillon de répondants :") +
         theme_void() +
-        theme(plot.title = element_text(family = font, size = 21, face = "bold", color = "#222222")) +
+        theme(plot.title = element_text(family = font, size = 18, face = "bold", color = "#222222")) +
         guides(fill = FALSE)
 }
 
 # Données
     # boxe 1
-val1 <- paste0(round((1 - ((data |> 
-    count(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
-    na.omit() |> 
-    rename(Var = 1) |> 
-    mutate(percent = n/sum(n)) |> 
-    filter(Var == "Jamais") |> 
-    select(percent))$percent)) * 100, 0), "%")
+        #pre-run stats 
+table <- data |> 
+  mutate(Var = str_replace_all(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+ref_data_freq_agregee <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val1 <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Hygiène, santé, beauté") |> 
+  mutate(Var = str_replace_all(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  left_join(ref_data_freq_agregee, by = "Var") |> 
+  filter(Var == "1 fois par semaine et plus") |> 
+  mutate(ratio = round(percent/percent_ref, 1))
     # boxe 2
-        #pre-run stats graph général + IDF et jointure
+        #pre-run stats 
 table <- data |>  
   summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
   filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
   mutate(percent = n/sum(n)*100) |> 
   rename(Var = 1)
 ref_discussions <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
 val2 <- idf |>  
   summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
   filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
@@ -654,11 +679,19 @@ val2 <- idf |>
          ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
   filter(Var == "Très régulièrement (plusieurs fois par jour)") |> 
   mutate(ratio = round(percent_ref/percent, 1))
+    # boxe 3
+val3 <- paste0(round((1 - ((data |> 
+    count(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
+    na.omit() |> 
+    rename(Var = 1) |> 
+    mutate(percent = n/sum(n)) |> 
+    filter(Var == "Jamais") |> 
+    select(percent))$percent)) * 100, 0), "%")
     
 # Application de la fonction
-infographie_graph(val1, "des commerces ont des discussiones privées avec leurs clients", 'fa-comments',
-                  val2$ratio, paste("Les commerçants d'Ile-de-France discutent", val2$ratio, "fois moins très régulièrement (plusieurs fois par jour) avec leurs clients que l'ensemble des commerçants"), 'fa-building',
-                 "< 0.5", "target pvalue", 'fa-globe')
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces en hygiène, santé et beauté ont des discussiones privées avec leurs clients au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-stethoscope',
+                  val2$ratio, paste("Les commerçants d'Ile-de-France discutent", val2$ratio, "fois moins souvent (plusieurs fois par jour) avec leurs clients que l'ensemble des commerçants"), 'fa-building',
+                  val3, "des commerces ont des discussiones privées avec leurs clients", 'fa-comments')
 ```
 
 
@@ -1178,6 +1211,54 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ## <FONT COLOR="#B4B1B1">Partager des savoir-faire</FONT>
 
+
+### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+val1 <- data |> 
+    select(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`) |> 
+    mutate(cat = case_when(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')` == "0" ~ "aucun",
+                           is.na(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`) ~ NA_character_,
+                           .default = "au moins un")) |> 
+    count(cat) |> 
+    filter(cat == "au moins un")
+val1_totalrep <- data |> 
+    filter(!is.na(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`)) |> 
+    nrow()
+    # boxe 2
+        #pre-run stats 
+table <- data |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_explications_produits <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val2 <- idf |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  left_join(ref_explications_produits, by = "Var") |> 
+  filter(Var == "Très régulièrement (plusieurs fois par jour)") |> 
+  mutate(ratio = round(percent/percent_ref, 1))
+    # boxe 3
+val3 <- data |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  filter(Var == "Très régulièrement (plusieurs fois par jour)")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$n / val1_totalrep * 100, 0), "%"), "des commerces organisent au moins une séance d'information, démonstration ou atelier par an au sein de leurs locaux", 'fa-wrench',
+                  val2$ratio, paste("Les commerçants d'Ile-de-France donnent", val2$ratio, "fois plus souvent (plusieurs fois par jour) des explications approfondies à leurs clients que l'ensemble des commerçants"), 'fa-building',
+                  paste0(round(val3$percent, 0), "%"), "des commerces donnent plusieurs fois par jour des explications approfondies sur leurs produits à leurs clients", 'fa-comment')
+```
+
+
 **Question posée dans l'enquête :** "*À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.*".
 
 ### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
@@ -1537,8 +1618,102 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ## <FONT COLOR="#B4B1B1">Construire une communauté locale</FONT>
 
 
-# ![](images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT>
+### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
 
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+table_collab <- data |> 
+    select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
+    mutate(var = str_replace_all(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`, "Oui, ", "Oui ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    count(var) #vérifier que ce sont les asso de quartier en tête
+val1 <- data |> 
+    select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
+    mutate(var = ifelse(grepl("Oui, avec des associations de quartier", `Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) == TRUE, 1, 0)) |> 
+    filter(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)` != "Je n'ai pas l'habitude de collaborer avec des associations")
+val1_sub <- val1 |> 
+    summarise(n=sum(var))
+    # boxe 2
+val2 <- data |> 
+    count(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`) |> 
+    na.omit()
+val2_oui <- val2 |> 
+    filter(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?` == "Oui")
+    # boxe 3
+table <- data |> 
+    select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
+    mutate(cat = case_when(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)` == "Je n'ai pas l'habitude de collaborer avec des associations" ~ 0,
+                           .default = str_count(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`, "Oui")))
+val3 <- table |> 
+    count(cat) |> 
+    filter(cat != 0) |> 
+    summarise(somme = sum(n))
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1_sub$n / nrow(val1) * 100, 0), "%"), "des collaborations avec des associations locales se font avec des associations de quartier entre autres", 'fa-building-o',
+                  paste0(round(val2_oui$n / sum(val2$n) * 100, 0), "%"), "des commerçants qui vendent des produits qu'ils ont fabriqué eux-mêmes utilisent des techniques traditionnelles ou artisanales pour les faire", 'fa-paint-brush',
+                  paste0(round(val3$somme / nrow(data) * 100, 0), "%"), "des commerces collaborent avec des associations locales", 'fa-handshake-o')
+```
+
+### <FONT COLOR="#B4B1B1">Analyse</FONT>{.tabset}
+
+**Question posée dans l'enquête :** "*Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)*".
+
+```{r}
+# Données
+table_collab_treemap <- table_collab |> 
+    mutate(var = str_replace_all(var, c("Je n'ai pas l'habitude de collaborer avec des associations" = "Aucune",
+                                        "Oui avec des a" = "A",
+                                        "Oui avec de a" = "A")))
+# Treemap
+table_collab_treemap |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = var, 
+                            label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+      labs(title = "Collaborations des commerçants avec des \nassociations locales") +
+      custom_theme() +
+      theme(legend.position = "none")
+```
+
+
+**Question posée dans l'enquête :** "*Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?*".
+
+```{r}
+# Dataviz
+val2 |> 
+  mutate(Pourcentage = round(n / sum(n) * 100, 0)) |> 
+  mutate(ypos = cumsum(Pourcentage) - .9 * Pourcentage, .by = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`) |> 
+  ggplot(aes(x="", y=n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) +  
+      geom_bar(stat="identity", width=1, color="white", size = 2) +
+      coord_polar("y") +
+      scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+      labs(title = str_wrap("Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent", width = 35)) +
+      theme_classic() + 
+      theme(legend.position = "top",
+            strip.text.x = element_text(size = 12, face = "bold"),
+            strip.background = element_blank(),
+            axis.title = element_blank(),
+            axis.ticks = element_blank(),
+            axis.line = element_blank(),
+            axis.text = element_blank(),
+            legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
+            text = element_text(family = "Montserrat", size = 12),
+            plot.title = ggplot2::element_text(size = 15, face = "bold", color = "#222222"), 
+            plot.caption = ggplot2::element_text(face = "italic", size = 18, 
+                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
+            plot.title.position = "plot", 
+            plot.caption.position = "plot") +
+      guides(fill = guide_legend(reverse = F, title = " ")) +
+      geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
+```
+
+
+# ![](images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT>
 
 
 ## <FONT COLOR="#004654">Aider les personnes précaires</FONT>
