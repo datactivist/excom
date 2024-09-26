@@ -58,7 +58,7 @@ Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundatio
 Datactivist.
 
 <p align="center">
- <img src="images/Roue_externalites_verte.png" width = "500">
+ <img src="images/Roue_externalites_verte.png" width = "600">
 </p>
 
 
@@ -375,32 +375,6 @@ raw_data |>
 <br>
 
 ```{r}
-data |> 
-  mutate(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` = factor(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, levels = c("Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
-  select(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
-  na.omit() |> 
-  ggplot() +
-  aes(
-    x = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`
-  ) +
-  geom_bar(fill = "#0C4C8A") +
-  labs(
-    x = "Fréquence",
-    y = "Nombre de commerces",
-    title = str_wrap("Fréquence d'échange sur des sujets privés avec les clients", width = 45)
-  ) +
-  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
-  coord_flip() +
-  theme_minimal() +
-  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-      panel.grid.major.y = ggplot2::element_blank()) +
-  custom_theme()
-```
-
-
-<br>
-
-```{r}
 # Table
 table <- data |> 
   summarise(nb= n(), .by = `Êtes-vous indépendant ?`) |> na.omit() |> 
@@ -471,45 +445,8 @@ ggVennDiagram(table, label_alpha = 0) +
         plot.caption.position = "plot")
 ```
 
-<br>
-
-```{r include=FALSE}
-# Data
-data_wordcloud <- data |> 
-  filter(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` != "Je n'ai pas l'habitude de proposer quelque chose") |> 
-  mutate(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` = str_replace_all(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`, ",", " ")) |> 
-  glimpse()
-corpus = Corpus(VectorSource(data_wordcloud$`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`))
-    # mise en forme des mots
-corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
-corpus = tm_map(corpus, tolower)
-corpus = tm_map(corpus, removePunctuation) #Removing Punctuation
-    # retrait des mots non désirés (pronoms, auxiliaires etc.)
-corpus = tm_map(corpus, removeWords, c("cloth", stopwords("french"))) #Remove stopwords
-corpus = tm_map(corpus, stripWhitespace) # Eliminate white spaces
-    # bon format du df
-DTM <- TermDocumentMatrix(corpus)
-mat <- as.matrix(DTM)
-f <- sort(rowSums(mat),decreasing=TRUE) 
-word_data <- data.frame(word = names(f),freq=f)
-```
-
-```{r}
-# Viz
-word_data |> 
-  ggplot(aes(label = word, size = freq)) +
-      geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
-      scale_size_area(max_size = 18) +
-      labs(title = str_wrap("Aides proposées par les commerces aux personnes en situation de précarité", width = 45)) +
-      theme_minimal() +
-      theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
-            plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = -60, l = 0)))
-
-```
 
 <br>
-
-
 
 
 ```{r eval=FALSE, include=FALSE}
@@ -690,10 +627,11 @@ val3 <- paste0(round((1 - ((data |>
     
 # Application de la fonction
 infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces en hygiène, santé et beauté ont des discussiones privées avec leurs clients au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-stethoscope',
-                  val2$ratio, paste("Les commerçants d'Ile-de-France discutent", val2$ratio, "fois moins souvent (plusieurs fois par jour) avec leurs clients que l'ensemble des commerçants"), 'fa-building',
+                  val2$ratio, paste("Les commerçants d'Ile-de-France discutent", val2$ratio, "fois moins souvent (plusieurs fois par jour) sur des sujets privés avec leurs clients que l'ensemble des commerçants"), 'fa-building',
                   val3, "des commerces ont des discussiones privées avec leurs clients", 'fa-comments')
 ```
 
+### <FONT COLOR="#B4B1B1">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?*".
 
@@ -1258,10 +1196,10 @@ infographie_graph(paste0(round(val1$n / val1_totalrep * 100, 0), "%"), "des comm
                   paste0(round(val3$percent, 0), "%"), "des commerces donnent plusieurs fois par jour des explications approfondies sur leurs produits à leurs clients", 'fa-comment')
 ```
 
+### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.*".
 
-### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -1652,12 +1590,12 @@ val3 <- table |>
     summarise(somme = sum(n))
     
 # Application de la fonction
-infographie_graph(paste0(round(val1_sub$n / nrow(val1) * 100, 0), "%"), "des collaborations avec des associations locales se font avec des associations de quartier entre autres", 'fa-building-o',
-                  paste0(round(val2_oui$n / sum(val2$n) * 100, 0), "%"), "des commerçants qui vendent des produits qu'ils ont fabriqué eux-mêmes utilisent des techniques traditionnelles ou artisanales pour les faire", 'fa-paint-brush',
+infographie_graph(paste0(round(val1_sub$n / nrow(val1) * 100, 0), "%"), "des collaborations avec des associations locales se font avec des associations de quartier", 'fa-building-o',
+                  paste0(round(val2_oui$n / sum(val2$n) * 100, 0), "%"), "des commerçants qui vendent les produits qu'ils ont fabriqué eux-mêmes utilisent des techniques traditionnelles ou artisanales pour les faire", 'fa-paint-brush',
                   paste0(round(val3$somme / nrow(data) * 100, 0), "%"), "des commerces collaborent avec des associations locales", 'fa-handshake-o')
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse</FONT>{.tabset}
+### <FONT COLOR="#B4B1B1">Analyse globale</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)*".
 
@@ -1718,9 +1656,112 @@ val2 |>
 
 ## <FONT COLOR="#004654">Aider les personnes précaires</FONT>
 
-**Question posée dans l'enquête :** "*Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.*".
+
+### <FONT COLOR="#004654">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+table <- data |> 
+  mutate(Var = str_replace_all(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+ref_data_freq_agregee <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val1 <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Café, hôtels, restaurants") |> 
+  mutate(Var = str_replace_all(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  left_join(ref_data_freq_agregee, by = "Var") |> 
+  filter(Var == "1 fois par semaine et plus") |> 
+  mutate(ratio = round(percent/percent_ref, 1))
+    # boxe 2
+        #pre-run stats 
+table <- data |> 
+  filter(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` != "Je n'ai pas l'habitude de proposer quelque chose") |> 
+  mutate(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` = str_split(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`, ",")) |> 
+  unnest() |> 
+  count(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+        #valeur boxe
+val2 <- table |> 
+    arrange(desc(n)) |> 
+    slice(1)
+    # boxe 3
+val3 <- data |>  
+  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
+  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  filter(Var == "Jamais")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var)), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
+
+
+### <FONT COLOR="#004654">Analyse globale</FONT>
+
+**Question posée dans l'enquête :** "*Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)*".
+
+```{r include=FALSE}
+# Data
+data_wordcloud <- data |> 
+  filter(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` != "Je n'ai pas l'habitude de proposer quelque chose") |> 
+  mutate(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)` = str_replace_all(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`, ",", " ")) |> 
+  glimpse()
+corpus = Corpus(VectorSource(data_wordcloud$`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`))
+    # mise en forme des mots
+corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
+corpus = tm_map(corpus, tolower)
+corpus = tm_map(corpus, removePunctuation) #Removing Punctuation
+    # retrait des mots non désirés (pronoms, auxiliaires etc.)
+corpus = tm_map(corpus, removeWords, c("cloth", stopwords("french"))) #Remove stopwords
+corpus = tm_map(corpus, stripWhitespace) # Eliminate white spaces
+    # bon format du df
+DTM <- TermDocumentMatrix(corpus)
+mat <- as.matrix(DTM)
+f <- sort(rowSums(mat),decreasing=TRUE) 
+word_data <- data.frame(word = names(f),freq=f)
+```
+
+```{r}
+# Viz
+word_data |> 
+  ggplot(aes(label = word, size = freq)) +
+      geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
+      scale_size_area(max_size = 18) +
+      labs(title = str_wrap("Aides proposées par les commerces aux personnes en situation de précarité", width = 45)) +
+      theme_minimal() +
+      theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
+            plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = -60, l = 0)))
+
+```
+
 
 ### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+
+**Question posée dans l'enquête :** "*Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.*".
 
 #### Général
 
@@ -2074,6 +2115,74 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 
 ## <FONT COLOR="#004654">Prendre soin des gens</FONT>
+
+### <FONT COLOR="#004654">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+table <- data |> 
+  mutate(Var = str_replace_all(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+ref_data_freq_agregee <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val1 <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Services aux particuliers") |> 
+  mutate(Var = str_replace_all(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  left_join(ref_data_freq_agregee, by = "Var") |> 
+  filter(Var == "Jamais") |> 
+  mutate(ratio = round(percent/percent_ref, 1))
+    # boxe 2
+        #pre-run stats 
+table <- data |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_discussions_informelles <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val2 <- idf |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  left_join(ref_discussions_informelles, by = "Var") |> 
+  filter(Var == "Très régulièrement (plusieurs fois par jour)") |> 
+  mutate(ratio = round(percent_ref/percent, 1))
+    # boxe 3
+val3 <- data |>  
+  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
+  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  filter(Var == "Très régulièrement (plusieurs fois par jour)")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces dans les services aux particuliers n'ont jamais de discussions informelles avec leurs clients, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-scissors',
+                  val2$ratio, paste("Les commerçants d'Ile-de-France discutent", val2$ratio,  "fois moins souvent (plusieurs fois par jour) de manière informelle avec leurs clients que l'ensemble des commerçants"), 'fa-building',
+                  paste0(round(val3$percent, 0), "%"), "des commerces discutent plusieurs fois par jour de manière informelle avec leurs clients", 'fa-comments')
+```
+
+
+### <FONT COLOR="#004654">Analyse globale</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)*".
 
@@ -2488,9 +2597,93 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ## <FONT COLOR="#004654">Orienter vers l'aide sociale</FONT>
 
-**Question posée dans l'enquête :** "*Vous arrive-t-il de rediriger un client vers une aide extérieure ?. A quelle fréquence cela vous arrive-t-il ?*".
+### <FONT COLOR="#004654">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+val1 <- data |> 
+  mutate(Var = str_replace_all(`A quelle fréquence cela vous arrive-t-il ?`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  filter(Var == "1 fois par semaine et plus")
+    # boxe 2
+        #pre-run stats 
+table <- data |> 
+    filter(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?` != "Je n'oriente pas ou alors rarement") |> 
+    mutate(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?` = str_replace_all(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`, "Oui, ", "Oui "),
+           `Vous arrive-t-il de rediriger un client vers une aide extérieure ?` = str_split(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`, ",")) |> 
+    unnest() |> 
+    count(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    rename(Var = 1)
+#valeur boxe
+val2 <- table |> 
+    arrange(desc(n)) |> 
+    slice(1) |> 
+    mutate(Var = str_replace_all(Var, c("Oui " = "")))
+    # boxe 3
+val3 <- data |> 
+    select(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) |> 
+    mutate(var = str_replace_all(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`, "Oui, ", "Oui ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    count(var) |> 
+    mutate(var = str_replace_all(var, c("Je n'oriente pas ou alors rarement" = "Aucune",
+                                        "Oui vers des s" = "S",
+                                        "Oui vers les s" = "S")),
+           percent = n/sum(n)*100) |> 
+    na.omit() |> 
+    filter(var == "Aucune")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces qui orientent leurs clients vers des aides extérieures le font au moins une fois par semaine"), 'fa-calendar',
+                  paste0(round(val2$percent, 0), "%"), paste0("des orientations des clients par les commerçants sont ", tolower(val2$Var)), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants qui sont en contact direct avec leurs clients ne les orientent pas ou rarement vers des aides extérieures", 'fa-medkit')
+```
+
+
+### <FONT COLOR="#004654">Analyse globale</FONT>{.tabset}
+
+**Question posée dans l'enquête :** "*Vous arrive-t-il de rediriger un client vers une aide extérieure ?*".
+
+```{r}
+# Données
+table_redirection_treemap <- data |> 
+    select(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) |> 
+    mutate(var = str_replace_all(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`, "Oui, ", "Oui ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    count(var)  |> 
+    mutate(var = str_replace_all(var, c("Je n'oriente pas ou alors rarement" = "Aucune",
+                                        "Oui vers des s" = "S",
+                                        "Oui vers les s" = "S"))) |> 
+    na.omit()
+# Treemap
+table_redirection_treemap |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = var, 
+                            label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+      labs(title = "Orientation des clients vers une aide extérieure \npar les commerçants") +
+      custom_theme() +
+      theme(legend.position = "none")
+```
+
+
 
 ### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+
+**Question posée dans l'enquête :** "*A quelle fréquence cela vous arrive-t-il ?*".
 
 #### Général
 
@@ -2844,7 +3037,110 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 # ![](images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT>
 
 
-## <FONT COLOR="#00A589">Renforcer l'entraide entre commerçants</FONT>
+## <FONT COLOR="#0097B2">Renforcer l'entraide entre commerçants</FONT>
+
+
+### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+val1 <- data |> 
+    select(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`) |> 
+    rename(Var = 1) |> 
+    mutate(is_helping = ifelse(Var %in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", 
+                                          "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services", 
+                                          "Cette situation ne s'applique pas à mon activité"), 0, 1))
+    # boxe 2
+val2 <- data |> 
+    count(`Collaborez-vous avec des commerçants ayant un espace de vente plus conséquent (un espace pour vendre/revendre vos produits ou abriter vos services) ?`) |> 
+    na.omit() |> 
+    mutate(total = sum(n)) |> 
+    filter(`Collaborez-vous avec des commerçants ayant un espace de vente plus conséquent (un espace pour vendre/revendre vos produits ou abriter vos services) ?` == "Non") |> 
+    summarise(percent = sum(n) / total * 100) |> 
+    unique()
+    # boxe 3
+val3 <- data |> 
+    count(`Faites-vous partie d'un réseau ou d'une association de commerçants ?`) |> 
+    mutate(total = sum(n)) |> 
+    filter(grepl("Je fais partie d'une association de commerçants", `Faites-vous partie d'un réseau ou d'une association de commerçants ?`) == TRUE) |> 
+    summarise(percent = sum(n) / total * 100) |> 
+    unique()
+    
+# Application de la fonction
+infographie_graph(paste0(round(sum(val1$is_helping) / nrow(val1) *100, 0), "%"), paste("des commerçants rendent des services à leurs collègues commerçants"), 'fa-users',
+                  paste0(round(val2$percent, 0), "%"), paste0("des commerçants ne collaborent pas avec d'autres commerces ayant un espace de vente plus conséquent"), 'fa-shopping-bag',
+                  paste0(round(val3$percent, 0), "%"), "des commerces font partie d'une association de commerçants", 'fa-handshake-o')
+```
+
+### <FONT COLOR="#0097B2">Analyse globale</FONT>
+
+
+
+```{r}
+data |> 
+  summarise(n= n(), .by = c(collab_asso, aide_commercants)) |> 
+  mutate(percent = paste0(round(n/sum(n)* 100, 0), "%"), .by = aide_commercants) |> 
+  ggplot(aes(x=collab_asso, y=aide_commercants, fill=n)) + 
+    geom_tile() +
+    geom_text(aes(label = percent)) +
+    theme_classic() +
+    scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
+    labs(
+    x = "Collaboration à une association",
+    y = "Aide aux commerçants",
+    title = "Aide aux commerçants voisins selon la \ncollaboration avec une association",
+    fill = "Aide aux commerçants") +
+    custom_theme() +
+    guides(fill = guide_legend(title = "Nombre de commerces"))
+```
+
+## <FONT COLOR="#0097B2">Animer la rue</FONT>
+
+
+### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+table <- data |> 
+    mutate(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)` = str_replace_all(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)`, "Santé, ", "Santé "),
+           `Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)` = str_split(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest() |> 
+    count(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)`) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    rename(Var = 1) |> 
+    na.omit()
+val1 <- table |> 
+    arrange(desc(n)) |> 
+    slice(1)
+    # boxe 2
+val2 <- data |> 
+    count(`Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`) |> 
+    na.omit() |> 
+    mutate(total = sum(n)) |> 
+    filter(`Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?` == "Non") |> 
+    summarise(percent = sum(n) / total * 100) |> 
+    unique()
+    # boxe 3
+val3 <- data |> 
+    select(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?`) |> 
+    rename(Var = 1) |> 
+    mutate(is_helping = ifelse(Var %in% c("Je ne connais pas vraiment les habitants de mon immeuble", 
+                                          "Je connais les habitants mais je n'ai pas l'occasion de rendre ces services", 
+                                          "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce"), 0, 1)) |> 
+    na.omit()
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des collaborations avec des micro-commerçants se font dans le domaine de l'", tolower(val1$Var)), 'fa-ticket',
+                  paste0(round(val2$percent, 0), "%"), paste0("des commerçants ne collaborent pas avec des micro-commerçants"), 'fa-shopping-bag',
+                  paste0(round(sum(val3$is_helping) / nrow(val3) *100, 0), "%"), paste("des commerçants rendent des services aux habitants de leur immeuble"), 'fa-users')
+```
+
+### <FONT COLOR="#0097B2">Analyse globale</FONT>
+
+
+**Question posée dans l'enquête :** "*Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?*".
 
 ```{r}
 table <- data |> 
@@ -2877,35 +3173,112 @@ ggplot(table) +
 <br>
 
 
+**Question posée dans l'enquête :** "*Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)*".
+
 ```{r}
-data |> 
-  summarise(n= n(), .by = c(collab_asso, aide_commercants)) |> 
-  mutate(percent = paste0(round(n/sum(n)* 100, 0), "%"), .by = aide_commercants) |> 
-  ggplot(aes(x=collab_asso, y=aide_commercants, fill=n)) + 
-    geom_tile() +
-    geom_text(aes(label = percent)) +
-    theme_classic() +
-    scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
-    labs(
-    x = "Collaboration à une association",
-    y = "Aide aux commerçants",
-    title = "Aide aux commerçants voisins selon la \ncollaboration avec une association",
-    fill = "Aide aux commerçants") +
-    custom_theme() +
-    guides(fill = guide_legend(title = "Nombre de commerces"))
+# Données
+table_microco_treemap <- data |> 
+    select(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)`) |> 
+    mutate(var = str_replace_all(`Dans quel(s) domaine(s) ?(Plusieurs réponses sont possibles)`, "Santé, ", "Santé ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    count(var) |>
+    mutate(var= str_squish(var)) |> 
+    mutate(n = sum(n), .by = var) |> 
+    unique() |> na.omit()
+# Treemap
+table_microco_treemap |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = var, 
+                            label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A")) +
+      labs(title = "Domaines de collaboration avec des micro-\ncommerçants") +
+      custom_theme() +
+      theme(legend.position = "none")
 ```
 
-## <FONT COLOR="#00A589">Animer la rue</FONT>
+## <FONT COLOR="#0097B2">Contribuer à l'attractivité</FONT>
 
-## <FONT COLOR="#00A589">Contribuer à l'attractivité</FONT>
+### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+val1 <- data |> 
+    mutate(Var = as.numeric(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.`)) |> 
+    select(Var) |> 
+    na.omit() |> 
+    mutate(is_higer9 = ifelse(Var > 9, 1, 0))
+    # boxe 2
+val2 <- mean(as.numeric(data$`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.`), na.rm = TRUE)
+    # boxe 3
+# Données
+table_evnts <- data |> 
+    mutate(Var = as.numeric(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.`)) |> 
+    select(Var) |> 
+    mutate(var_cat = case_when(Var == 0 ~ "Aucun évènement",
+                               Var >= 1  & Var <= 5 ~ "Entre 1 et 5 évènements",
+                               Var > 5 ~ "Plus de 5 évènements",
+                               .default = NA_character_)) |> 
+    count(var_cat) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100)
+val3 <- table_evnts |> 
+    filter(var_cat == "Aucun évènement")
+    
+# Application de la fonction
+infographie_graph(paste0(round(sum(val1$is_higer9) / nrow(val1)*100, 1), "%"), paste("des commerçants organisent 10 évènements et plus par an pour dynamiser la vie du quartier"), 'fa-users',
+                  round(val2, 0), paste("En moyenne les commerçants organisent", round(val2, 0), "évènements dynamisant la vie du quartier"), 'fa-gift',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants ne participent jamais à l'organisation d'évènements dynamisant la vie du quartier par an", 'fa-hand-paper-o')
+```
 
 
+### <FONT COLOR="#0097B2">Analyse globale</FONT>
+
+**Question posée dans l'enquête :** "*Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.*".
+
+```{r fig.width=9}
+# Dataviz
+table_evnts |> 
+  mutate(var_cat = factor(var_cat, levels = c("Aucun évènement", "Entre 1 et 5 évènements", "Plus de 5 évènements"))) |> 
+  ggplot() +
+    aes(x = var_cat, y = n) +
+    geom_col(fill = "#0C4C8A") +
+    labs(y = "Nombre de commerces", 
+         title = "Nombre d'organisations annuelles d'évènements dynamisant \nla vie du quartier par les commerçants") +
+    geom_label(aes(x = var_cat, y = n+5, label = paste0(round(percent, 0), "%")), size = 5, fill = "white", label.size = NA) +
+    theme_minimal() +
+    custom_theme() +
+    theme(axis.title.x = element_blank())
+```
 
 # ![](images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT>
 
 
 
 ## <FONT COLOR="#00A589">Intervenir en cas d'insécurité</FONT>
+
+
+### <FONT COLOR="#00A589">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width='80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
 
 **Question posée dans l'enquête :** "*A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?*".
 
@@ -3380,6 +3753,24 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 ## <FONT COLOR="#00A589">Aider en cas d'incident</FONT>
 
+### <FONT COLOR="#00A589">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
 **Question posée dans l'enquête :** "*Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?*".
 
 ### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
@@ -3744,6 +4135,24 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 ## <FONT COLOR="#00A589">Veiller sur la rue</FONT>
 
+### <FONT COLOR="#00A589">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
 **Question posée dans l'enquête :** "*L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?*".
 
 ### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
@@ -4099,16 +4508,88 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 # ![](images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT>
 
-## <FONT COLOR="#00A589">Réduire la consommation d'eau / d'éléctricité</FONT>
+## <FONT COLOR="#E1B441">Réduire la consommation d'eau / d'éléctricité</FONT>
 
-## <FONT COLOR="#00A589">Sensibiliser les clients</FONT>
+### <FONT COLOR="#E1B441">Chiffres clés</FONT>
 
-## <FONT COLOR="#00A589">Réduire les déchets</FONT>
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine par des personnes en situation de précarité, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
+## <FONT COLOR="#E1B441">Sensibiliser les clients</FONT>
+
+### <FONT COLOR="#E1B441">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
+## <FONT COLOR="#E1B441">Réduire les déchets</FONT>
+
+### <FONT COLOR="#E1B441">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
 
 # ![](images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT>
 
 
 ## <FONT COLOR="#FF5757">Prendre soin de l'espace public</FONT>
+
+### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
 
@@ -4466,6 +4947,24 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ## <FONT COLOR="#FF5757">Assurer la propreté</FONT>
 
+### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
+
 **Question posée dans l'enquête :** "*Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)*".
 
 ### <FONT COLOR="#FF5757">Analyse par taille de communes</FONT>{.tabset}
@@ -4820,3 +5319,21 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ## <FONT COLOR="#FF5757">Préserver le patrimoine architectural</FONT>
 
+
+### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+
+```{r eval=FALSE, include=FALSE, out.width = '80%'}
+# Données
+    # boxe 1
+        #pre-run stats 
+        #valeur boxe
+    # boxe 2
+        #pre-run stats 
+        #valeur boxe
+    # boxe 3
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
+                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+```
