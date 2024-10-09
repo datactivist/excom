@@ -337,7 +337,7 @@ custom_theme <- function(){
 # Premier graphique
 ggplot(raw_data) +
   aes(x = `Quelle est la catégorie de votre commerce ?`) +
-  geom_bar(fill = "#0C4C8A") +
+  geom_bar(fill = "#3182BD") +
   labs(
     y = "Nombre de commerces",
     title = "Catégorie des commerces répondants"
@@ -362,7 +362,7 @@ raw_data |>
     aes(
       x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
     ) +
-    geom_bar(fill = "#0C4C8A") +
+    geom_bar(fill = "#3182BD") +
     labs(
       y = "Nombre de commerces", 
       x = "Fréquentation moyenne du commerce par jour",
@@ -458,7 +458,7 @@ data |>
     x = as.numeric(`Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')`),
     #group = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`
   ) +
-  geom_curve(fill = "#0C4C8A") +
+  geom_curve(fill = "#3182BD") +
   labs(
     x = "Nombre d'évènements organisés",
     y = "Utilisation de techniques \ntraditionnelles ou artisanales",
@@ -3245,7 +3245,7 @@ table_evnts |>
   mutate(var_cat = factor(var_cat, levels = c("Aucun évènement", "Entre 1 et 5 évènements", "Plus de 5 évènements"))) |> 
   ggplot() +
     aes(x = var_cat, y = n) +
-    geom_col(fill = "#0C4C8A") +
+    geom_col(fill = "#3182BD") +
     labs(y = "Nombre de commerces", 
          title = "Nombre d'organisations annuelles d'évènements dynamisant \nla vie du quartier par les commerçants") +
     geom_label(aes(x = var_cat, y = n+5, label = paste0(round(percent, 0), "%")), size = 5, fill = "white", label.size = NA) +
@@ -3311,7 +3311,7 @@ val3 <- table |>
     filter(Var == "J'agis dès que je vois quelque chose d'inhabituel. J'interviens directement ou j'appelle les forces de l'ordre")
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste(paste0(round(val1$percent, 0), "%"), "des commerces de services aux particuliers interviennent au moins une fois par mois dans des situations d'insécurité, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-scissors',
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces de services aux particuliers interviennent au moins une fois par mois dans des situations d'insécurité, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-scissors',
                   paste0(round(val2$percent, 0), "%"), paste0("des commerçants qui interviennent dans des situations d'insécurité interviennent 1 à 2 fois par an"), 'fa-heartbeat',
                   paste0(round(val3$n / sum(table$n) * 100, 0), "%"), "des commerçants agissent immédiatemment lorsqu'ils sont témoins d'une situation d'insécurité à proximité de leur lieu d'activité", 'fa-shield')
 ```
@@ -4705,7 +4705,7 @@ table |>
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
       scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A")) +
-      labs(title = "Équipements installés à l'initiative des \ncommerçants pour réduire leur consommation d'eau \net d'électricité") +
+      labs(title = "Équipements installés à l'initiative des \ncommerçants pour réduire leur consommation \nd'eau et d'électricité") +
       custom_theme() +
       theme(legend.position = "none")
 ```
@@ -4783,7 +4783,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des choses propos
 
 **Question posée dans l'enquête :** "*Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ? (Plusieurs réponses sont possibles)*".
 
-```{r}
+```{r fig.height=7}
 # Données
 table <- data |> 
     mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
@@ -4800,7 +4800,7 @@ table |>
              position="dodge", stat="identity", width=.6, fill = "#3182BD") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 55)) +
+         title = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 50)) +
     geom_label(aes(x = Var, y = n+5, label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
@@ -4817,25 +4817,186 @@ table |>
 
 ### <FONT COLOR="#E1B441">Chiffres clés</FONT>
 
-```{r eval=FALSE, include=FALSE, out.width = '80%'}
+```{r out.width = '80%'}
 # Données
     # boxe 1
-        #pre-run stats 
-        #valeur boxe
+table <- data |> 
+    mutate(Var = str_replace_all(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`, 
+                                 c("Mise à disposition d'emballages réutilisables : sacs en tissu, pots en verre, etc" = "Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc",  
+                                   "Utilisation de contenants durables : en verre, inox ou bois" = "Utilisation de contenants durables : en verre inox ou bois",
+                                   "Je recycle les déchets engendrés par la fabrication de mes produits. \\(exemples : recycler la cire d'abeille en la transformant en bougie ou bee wrap, recycler le pain en chapelure, réutiliser des chutes de vêtements\\)" = "Recyclage des déchets engendrés par la fabrication de mes produits"))) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc" = "Mise à disposition d'emballages réutilisables",
+                                        "Utilisation de contenants durables : en verre inox ou bois" = "Utilisation de contenants durables",
+                                        "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100)
+val1 <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
+    arrange(desc(percent)) |> 
+    slice(1)
     # boxe 2
-        #pre-run stats 
-        #valeur boxe
+val2 <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
+    summarise(percent = sum(percent))
     # boxe 3
+table <- data |> 
+    mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100)
+val3 <- table |> 
+    filter(Var != "Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités",
+           Var != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce") |> 
+    summarise(percent = sum(percent))
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
-                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
-                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des actions mises en œuvre par les commerçants pour réduire leurs déchêts sont : ", tolower(val1$Var)), 'fa-leaf',
+                  paste0(round(val2$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants proposent des solutions de recyclage au sein de leur commerce", 'fa-recycle')
 ```
+
 
 ### <FONT COLOR="#E1B441">Analyse globale</FONT>
 
+**Question posée dans l'enquête :** "*Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)*".
+
+```{r}
+# Données
+table <- data |> 
+    mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné",
+                                        "Bornes de recyclage pour p" = "P",
+                                        "Bornes de recyclage pour a" = "A",
+                                        "Bornes de recyclage traditionnelles : carton et tout venant" = "Cartons et tout venant",
+                                        "Container de recyclage pour vêtements" = "Vêtements",
+                                        "Récupération de capsules de café" = "Capsules de café",
+                                        "Recyclage de cheveux ou poils d'animaux" = "Cheveux ou poils d'animaux",
+                                        "Récupération de boîtes d'oeuf ou bocaux" = "Boîtes d'oeuf ou bocaux"))) |> 
+    select(Var) |> 
+    count(Var)
+
+# Graphique
+table |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = Var, 
+                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
+                                   "#3081bc", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+      labs(title = "Solutions de recycalge ou récupération \nproposées par les commerçants") +
+      custom_theme() +
+      theme(legend.position = "none")
+```
+
+```{r include=FALSE}
+# Data
+data_wordcloud <- data |> 
+  mutate(`Pouvez-vous préciser ? (2)` = str_replace_all(`Pouvez-vous préciser ? (2)`, ",", " ")) |> 
+  glimpse()
+corpus = Corpus(VectorSource(data_wordcloud$`Pouvez-vous préciser ? (2)`))
+    # mise en forme des mots
+corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
+corpus = tm_map(corpus, tolower)
+corpus = tm_map(corpus, removePunctuation) #Removing Punctuation
+    # retrait des mots non désirés (pronoms, auxiliaires etc.)
+corpus = tm_map(corpus, removeWords, c("cloth", stopwords("french"))) #Remove stopwords
+corpus = tm_map(corpus, stripWhitespace) # Eliminate white spaces
+    # bon format du df
+DTM <- TermDocumentMatrix(corpus)
+mat <- as.matrix(DTM)
+f <- sort(rowSums(mat),decreasing=TRUE) 
+word_data <- data.frame(word = names(f),freq=f) |> 
+    mutate(word = str_replace(word, "led", "LED")) |> 
+    filter(row_number() < 25)
+```
+
+```{r}
+# Viz
+word_data |> 
+  ggplot(aes(label = word, size = freq)) +
+      geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
+      scale_size_area(max_size = 18) +
+      labs(title = str_wrap("Autres solutions de recyclage proposées par les commerçants", width = 45)) +
+      theme_minimal() +
+      theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
+            plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = -60, l = 0)))
+```
+
+
 **Question posée dans l'enquête :** "*Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ? (Plusieurs réponses sont possibles)*".
+
+```{r}
+# Données
+table <- data |> 
+    mutate(Var = str_replace_all(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`, 
+                                 c("Mise à disposition d'emballages réutilisables : sacs en tissu, pots en verre, etc" = "Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc",  
+                                   "Utilisation de contenants durables : en verre, inox ou bois" = "Utilisation de contenants durables : en verre inox ou bois",
+                                   "Je recycle les déchets engendrés par la fabrication de mes produits. \\(exemples : recycler la cire d'abeille en la transformant en bougie ou bee wrap, recycler le pain en chapelure, réutiliser des chutes de vêtements\\)" = "Recyclage des déchets engendrés par la fabrication de mes produits"))) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc" = "Mise à disposition d'emballages réutilisables",
+                                        "Utilisation de contenants durables : en verre inox ou bois" = "Utilisation de contenants durables",
+                                        "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    count(Var)
+
+# Graphique
+table |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = Var, 
+                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#9ecae1","#7A9BB1", "#3081bc")) +
+      labs(title = "Actions mises en œuvre par les commerçants \npour réduire leurs déchêts") +
+      custom_theme() +
+      theme(legend.position = "none")
+```
+
+```{r include=FALSE}
+# Data
+data_wordcloud <- data |> 
+  mutate(`Pouvez-vous préciser ? (1)` = str_replace_all(`Pouvez-vous préciser ? (1)`, ",", " ")) |> 
+  glimpse()
+corpus = Corpus(VectorSource(data_wordcloud$`Pouvez-vous préciser ? (1)`))
+    # mise en forme des mots
+corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
+corpus = tm_map(corpus, tolower)
+corpus = tm_map(corpus, removePunctuation) #Removing Punctuation
+    # retrait des mots non désirés (pronoms, auxiliaires etc.)
+corpus = tm_map(corpus, removeWords, c("cloth", stopwords("french"))) #Remove stopwords
+corpus = tm_map(corpus, stripWhitespace) # Eliminate white spaces
+    # bon format du df
+DTM <- TermDocumentMatrix(corpus)
+mat <- as.matrix(DTM)
+f <- sort(rowSums(mat),decreasing=TRUE) 
+word_data <- data.frame(word = names(f),freq=f) |> 
+    mutate(word = str_replace(word, "led", "LED")) |> 
+    filter(row_number() < 30)
+```
+
+```{r}
+# Viz
+word_data |> 
+  ggplot(aes(label = word, size = freq)) +
+      geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
+      scale_size_area(max_size = 18) +
+      labs(title = str_wrap("Autres actions mises en œuvre par les \ncommerçants pour réduire leurs déchêts", width = 45)) +
+      theme_minimal() +
+      theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
+            plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = -60, l = 0)))
+```
 
 
 # ![](images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT>
@@ -4845,20 +5006,71 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtel
 
 ### <FONT COLOR="#FF5757">Chiffres clés</FONT>
 
-```{r eval=FALSE, include=FALSE, out.width = '80%'}
+```{r out.width = '80%'}
 # Données
     # boxe 1
         #pre-run stats 
+table_embellissement <- data |> 
+    mutate(Var = str_replace_all(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?`, 
+                                 "Verdissement \\(exemples : jardinières, pots de fleurs\\)", "Verdissement")) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Je n’ai pas mené d’initiative particulière" = "Pas mené d’initiative particulière",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100)
         #valeur boxe
+val1 <- table_embellissement |> 
+    filter(Var != "Non concerné",
+           Var != "Pas mené d’initiative particulière") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    arrange(desc(percent)) |> 
+    slice(1)
     # boxe 2
         #pre-run stats 
+table <- data |>  
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_interpellation_mairie <- table |> select(-n) |> rename(percent_ref = percent)
         #valeur boxe
+val2 <- ref_interpellation_mairie |> 
+    filter(Var != "Jamais") |> 
+    summarise(percent = sum(percent_ref))
     # boxe 3
+val3 <- table_embellissement |> 
+    filter(Var != "Non concerné",
+           Var != "Pas mené d’initiative particulière") |> 
+    summarise(percent = sum(percent))
+
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
-                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
-                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des initiatives d'embellissement de la rue sont :", tolower(val1$Var)), 'fa-eye',
+                  paste0(round(val2$percent, 0), "%"), "des commerçants ont déjà interpellé les services techniques de la mairie pour signaler une dégradation ou du matériel public défectueux", 'fa-phone',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants sont impliqués dans des initiatives d'embellissement de la rue", 'fa-shower')
+```
+
+
+
+**Question posée dans l'enquête :** "*Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?*".
+
+### <FONT COLOR="#FF5757">Analyse globale</FONT>{.tabset}
+
+```{r}
+# Graphique
+table_embellissement |> 
+  ggplot() +
+      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
+      geom_treemap_text(aes(area = n, fill = Var, 
+                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
+                        colour = "white", place = "centre", size = 15, grow = TRUE) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#9ecae1","#7A9BB1", "#3081bc")) +
+      labs(title = "Implication des commerçants dans les initiatives \nd'embellissement de la rue") +
+      custom_theme() +
+      theme(legend.position = "none")
 ```
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
@@ -4868,14 +5080,6 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtel
 #### Général
 
 ```{r fig.height=7}
-# Données de référence 
-table <- data |>  
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-ref_interpellation_mairie <- table |> select(-n) |> rename(percent_ref = percent)
-
 # Données de l'ensemble
 table <- data |>  
   summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
@@ -5219,20 +5423,64 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ### <FONT COLOR="#FF5757">Chiffres clés</FONT>
 
-```{r eval=FALSE, include=FALSE, out.width = '80%'}
+```{r out.width='80%'}
 # Données
     # boxe 1
         #pre-run stats 
+table <- data |> 
+  mutate(Var = str_replace_all(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100)
+ref_data_freq_agregee <- table |> select(-n) |> rename(percent_ref = percent)
         #valeur boxe
+val1 <- data |>  
+  filter(`Quelle est la catégorie de votre commerce ?` == "Café, hôtels, restaurants") |> 
+  mutate(Var = str_replace_all(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  left_join(ref_data_freq_agregee, by = "Var") |> 
+  filter(Var == "1 fois par semaine et plus") |> 
+  mutate(ratio = round(percent/percent_ref, 1))
     # boxe 2
-        #pre-run stats 
-        #valeur boxe
+val2 <- data |> 
+  mutate(Var = str_replace_all(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`, 
+                               c("Je ne sais pas" = NA_character_, 
+                                 "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                 "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                 "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = Var) |> 
+  filter(!is.na(Var)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  filter(Var == "1 fois par semaine et plus")
     # boxe 3
+val3 <- data |> 
+    count(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
+    na.omit() |> 
+    rename(Var = 1) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var != "Jamais") |> 
+    summarise(percent = sum(percent))
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
-                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
-                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants nettoyent les abords extérieurs de leur commerce au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
+                  paste0(round(val2$percent, 0), "%"), paste0("des commerçants nettoyent les abords extérieurs de leur commerce au moins une fois par semaine"), 'fa-calendar-check-o',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants nettoyent les abords extérieurs de leur commerce", 'fa-shower')
 ```
 
 **Question posée dans l'enquête :** "*Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)*".
@@ -5592,18 +5840,106 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 ### <FONT COLOR="#FF5757">Chiffres clés</FONT>
 
-```{r eval=FALSE, include=FALSE, out.width = '80%'}
+```{r out.width = '80%'}
 # Données
     # boxe 1
         #pre-run stats 
+table_patrimoine <- data |> 
+    mutate(Var = str_replace_all(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`, c("Oui, " = "Oui ", "Non, " = "Non ")),
+           Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100,
+           Var = str_replace_all(Var, c("Non la façade ou l'immeuble n'est pas classé patrimoine historique mais est ancien. Je fais des efforts pour préserver l'aspect original" = "Non classé mais ancien, efforts faits pour préserver l'aspect original",
+                                        "Non mon commerce ne se situe pas dans un bâtiment classé" = "Non classé",
+                                        "Oui la façade ou l'immeuble est classé patrimoine historique et j'y apporte un soin particulier" = "Classé, soin particulier apporté",
+                                        "Oui la façade ou l'immeuble est classé patrimoine historique mais cela est une contrainte" = "Classé, perçu comme une contrainte")))
         #valeur boxe
+val1 <- table_patrimoine |> 
+    filter(Var == "Classé, perçu comme une contrainte" | Var == "Classé, soin particulier apporté") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "Classé, perçu comme une contrainte")
     # boxe 2
-        #pre-run stats 
-        #valeur boxe
+val2 <- table_patrimoine |> 
+    filter(Var == "Non classé mais ancien, efforts faits pour préserver l'aspect original")
     # boxe 3
+val3 <- data |> 
+  mutate(Var = substr(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`, 1, 3)) |> 
+  summarise(nb= n(), .by = Var) |> na.omit() |> 
+  mutate(Pourcentage = round(nb / sum(nb) * 100, 2)) |> 
+  mutate(ypos = cumsum(Pourcentage) - .5 * Pourcentage, .by = Var) |> 
+  filter(Var == "Oui")
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtels et restaurants sont sollicités au moins une fois par semaine, soit", val1$ratio, "fois plus que l'ensemble des commerces"), 'fa-coffee',
-                  paste0(round(val2$percent, 0), "%"), paste0("des aides proposées aux personnes en situation de précarité sont l'", tolower(val2$Var), " entre autres"), 'fa-heartbeat',
-                  paste0(round(val3$percent, 0), "%"), "des commerces n'ont jamais été sollicités par des personnes en situation de précarité", 'fa-users')
+infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerces permanents qui se situent dans un local classé au patrimoine architectural le ressentent comme une contrainte", 'fa-link',
+                  paste0(round(val2$percent, 0), "%"), "des commerces permanents se situent dans un local ancien non classé, auquel ils apportent un soin particulier", 'fa-thumbs-up',
+                  paste0(round(val3$Pourcentage, 0), "%"), "des commerces permanents se situent dans un local classé au patrimoine architectural", 'fa-building')
 ```
+
+
+
+**Question posée dans l'enquête :** "*Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?*".
+
+### <FONT COLOR="#FF5757">Analyse globale</FONT>{.tabset}
+
+```{r}
+# Table
+table <- data |> 
+  mutate(Var = substr(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`, 1, 3)) |> 
+  summarise(nb= n(), .by = Var) |> na.omit() |> 
+  mutate(Pourcentage = round(nb / sum(nb) * 100, 0)) |> 
+  mutate(ypos = cumsum(Pourcentage) - .5 * Pourcentage, .by = Var)
+
+# Dataviz
+table |> 
+    ggplot(aes(x="", y=nb, fill=Var)) +  
+      geom_bar(stat="identity", width=1, color="white", size = 2) +
+      coord_polar("y") +
+      scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+      labs(title = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 35)) +
+      theme_classic() + 
+      theme(legend.position = "top",
+            strip.text.x = element_text(size = 12, face = "bold"),
+            strip.background = element_blank(),
+            axis.title = element_blank(),
+            axis.ticks = element_blank(),
+            axis.line = element_blank(),
+            axis.text = element_blank(),
+            legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
+            legend.title = ggplot2::element_text(size = 18,color = "#222222"), 
+            text = element_text(family = "Montserrat", size = 12),
+            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
+            plot.caption = ggplot2::element_text(face = "italic", size = 18, 
+                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
+            plot.title.position = "plot", 
+            plot.caption.position = "plot") +
+      guides(fill = guide_legend(reverse = F, title = "Classé")) +
+      geom_text(aes(y = ypos, x = 2, label = paste0(round(Pourcentage,0), "%")), color = "#333333", 
+                size=5, check_overlap = T)
+```
+
+<br>
+
+```{r}
+# Graphique
+table_patrimoine |> 
+  mutate(Var = fct_reorder(Var, n)) |> 
+  ggplot() + 
+    geom_bar(aes(y=n, x=Var),
+             position="dodge", stat="identity", width=.6, fill = "#3182BD") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         title = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 50)) +
+    geom_label(aes(x = Var, y = n+10, label = paste0(round(percent, 0), "%")),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+```
+
