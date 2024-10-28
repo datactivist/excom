@@ -65,9 +65,10 @@ Datactivist.
 # Import des données
 
 
-```{r}
+```{r imports}
 # Librairies
 library(tidyverse)
+library(jsonlite)
 library(readxl)
 library(esquisse)
 library(gt)
@@ -84,8 +85,9 @@ library(treemapify)
 #library(emojifont) #pas runné car conflit avec le custom_theme() pour tous les autres graphiques sinon
 
 # Données
-raw_data <- read_csv("data/[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
-repartition_theorique <- read_excel("data/Repartition_theorique_repondants.xlsx")
+raw_data <- read_csv("data/in/[Fillout] EXCOM _ Enquête sur les effets du commerce de proximité results.csv")
+deleted_questions_fillout <- fromJSON(txt = "data/in/export_fillout_deleted_questions.json", flatten = TRUE)
+repartition_theorique <- read_excel("data/in/Repartition_theorique_repondants.xlsx")
   # identifiant des départements
 departements_dg <- read_csv("https://www.data.gouv.fr/fr/datasets/r/67432189-8426-42e6-9ddb-8d21631df9c5")
   # OFGL - données de population
@@ -95,7 +97,7 @@ communes_pop <- read_delim("https://data.ofgl.fr/api/explore/v2.1/catalog/datase
          population = `Population totale`) |> 
   select(cog_commune, nom_commune, population)
   # Datagouv - codes postaux : https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/
-codes_postaux_dg <- read_csv("data/codes_postaux_datagouv.csv") |>
+codes_postaux_dg <- read_csv("data/in/codes_postaux_datagouv.csv") |>
   select(-Ligne_5) |> distinct() |> 
   mutate(Code_commune_INSEE = ifelse(nchar(Code_commune_INSEE) == 4, paste0("0", Code_commune_INSEE), Code_commune_INSEE),
          Code_postal = ifelse(nchar(Code_postal) == 4, paste0("0", Code_postal), Code_postal)) |> 
@@ -122,55 +124,74 @@ Composée de près de 40 questions, l'enquête se divise en 6 sections reprenant
 - Environnement ;
 - Espace public.
 
-```{r}
-# Nom des colonnes
+
+
+```{r data preparation}
+# Traitement des réponses apparaissant dans les "deleted question" avant remaniement du questionnaire
+deleted_questions_fillout <- deleted_questions_fillout |> 
+    # filtre sur les réponses avant remaniement
+    filter(row_number() >= 29) |> 
+    # merge des colonnes "Deleted question" liées au remaniement questionnaire
+    mutate(`Quel est le nom de votre commerce ?` = coalesce(`Quel est le nom de votre commerce ?`,
+                                                            `Deleted question 16`),
+           `Êtes-vous indépendant ?` = coalesce(`Êtes-vous indépendant ?`,
+                                                `Deleted question 18`),
+           `Où vendez-vous vos produits / services ?` = coalesce(`Où vendez-vous vos produits / services ?`,
+                                                                 `Deleted question 12`),
+           `Pouvez-vous préciser, dans quel(s) lieu(x) intervenez-vous ?(Plusieurs réponses sont possibles)` = coalesce(`Pouvez-vous préciser, dans quel(s) lieu(x) intervenez-vous ?(Plusieurs réponses sont possibles)`,
+                                                                                                                        `Deleted question 29`),
+           `Quelle est l'adresse de votre commerce ?` = paste(`Deleted question 21.address`, `Deleted question 21.city`, `Deleted question 21.state`, `Deleted question 21.zipCode`, `Deleted question 21.country`),
+           `Dans quelle ville intervenez-vous le plus régulièrement ? (Renseigner le code postal)` = coalesce(`Dans quelle ville intervenez-vous le plus régulièrement ? (Renseigner le code postal)`, `Deleted question 32`),
+           `Dans quelle ville travaillez-vous le plus régulièrement ? (Renseigner le code postal)` = coalesce(`Dans quelle ville travaillez-vous le plus régulièrement ? (Renseigner le code postal)`, `Deleted question 25`),
+           `Quelle est la catégorie de votre commerce ?` = coalesce(`Quelle est la catégorie de votre commerce ? `,
+                                                                    `Deleted question 31`),
+           `Pouvez vous préciser ? (5)` = `Deleted question 11`, #alimentaire
+           `Pouvez vous préciser ? (6)` = `Deleted question 20`, #equipement de la personne
+           `Pouvez vous préciser ? (7)` = `Deleted question 23`, #equipement de la maison
+           `Pouvez vous préciser ? (9)` = `Deleted question 24`, #culture, loisirs
+           `Pouvez vous préciser ? (4)` = `Deleted question 28`, #hygiene, santé, beauté
+           `Pouvez vous préciser ? (1)` = `Deleted question 17`, #divers
+           `Pouvez vous préciser ?` = `Deleted question 26`, #services aux particuliers
+           #`Pouvez vous préciser ? (8)` = coalesce(`Pouvez vous préciser ? (8)`,
+                                                   #`Deleted question ()`), #commerces et services de véhicules automobiles
+           `Pouvez vous préciser ? (3)` = `Deleted question 22`, #autres services
+           `Pouvez vous préciser ? (2)` = `Deleted question 19`, #cafés, hotels, resto
+           `Que propose votre commerce ? (Plusieurs réponses sont possibles)` = coalesce(`Que propose votre commerce ? (Plusieurs réponses sont possibles)`,
+                                                                                         `Deleted question 13`),
+           `Travaillez-vous seul ?` = coalesce(`Travaillez-vous seul ?`,
+                                               `Deleted question 14`),
+           `Êtes-vous en contact direct avec des clients ?` = coalesce(`Êtes-vous en contact direct avec des clients ?`,
+                                                                       `Deleted question 15`),
+           `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)` = coalesce(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`,
+                                                                                                                                         `Deleted question 30`)) |> 
+    # On renomme les colonnes qui ont un nom différent de lui des données brutes pour que le bind_rows() fonctionne
+    rename("A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?" = "A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ? ",
+           "Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.).Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')" = "Dans certains cas, vous pouvez être susceptible d'organiser, à l'intérieur de votre magasin, des séances d'information, démonstrations ou ateliers (explications approfondies d'utilisation de vos produits, transmission de connaissances, etc.). Combien en organisez-vous par an ? (Si vous n'en organisez aucune, mettre '0')",
+           "Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes." = "Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.  ",
+           "De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?" = "De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ? ",
+           "Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?" = "Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ? ",
+           "Pouvez-vous préciser ? (6)" = "Pouvez-vous préciser ?", #entraide entre commerçants
+           "Pouvez-vous préciser ? (1)" = "Pouvez-vous préciser ? " #solutions pour réduire les déchets du commerce
+           ) |> 
+    # Sélection des colonnes comme dans les données brutes
+    select(any_of(names(raw_data))) |> 
+    # Transformation des listes en chaînes de caractères
+    mutate(across(where(is.list), ~ sapply(.x, function(y) paste(unlist(y), collapse = ", ")))) |> 
+    # Valeur manquante comme NA
+    mutate_all(as.character) |> 
+    mutate_all(na_if, "")
+
+# Nom des colonnes des données brutes
 noms_cols <- names(raw_data) |> as.data.frame()
 
-# Nettoyage / mise en qualité / création de nouvelles variables
+# Nettoyage / mise en qualité / création de nouvelles variables sur les données brutes
 data <- raw_data |> 
-    # merge des colonnes "Deleted question" après remaniement questionnaire
-  mutate(`Quel est le nom de votre commerce ?` = coalesce(`Quel est le nom de votre commerce ?`, 
-                                                          `Deleted question (b8Ary)`),
-         `Êtes-vous indépendant ?` = coalesce(`Êtes-vous indépendant ?`, 
-                                              `Deleted question (cHcLK)`),
-         `Où vendez-vous vos produits / services ?` = coalesce(`Où vendez-vous vos produits / services ?`, 
-                                                               `Deleted question (3A8pT)`),
-         `Pouvez-vous préciser, dans quel(s) lieu(x) intervenez-vous ?(Plusieurs réponses sont possibles)` = coalesce(`Pouvez-vous préciser, dans quel(s) lieu(x) intervenez-vous ?(Plusieurs réponses sont possibles)`, 
-                                                                                                                      `Deleted question (od4PG)`),
-         `Quelle est l'adresse de votre commerce ?` = coalesce(`Quelle est l'adresse de votre commerce ?`, 
-                                                               `Deleted question (h8Wcm)`),
-         `Dans quelle ville intervenez-vous le plus régulièrement ? (Renseigner le code postal)` = coalesce(`Dans quelle ville intervenez-vous le plus régulièrement ? (Renseigner le code postal)`, `Deleted question (vsd3y)`),
-         `Dans quelle ville travaillez-vous le plus régulièrement ? (Renseigner le code postal)` = coalesce(`Dans quelle ville travaillez-vous le plus régulièrement ? (Renseigner le code postal)`, `Deleted question (maw96)`),
-         `Quelle est la catégorie de votre commerce ?` = coalesce(`Quelle est la catégorie de votre commerce ?`, 
-                                                                  `Deleted question (sCgQH)`),
-         `Pouvez vous préciser ? (5)` = coalesce(`Pouvez vous préciser ? (5)`, 
-                                                 `Deleted question (154HD)`),
-         `Pouvez vous préciser ? (6)` = coalesce(`Pouvez vous préciser ? (6)`, 
-                                                 `Deleted question (fCAjR)`),
-         `Pouvez vous préciser ? (7)` = coalesce(`Pouvez vous préciser ? (7)`, 
-                                                 `Deleted question (jwX3U)`),
-         `Pouvez vous préciser ? (9)` = coalesce(`Pouvez vous préciser ? (9)`, 
-                                                 `Deleted question (mVDFV)`),
-         `Pouvez vous préciser ? (4)` = coalesce(`Pouvez vous préciser ? (4)`, 
-                                                 `Deleted question (oU2dg)`),
-         `Pouvez vous préciser ? (1)` = coalesce(`Pouvez vous préciser ? (1)`, 
-                                                 `Deleted question (bmLVA)`),
-         `Pouvez vous préciser ?` = coalesce(`Pouvez vous préciser ?`, 
-                                             `Deleted question (nwx3a)`),
-         #`Pouvez vous préciser ? (8)` = coalesce(`Pouvez vous préciser ? (8)`, 
-                                                 #`Deleted question ()`), #commerces et services de véhicules automobilies
-         `Pouvez vous préciser ? (3)` = coalesce(`Pouvez vous préciser ? (3)`, 
-                                                 `Deleted question (jUET5)`),
-         `Pouvez vous préciser ? (2)` = coalesce(`Pouvez vous préciser ? (2)`, 
-                                                 `Deleted question (ddK2v)`),
-         `Que propose votre commerce ? (Plusieurs réponses sont possibles)` = coalesce(`Que propose votre commerce ? (Plusieurs réponses sont possibles)`, 
-                                                                                       `Deleted question (3kHae)`),
-         `Travaillez-vous seul ?` = coalesce(`Travaillez-vous seul ?`, 
-                                             `Deleted question (8AAv4)`),
-         `Êtes-vous en contact direct avec des clients ?` = coalesce(`Êtes-vous en contact direct avec des clients ?`, 
-                                                                     `Deleted question (8cLRj)`),
-         `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)` = coalesce(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, 
-                                                                                                                                       `Deleted question (rhzE7)`)) |> 
+    # on garde les réponses après remaniement du questionnaire
+  filter(row_number() < nrow(raw_data) - 155,
+         `Submission ID` != "a9ad2701-7f5d-419b-98d7-37c414c87a94") |> # rep quasi toute vide liée au bug des questions avec le remaniement du questionnaire
+    # on merge avec les réponses avant remaniement du questionnaire
+  mutate_all(as.character) |> 
+  bind_rows(deleted_questions_fillout) |> 
     # Extraction code postal de l'adresse
   rowwise() |> 
   mutate(`Quelle est l'adresse de votre commerce ?` = ifelse(`Quelle est l'adresse de votre commerce ?` == "\n  \n", NA, `Quelle est l'adresse de votre commerce ?`),
@@ -182,9 +203,9 @@ data <- raw_data |>
          code_departement = substr(zip_code, 1, 2)) |> 
   left_join(departements_dg |> select(nom, COG, code_region), by = c("code_departement" = "COG")) |> 
   rename(nom_departement = nom) |> 
-  mutate(nom_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "41") ~ "Autres",
+  mutate(nom_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "93") ~ "Autres",
                                                  .default = nom_departement),
-         code_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "41") ~ "Autres",
+         code_departement_partenaires = case_when(!code_departement %in% c("75", "76", "13", "93") ~ "Autres",
                                                  .default = code_departement)) |> 
   ungroup() |> 
     # Nettoyage des variables 
@@ -219,17 +240,16 @@ data <- raw_data |>
   arrange(desc(population), .by = `Quel est le nom de votre commerce ?`) |> 
   mutate(adresse_lower = tolower(`Quelle est l'adresse de votre commerce ?`)) |> 
   slice(1, .by = c(`Quel est le nom de votre commerce ?`, adresse_lower)) |> #qd match avec plusieurs codes postaux, on garde seulement la ville avec la population la plus élevée
-  mutate(categorie_population = case_when(population < 1000 ~ "population faible",
-                                          population >= 1000 & population < 10000 ~ "population moyenne",
+  mutate(categorie_population = case_when(population < 10000 ~ "population moyenne",
                                           population >= 10000 & population < 100000 ~ "population élevée",
                                           population >= 100000 ~ "population très élevée",
                                           .default = NA_character_)) |> 
     # Retrait des réponses doublons
-  filter(`Submission ID` %in% c("3c752f81-c4be-47ef-a5fc-2e62792d0552", # INSTINC ´ TIF
-                                "2de002a5-e729-4b23-9093-4b49a4d3f8c9", # La trésorerie
-                                "d1b39abf-2bb3-4f3f-b72d-215302aca983", # Betjeman & Barton
-                                "a9ad2701-7f5d-419b-98d7-37c414c87a94") #rep quasi toute vide liée au bug des questions avec le remaniement du questionnaire
-         == FALSE)
+  filter(`Submission ID` != "01469ecf-0ff8-4973-8a21-5da18677cc07" | is.na(`Submission ID`)) |>  # Culinariob, doublon avec Culinarion
+  filter(`Quel est le nom de votre commerce ?` != "La Trésoerie" | is.na(`Quel est le nom de votre commerce ?`),
+         `Quel est le nom de votre commerce ?` != "Betjeman & Barton" | `Quelle est l'adresse de votre commerce ?` != "53 rue aux Juifs Rouen Normandie 76000 France",
+         `Quel est le nom de votre commerce ?` != "INSTINC ´ TIF" | !is.na(`Êtes-vous indépendant ?`),
+         `Quel est le nom de votre commerce ?` != "Atelier Brune" | !is.na(`Submission ID`))
 
 
 # Filtre sur l'Ile de France
@@ -237,7 +257,7 @@ idf <- data |>
   filter(code_region == "11") # ile de france
 rio::export(idf, "data/export_reponses_idf.csv")
 
-# Filtre sur PAris
+# Filtre sur Paris
 paris <- data |> 
   filter(Libelle_acheminement == "PARIS") |> 
   select(`Quel est le nom de votre commerce ?`, adresses, zip_code, Nom_de_la_commune)
@@ -286,6 +306,7 @@ repartition_reelle <- data |>
 
 # Affichage de la table
 repartition_reelle |> 
+  arrange(`Échantillon théorique de l’enquête`) |> 
   gt() |>
   gt_theme_nytimes() |> 
   tab_header(title = "Répartition des réponses à l'enquête par département") |>
@@ -298,21 +319,6 @@ repartition_reelle |>
 ```
 
 <br>
-
-### Départements "Autres"
-
-**Les départements "Autres" sont les suivants :**
-
-```{r}
-# Départements "Autres"
-table <- data |> 
-  filter(code_departement_partenaires == "Autres") |> 
-  summarise(`Nombre de réponses` = n(), .by = nom_departement) |> 
-  arrange(desc(`Nombre de réponses`)) |> 
-  rename(Département = nom_departement)
-# Affichage des données
-datatable(table, options = list(pageLength = 10))
-```
 
 ### Détail Métropole de Rouen
 
@@ -327,6 +333,40 @@ table <- data |>
 datatable(table)
 ```
 
+### Détail Paris
+
+**Au sein des arrondissements de Paris, les réponses se répartissent de la manière suivante :**
+
+```{r}
+table <- data |> 
+    filter(code_departement_partenaires == 75) |> 
+    summarise(`Nombre de réponses` = n(), .by = Nom_de_la_commune) |> 
+    arrange(Nom_de_la_commune) |> 
+    rename(Commune = Nom_de_la_commune)
+datatable(table)
+
+table <- data |> 
+    filter(code_departement_partenaires == 75) |> 
+    select(`Quel est le nom de votre commerce ?`, Nom_de_la_commune) |> 
+    summarise(Commerces = paste(`Quel est le nom de votre commerce ?`, collapse = ", "), .by = Nom_de_la_commune)
+```
+
+
+### Départements "Autres"
+
+**Les départements "Autres" sont les suivants :**
+
+```{r}
+# Départements "Autres"
+table <- data |> 
+  filter(code_departement_partenaires == "Autres") |> 
+  summarise(`Nombre de réponses` = n(), .by = nom_departement) |> 
+  arrange(desc(`Nombre de réponses`)) |> 
+  rename(Département = nom_departement) |> 
+  na.omit()
+# Affichage des données
+datatable(table, options = list(pageLength = 10))
+```
 
 ## Traitement des données
 
@@ -345,12 +385,11 @@ Quelques manipulations ont été faites sur les données en amont de leur analys
 - **Enrichissement de la population** :
   - jointure de codes postaux extraits des adresses avec les données externes datagouv [*Base officielle des codes postaux*](https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/) dans lesquelles apparaissent les données de population
   - gestion des communes multiples avec un même code postal : il a été décidé de garder la commune avec la population la plus élevée
-  - création d'une nouvelle variable de la catégorie de population avec 4 niveaux : faible, moyenne, élevée, très élevée.
+  - création d'une nouvelle variable de la catégorie de population avec 3 niveaux : moyenne, élevée, très élevée.
   
 Les tranches de population sont les suivantes :
 
-- '***population faible***' correspond aux villes dont la population est inférieure à 1.000 habitants, soit `r data |> filter(categorie_population == "population faible") |> nrow()` communes ;
-- '***population moyenne***' correspond aux villes dont la population est comprise entre 1.000 et 9.999 habitants, soit `r data |> filter(categorie_population == "population moyenne") |> nrow()` communes;
+- '***population moyenne***' correspond aux villes dont la population est inférieure à 10.000 habitants, soit `r data |> filter(categorie_population == "population moyenne") |> nrow()` communes;
 - '***population élevée***' correspond aux villes dont la population est comprise entre 10.000 et 99.999 habitants, soit `r data |> filter(categorie_population == "population élevée") |> nrow()` communes;
 - '***population très élevée***' correspond aux villes dont la population est supérieure ou égale à 100.000 habitants, soit `r data |> filter(categorie_population == "population très élevée") |> nrow()` communes.
 
@@ -896,23 +935,6 @@ graph_questions_freq(table, ref_discussions, "En Ile-de-France, les commerçants
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
-  filter(!is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#DEEBF7")
-```
-
-
 #### Population moyenne
 
 ```{r fig.height=7}
@@ -925,7 +947,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_discussions, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_discussions, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 3, "", "#9ECAE1")
 ```
 
@@ -1403,22 +1425,6 @@ graph_questions_freq(table, ref_explications_produits, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
-  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#DEEBF7")
-```
-
 
 #### Population moyenne
 
@@ -1432,7 +1438,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_explications_produits, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#9ECAE1")
 ```
 
@@ -1771,7 +1777,7 @@ table_collab_treemap |>
       geom_treemap_text(aes(area = n, fill = var, 
                             label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
       labs(title = "Collaborations des commerçants avec des \nassociations locales") +
       custom_theme() +
       theme(legend.position = "none")
@@ -1965,23 +1971,6 @@ graph_questions_freq(table, ref_sollicitations_precaires, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`) |> 
-  filter(!is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#DEEBF7")
-```
-
-
 #### Population moyenne
 
 ```{r fig.height=7}
@@ -1994,7 +1983,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_sollicitations_precaires, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#9ECAE1")
 ```
 
@@ -2447,21 +2436,6 @@ graph_questions_freq(table, ref_discussions_informelles, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) |> 
-  filter(!is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#DEEBF7")
-```
 
 
 #### Population moyenne
@@ -2476,7 +2450,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_discussions_informelles, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_discussions_informelles, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#9ECAE1")
 ```
 
@@ -2887,22 +2861,6 @@ graph_questions_freq(table, ref_redirections_aides_ext, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `A quelle fréquence cela vous arrive-t-il ?`) |> 
-  filter(!is.na(`A quelle fréquence cela vous arrive-t-il ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#DEEBF7")
-```
-
 
 #### Population moyenne
 
@@ -2916,7 +2874,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#9ECAE1")
 ```
 
@@ -3555,22 +3513,6 @@ graph_questions_freq2(table, ref_intervention_insecurite, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`) |> 
-  filter(!is.na(`A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_intervention_insecurite, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#DEEBF7")
-```
-
 
 #### Population moyenne
 
@@ -3584,7 +3526,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq2(table, ref_intervention_insecurite, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#9ECAE1")
 ```
 
@@ -4063,23 +4005,6 @@ graph_questions_freq2(table, ref_aide_personnes, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
-  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |> 
-  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
-        percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#DEEBF7")
-```
-
 
 #### Population moyenne
 
@@ -4094,7 +4019,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq2(table, ref_aide_personnes, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#9ECAE1")
 ```
 
@@ -4487,21 +4412,6 @@ graph_questions_freq2(table, ref_insecurite_citoyens, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
-  filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#DEEBF7")
-```
 
 
 #### Population moyenne
@@ -4516,7 +4426,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#9ECAE1")
 ```
 
@@ -4863,7 +4773,7 @@ table |>
       geom_treemap_text(aes(area = n, fill = Var, 
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A")) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A")) +
       labs(title = "Équipements installés à l'initiative des \ncommerçants pour réduire leur consommation \nd'eau et d'électricité") +
       custom_theme() +
       theme(legend.position = "none")
@@ -5051,7 +4961,9 @@ table |>
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
       scale_fill_manual(values = c("#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
-                                   "#3081bc", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+                                   "#3081bc", "#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
+                                   "#3081bc", "#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
+                                   "#3081bc")) +
       labs(title = "Solutions de recycalge ou récupération \nproposées par les commerçants") +
       custom_theme() +
       theme(legend.position = "none")
@@ -5117,7 +5029,7 @@ table |>
       geom_treemap_text(aes(area = n, fill = Var, 
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#9ecae1","#7A9BB1", "#3081bc")) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
       labs(title = "Actions mises en œuvre par les commerçants \npour réduire leurs déchêts") +
       custom_theme() +
       theme(legend.position = "none")
@@ -5226,7 +5138,7 @@ table_embellissement |>
       geom_treemap_text(aes(area = n, fill = Var, 
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#9ecae1","#7A9BB1", "#3081bc")) +
+      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
       labs(title = "Implication des commerçants dans les initiatives \nd'embellissement de la rue") +
       custom_theme() +
       theme(legend.position = "none")
@@ -5271,21 +5183,6 @@ graph_questions_freq(table, ref_interpellation_mairie, "Ile-de-France",
 ```
 
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
-  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#DEEBF7")
-```
 
 
 #### Population moyenne
@@ -5300,7 +5197,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_interpellation_mairie, "Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#9ECAE1")
 ```
 
@@ -5687,22 +5584,6 @@ graph_questions_freq(table, ref_nettoyage_abords,"En Ile-de-France, les commerç
                      "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "Très régulièrement (plusieurs fois par jour)", "#3182bd")
 ```
 
-#### Population faible
-
-```{r fig.height=7}
-# Données de la sous-population
-table <- data |>  
-  filter(categorie_population == "population faible") |> 
-  summarise(n = n(), .by = `Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`) |> 
-  filter(!is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |> 
-  mutate(percent = n/sum(n)*100) |> 
-  rename(Var = 1)
-
-# Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de moins de 1.000 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#DEEBF7")
-```
-
 #### Population moyenne
 
 ```{r fig.height=7}
@@ -5715,7 +5596,7 @@ table <- data |>
   rename(Var = 1)
 
 # Graphique
-graph_questions_freq(table, ref_nettoyage_abords,"Communes de 1.000 à 9.999 habitants", 
+graph_questions_freq(table, ref_nettoyage_abords,"Communes de moins de 10.000 habitants", 
                      "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 3, "", "#9ECAE1")
 ```
 
