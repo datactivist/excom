@@ -8,8 +8,8 @@ Pourtant, les effets du commerce sont encore mal identifiés, et les quelques tr
 Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
 Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundation, Datactivist._
 
-Le projet est composé de 3 phases : 
+### Le projet est composé de 3 phases : 
 
-1. Mise en visibilité : [livrable]([url](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p))
-2. Mise en données : livrable
-3. Mise en équivalence monétaire : livrable
+1. **Mise en visibilité** : [livrable](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p)
+2. **Mise en données** : livrable
+3. **Mise en équivalence monétaire** : livrable
