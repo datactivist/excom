@@ -251,17 +251,34 @@ data <- raw_data |>
          `Quel est le nom de votre commerce ?` != "INSTINC ´ TIF" | !is.na(`Êtes-vous indépendant ?`),
          `Quel est le nom de votre commerce ?` != "Atelier Brune" | !is.na(`Submission ID`))
 
+# Export des réponses anonymisées
+data_anonymes <- data |> 
+    arrange(`Quel est le nom de votre commerce ?`) |> 
+    select(-c(`Submission ID`:`Quel est le nom de votre commerce ?`, `Quelle est l'adresse de votre commerce ?`,
+              `Partagez-nous votre mail si vous souhaitez être informé des avancées du projet :`:`zip_code`,
+              `Pour finir, avez-vous une anecdote à nous raconter pour illustrer l'impact de votre commerce sur le quartier / lieux d'activité ?`,
+              `nom_departement_partenaires`:`aide_commercants`, `Libelle_acheminement`:`categorie_population`)) |> 
+    relocate(Nom_de_la_commune, zip_code_general, Code_commune_INSEE, nom_departement, code_departement, code_region, 
+             .before = `Êtes-vous indépendant ?`) |> 
+    rename(Commune = Nom_de_la_commune,
+           `Code postal` = zip_code_general,
+           `Code INSEE` = Code_commune_INSEE,
+           Departement = nom_departement,
+           `Code departement` = code_departement,
+           `Code region` = code_region)
+rio::export(data_anonymes, "data/out/reponses_enquete_anonymisees.csv")
+
 
 # Filtre sur l'Ile de France
 idf <- data |> 
   filter(code_region == "11") # ile de france
-rio::export(idf, "data/export_reponses_idf.csv")
+rio::export(idf, "data/out/export_reponses_idf.csv")
 
 # Filtre sur Paris
 paris <- data |> 
   filter(Libelle_acheminement == "PARIS") |> 
   select(`Quel est le nom de votre commerce ?`, adresses, zip_code, Nom_de_la_commune)
-rio::export(paris, "data/export_commerces_paris.csv")
+rio::export(paris, "data/out/export_commerces_paris.csv")
 
 
 # Nom des colonnes
@@ -280,7 +297,7 @@ Au `r format(Sys.time(), '%d %B %Y')`, `r aa` réponses uniques ont été récol
 
 
 
-```{r}
+```{r répartition échantillon}
 # Calcul de la répartition de notre échantillon
 repartition_reelle <- data |> 
   summarise(`Échantillon réel de l'enquête` = n(), .by = code_departement_partenaires) |> 
@@ -301,12 +318,10 @@ repartition_reelle <- data |>
          `Répartition de l'échantillon réel` = paste0(`Répartition de l'échantillon réel`, "%")) |> 
   mutate_at(vars(-`% de l'objectif de réponses atteint`), as.character) |> 
   mutate_at(vars(-`% de l'objectif de réponses atteint`), ~replace_na(., "")) |> 
-  rename(`Code département` = code_departement_partenaires) |> 
-  arrange(`Échantillon réel de l'enquête`)
+  rename(`Code département` = code_departement_partenaires)
 
 # Affichage de la table
 repartition_reelle |> 
-  arrange(`Échantillon théorique de l’enquête`) |> 
   gt() |>
   gt_theme_nytimes() |> 
   tab_header(title = "Répartition des réponses à l'enquête par département") |>
@@ -397,6 +412,8 @@ Les tranches de population sont les suivantes :
 
 # Aperçu des données
 
+<br>
+
 ```{r custom_theme}
 # Thème pour les graphs
 font <- "Open Sans"
@@ -427,9 +444,40 @@ custom_theme <- function(){
 }
 ```
 
-```{r}
+```{r carto geoloc, cache=TRUE}
 # Carto des réponses
+library(tidygeocoder)
+data_geoloc <- data |> 
+    select(zip_code) |> 
+    mutate(pays = "France") |> 
+    na.omit() |> 
+    geocode(postalcode = zip_code, country = pays, method = 'osm', lat = latitude , long = longitude)
 
+# Cartographie des répondants
+library(leaflet)
+library(htmltools)
+    # titre
+tag.map.title <- tags$style(HTML("
+  .leaflet-control.map-title { 
+    transform: translate(0%,-170%);
+    left: 7%;
+    text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+  }
+"))
+title <- tags$div(tag.map.title, HTML("Répartition géographique des commerces répondants"))
+    # carte
+leaflet(data_geoloc) |> 
+  addTiles() |> 
+  addControl(title, position = "topleft", className = "map-title") |> 
+  setView(lng = 3, lat = 47, zoom = 4.8) |> 
+  addMarkers(lng = data_geoloc$longitude, lat = data_geoloc$latitude, 
+             label = data_geoloc$n, clusterOptions = markerClusterOptions()) |> 
+  addProviderTiles(provider = "Esri.WorldGrayCanvas")
 ```
 
 <br>
@@ -458,7 +506,8 @@ ggplot(data) +
 table <- data |> 
   summarise(nb= n(), .by = `Êtes-vous indépendant ?`) |> na.omit() |> 
   mutate(Pourcentage = round(nb / sum(nb) * 100, 0)) |> 
-  mutate(ypos = cumsum(Pourcentage) - .9 * Pourcentage, .by = `Êtes-vous indépendant ?`)
+  arrange(desc(nb)) |> 
+  mutate(ypos = cumsum(nb) - .5 * nb)
 
 # Dataviz
 table |> 
@@ -475,12 +524,12 @@ table |>
             axis.ticks = element_blank(),
             axis.line = element_blank(),
             axis.text = element_blank(),
-            legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
+            legend.text = ggplot2::element_text(size = 18,color = "#222222"),
             text = element_text(family = "Montserrat", size = 12),
-            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
-            plot.caption = ggplot2::element_text(face = "italic", size = 18, 
-                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
-            plot.title.position = "plot", 
+            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"),
+            plot.caption = ggplot2::element_text(face = "italic", size = 18,
+                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)),
+            plot.title.position = "plot",
             plot.caption.position = "plot") +
       guides(fill = guide_legend(reverse = T, title = " ")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
@@ -493,8 +542,9 @@ table |>
 # Table
 table <- data |> 
   summarise(nb= n(), .by = `Êtes-vous en contact direct avec des clients ?`) |> na.omit() |> 
-  mutate(Pourcentage = round(nb / sum(nb) * 100, 0)) |> 
-  mutate(ypos = cumsum(Pourcentage) - .9 * Pourcentage, .by = `Êtes-vous en contact direct avec des clients ?`)
+  mutate(Pourcentage = round(nb / sum(nb) * 100, 1)) |> 
+  arrange(desc(nb)) |> 
+  mutate(ypos = cumsum(nb) - .9 * nb)
 
 # Dataviz
 table |> 
@@ -519,7 +569,7 @@ table |>
             plot.title.position = "plot", 
             plot.caption.position = "plot") +
       guides(fill = guide_legend(reverse = T, title = " ")) +
-      geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
+      geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,1), "%", sep="")), color = "#333333", size=5, check_overlap = T)
 ```
 
 
@@ -663,6 +713,7 @@ table <- data |>
   mutate(`Travaillez-vous seul ?` = substr(`Travaillez-vous seul ?`, 1, 3)) |> 
   summarise(nb= n(), .by = `Travaillez-vous seul ?`) |> na.omit() |> 
   mutate(Pourcentage = round(nb / sum(nb) * 100, 0)) |> 
+  arrange(nb) |> 
   mutate(ypos = cumsum(nb) - .5 * nb)
 
 # Dataviz
@@ -866,7 +917,7 @@ table |>
 
 ```{r fig.height=7}
 # Graphique factorisé
-graph_questions_freq <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_questions_freq <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -885,7 +936,7 @@ graph_questions_freq <- function(data, ref_data, title_name, subtitle_name, y_n,
              subtitle = stringr::str_wrap(subtitle_name, width = 55),
              caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
              title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
                    size = 5, fill = "white", label.size = NA) +
         theme_classic() +
         custom_theme() +
@@ -913,9 +964,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 12, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+12, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -930,8 +981,8 @@ table <- idf |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_discussions, "En Ile-de-France, les commerçants discutent moins de sujet privés avec leurs clients que les commerçants de l'ensemble du territoire", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "Très rarement (moins d'une fois par mois)", "#3182bd")
+graph_questions_freq(table, ref_discussions, "Ile-de-France", 
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "Régulièrement (3 à 5 fois par semaine)", "#3182bd")
 ```
 
 
@@ -948,7 +999,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 3, "", "#9ECAE1")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -964,7 +1015,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 2, "", "#3182BD")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182BD")
 ```
 
 
@@ -981,7 +1032,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -992,13 +1043,13 @@ graph_comparaison_pop <- function(data, subtitle_name){
   data |> 
     mutate(nb_reponses_freq = sum(n), .by = Var) |> 
     mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)")),
-           categorie_population = factor(categorie_population, levels = c("faible", "moyenne", "élevée", "très élevée"))) |> 
+           categorie_population = factor(categorie_population, levels = c("moyenne", "élevée", "très élevée"))) |> 
     ggplot() + 
     geom_bar(aes(y=percent_freq, x=Var, fill = categorie_population, group = categorie_population, alpha = Var != ""),
              position="stack", stat="identity", width=.6) +
     geom_text(aes(label = paste(nb_reponses_freq, ifelse(nb_reponses_freq <= 1, "réponse", "réponses")), x=Var, fill = categorie_population, group = categorie_population, y = 0.01), 
               hjust = 0, color = "white", fontface = "italic", size = 5) +
-    scale_fill_manual(values = c("faible" = "#DEEBF7", "moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
+    scale_fill_manual(values = c("moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
     scale_alpha_manual(values=c(1, .4)) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
@@ -1010,7 +1061,7 @@ graph_comparaison_pop <- function(data, subtitle_name){
     theme(legend.position = "top",
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
-    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 2, reverse = TRUE)) +
+    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 3, reverse = TRUE)) +
     coord_flip()
 }
 
@@ -1034,7 +1085,7 @@ graph_comparaison_pop(table, "Répartition des commerces selon leurs discussions
 
 ```{r}
 # Graphique factorisé
-graph_type_commerce_freq_agregee <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_type_commerce_freq_agregee <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -1053,7 +1104,7 @@ graph_type_commerce_freq_agregee <- function(data, ref_data, title_name, subtitl
              subtitle = stringr::str_wrap(subtitle_name, width = 55),
              caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
              title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
                    size = 5, fill = "white", label.size = NA) +
         theme_classic() +
         custom_theme() +
@@ -1090,9 +1141,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 15, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -1116,7 +1167,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -1138,7 +1189,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -1160,7 +1211,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -1182,7 +1233,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -1204,7 +1255,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -1226,7 +1277,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 
@@ -1247,7 +1298,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la vente et services de véhicules automobiles", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Café, hôtels, restaurants
@@ -1269,14 +1320,14 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 #### Comparaison
 
 ```{r fig.height=9, fig.width=12}
 # Graphique factorisé
-graph_type_commerce_comparaison <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_type_commerce_comparaison <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -1323,7 +1374,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
 ```
 
 
@@ -1402,9 +1453,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_explications_produits, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 15, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -1421,7 +1472,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_explications_produits, "Ile-de-France", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 
@@ -1439,7 +1490,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_explications_produits, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 3, "", "#9ECAE1")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients",  "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -1455,7 +1506,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_explications_produits, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 2, "", "#3182BD")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182BD")
 ```
 
 
@@ -1472,7 +1523,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_explications_produits, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 5, "", "#0C4C8A")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients","", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -1526,9 +1577,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 15, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -1552,7 +1603,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -1574,7 +1625,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -1596,7 +1647,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -1618,7 +1669,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -1640,7 +1691,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -1662,7 +1713,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 
@@ -1686,7 +1737,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 
@@ -1712,7 +1763,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd")
 ```
 
 
@@ -1790,7 +1841,8 @@ table_collab_treemap |>
 # Dataviz
 val2 |> 
   mutate(Pourcentage = round(n / sum(n) * 100, 0)) |> 
-  mutate(ypos = cumsum(Pourcentage) - .9 * Pourcentage, .by = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`) |> 
+  arrange(desc(n)) |> 
+  mutate(ypos = cumsum(n) - .5 * n) |> 
   ggplot(aes(x="", y=n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) +  
       geom_bar(stat="identity", width=1, color="white", size = 2) +
       coord_polar("y") +
@@ -1948,9 +2000,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_sollicitations_precaires, "Ensemble des commerces", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 10, "", "#3182bd") +
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -1967,7 +2019,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_sollicitations_precaires, "Ile-de-France", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 
@@ -1984,7 +2036,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_sollicitations_precaires, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité",  "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -2000,7 +2052,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 2, "", "#3182BD")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182BD")
 ```
 
 
@@ -2017,7 +2069,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_sollicitations_precaires, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -2072,9 +2124,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 15, "", "#3182bd") +
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -2098,7 +2150,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -2120,7 +2172,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -2142,7 +2194,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -2164,7 +2216,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -2186,7 +2238,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -2208,7 +2260,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 
@@ -2232,7 +2284,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 
@@ -2257,7 +2309,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 1, "", "#3182bd")
+                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
 ```
 
 
@@ -2413,9 +2465,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions_informelles, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 8, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+8, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -2432,7 +2484,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions_informelles, "Ile-de-France", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 
@@ -2451,7 +2503,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions_informelles, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#9ECAE1")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -2467,7 +2519,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions_informelles, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 2, "", "#3182BD")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182BD")
 ```
 
 
@@ -2484,7 +2536,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_discussions_informelles, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -2539,9 +2591,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 15, "", "#3182bd") +
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -2565,7 +2617,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -2587,7 +2639,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -2609,7 +2661,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -2631,7 +2683,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -2653,7 +2705,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -2675,7 +2727,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 
@@ -2699,7 +2751,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 
@@ -2724,7 +2776,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", 1, "", "#3182bd")
+                     "Répartition des commerces selon la fréquence de leurs discussions informelles avec des clients", "", "#3182bd")
 ```
 
 
@@ -2838,9 +2890,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_redirections_aides_ext, "Ensemble des commerces", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 10, "", "#3182bd") +
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -2857,7 +2909,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_redirections_aides_ext, "Ile-de-France", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 
@@ -2875,7 +2927,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures",  "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -2891,7 +2943,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 2, "", "#3182BD")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182BD")
 ```
 
 
@@ -2908,7 +2960,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -2962,9 +3014,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 15, "", "#3182bd") +
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -2988,7 +3040,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -3010,7 +3062,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -3032,7 +3084,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -3054,7 +3106,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -3076,7 +3128,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -3098,7 +3150,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 
@@ -3122,7 +3174,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 
@@ -3147,7 +3199,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", 1, "", "#3182bd")
+                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182bd")
 ```
 
 
@@ -3443,7 +3495,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces de s
 
 ```{r fig.height=7}
 # Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
-graph_questions_freq2 <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_questions_freq2 <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -3462,7 +3514,7 @@ graph_questions_freq2 <- function(data, ref_data, title_name, subtitle_name, y_n
              subtitle = stringr::str_wrap(subtitle_name, width = 55),
              caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
              title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
                    size = 5, fill = "white", label.size = NA) +
         theme_classic() +
         custom_theme() +
@@ -3490,9 +3542,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_intervention_insecurite, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 10, "", "#3182bd") +
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -3509,7 +3561,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_intervention_insecurite, "Ile-de-France", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -3527,7 +3579,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_intervention_insecurite, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -3543,7 +3595,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 2, "", "#3182BD")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182BD")
 ```
 
 
@@ -3560,7 +3612,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_intervention_insecurite, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -3613,7 +3665,7 @@ graph_comparaison_pop2(table, "Répartition des commerces selon leur interventio
 
 ```{r}
 # Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
-graph_type_commerce_freq_agregee2 <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_type_commerce_freq_agregee2 <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -3632,7 +3684,7 @@ graph_type_commerce_freq_agregee2 <- function(data, ref_data, title_name, subtit
              subtitle = stringr::str_wrap(subtitle_name, width = 55),
              caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
              title = stringr::str_wrap(title_name, width = 45)) +
-        geom_label(aes(x = Var, y = n+y_n, label = ifelse(is.na(ecart), NA, ecart)),
+        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
                    size = 5, fill = "white", label.size = NA) +
         theme_classic() +
         custom_theme() +
@@ -3669,9 +3721,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 15, "", "#3182bd") +
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -3695,7 +3747,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -3717,7 +3769,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -3739,7 +3791,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -3761,7 +3813,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -3783,7 +3835,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -3805,7 +3857,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -3829,7 +3881,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -3837,7 +3889,7 @@ graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Café, hôtels,
 
 ```{r fig.height=9, fig.width=12}
 # Nouvelle fonction pour le graph avec des fréquences différentes (plus rares)
-graph_type_commerce_comparaison2 <- function(data, ref_data, title_name, subtitle_name, y_n, valeur_ressortir, col_barres){
+graph_type_commerce_comparaison2 <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
     data |> 
         left_join(ref_data, by = "Var") |> 
         mutate(n_ref = percent_ref/100 * sum(n),
@@ -3884,7 +3936,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -3981,9 +4033,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_aide_personnes, "Ensemble des commerces", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 10, "", "#3182bd") +
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -4001,7 +4053,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_aide_personnes, "Ile-de-France", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 
@@ -4020,7 +4072,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_aide_personnes, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -4037,7 +4089,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_aide_personnes, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 2, "", "#3182BD")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182BD")
 ```
 
 
@@ -4055,7 +4107,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_aide_personnes, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -4110,9 +4162,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 15, "", "#3182bd") +
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -4136,7 +4188,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -4158,7 +4210,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -4180,7 +4232,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -4202,7 +4254,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -4224,7 +4276,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -4246,7 +4298,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 
@@ -4270,7 +4322,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 
@@ -4295,7 +4347,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", 1, "", "#3182bd")
+                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd")
 ```
 
 
@@ -4389,9 +4441,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_insecurite_citoyens, "Ensemble des commerces", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 10, "", "#3182bd") +
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -4408,7 +4460,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_insecurite_citoyens, "Ile-de-France", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -4427,7 +4479,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -4443,7 +4495,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 2, "", "#3182BD")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182BD")
 ```
 
 
@@ -4460,7 +4512,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq2(table, ref_insecurite_citoyens, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -4515,9 +4567,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 15, "", "#3182bd") +
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -4541,7 +4593,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -4563,7 +4615,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -4585,7 +4637,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -4607,7 +4659,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -4629,7 +4681,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -4651,7 +4703,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -4675,7 +4727,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 
@@ -4700,7 +4752,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", 1, "", "#3182bd")
+                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
 # ![](images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT>
@@ -4797,7 +4849,8 @@ DTM <- TermDocumentMatrix(corpus)
 mat <- as.matrix(DTM)
 f <- sort(rowSums(mat),decreasing=TRUE) 
 word_data <- data.frame(word = names(f),freq=f) |> 
-    mutate(word = str_replace(word, "led", "LED"))
+    mutate(word = str_replace(word, "led", "LED")) |> 
+    filter(row_number() <= 20)
 ```
 
 ```{r}
@@ -4852,7 +4905,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des choses propos
 
 **Question posée dans l'enquête :** "*Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ? (Plusieurs réponses sont possibles)*".
 
-```{r fig.height=7}
+```{r fig.height=9}
 # Données
 table <- data |> 
     mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
@@ -4867,10 +4920,10 @@ table |>
   ggplot() + 
     geom_bar(aes(y=n, x=Var),
              position="dodge", stat="identity", width=.6, fill = "#3182BD") +
-    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
          title = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 50)) +
-    geom_label(aes(x = Var, y = n+5, label = paste0(round(percent, 0), "%")),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
     custom_theme() +
@@ -5160,9 +5213,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_interpellation_mairie, "Ensemble des commerces", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 10, "", "#3182bd") +
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+10, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -5179,7 +5232,7 @@ table <- idf |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_interpellation_mairie, "Ile-de-France", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 
@@ -5198,7 +5251,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_interpellation_mairie, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#9ECAE1")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -5214,7 +5267,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_interpellation_mairie, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 2, "", "#3182BD")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182BD")
 ```
 
 
@@ -5231,7 +5284,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_interpellation_mairie, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 3, "", "#0C4C8A")
+                     "Répartition des commerces selon les interpellations des services de la mairie",  "", "#0C4C8A")
 ```
 
 #### Comparaison
@@ -5286,9 +5339,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 15, "", "#3182bd") +
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -5312,7 +5365,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -5334,7 +5387,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -5356,7 +5409,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -5378,7 +5431,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -5400,7 +5453,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -5422,7 +5475,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 
@@ -5446,7 +5499,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 
@@ -5471,7 +5524,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", 1, "", "#3182bd")
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd")
 ```
 
 
@@ -5563,9 +5616,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_questions_freq(table, ref_nettoyage_abords, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 15, "", "#3182bd") +
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs",  "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -5581,7 +5634,7 @@ table <- idf |>
 
 # Graphique
 graph_questions_freq(table, ref_nettoyage_abords,"En Ile-de-France, les commerçants nettoient proportionnellement plus régulièrement les abords de leur commerce que les commerçants de l'ensemble du territoire", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "Très régulièrement (plusieurs fois par jour)", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs",  "Très régulièrement (plusieurs fois par jour)", "#3182bd")
 ```
 
 #### Population moyenne
@@ -5597,7 +5650,7 @@ table <- data |>
 
 # Graphique
 graph_questions_freq(table, ref_nettoyage_abords,"Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 3, "", "#9ECAE1")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#9ECAE1")
 ```
 
 #### Population élevée
@@ -5613,7 +5666,7 @@ table <- data |>
 
 # Graphique
 graph_questions_freq(table, ref_nettoyage_abords,"Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#3182BD")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182BD")
 ```
 
 
@@ -5630,7 +5683,7 @@ table <- data |>
 
 # Graphique
 graph_questions_freq(table, ref_nettoyage_abords,"Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 2, "", "#0C4C8A")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#0C4C8A")
 ```
 
 
@@ -5687,9 +5740,9 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 15, "", "#3182bd") +
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd") +
     theme(plot.caption = element_blank()) +
-    geom_label(aes(x = Var, y = n+15, label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
 
@@ -5713,7 +5766,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces alimentaires", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 #### Equipement de la personne
@@ -5735,7 +5788,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la personne", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 #### Equipement de la maison
@@ -5757,7 +5810,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'equipement de la maison", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 #### Culture, loisirs
@@ -5779,7 +5832,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans la culture, les loisirs", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 #### Hygiène, santé, beauté
@@ -5801,7 +5854,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans l'hygiène, la santé, la beauté", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 #### Services aux particuliers
@@ -5823,7 +5876,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Commerces dans les services aux particuliers", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 
@@ -5847,7 +5900,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Café, hôtels, restaurants", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 
@@ -5872,7 +5925,7 @@ table <- data |>
 
 # On applique la fonction créée
 graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", 1, "", "#3182bd")
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
 ```
 
 ## <FONT COLOR="#FF5757">Préserver le patrimoine architectural</FONT>
@@ -5930,7 +5983,8 @@ table <- data |>
   mutate(Var = substr(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`, 1, 3)) |> 
   summarise(nb= n(), .by = Var) |> na.omit() |> 
   mutate(Pourcentage = round(nb / sum(nb) * 100, 0)) |> 
-  mutate(ypos = cumsum(Pourcentage) - .5 * Pourcentage, .by = Var)
+  arrange(nb) |> 
+  mutate(ypos = cumsum(nb) - .5 * nb)
 
 # Dataviz
 table |> 
@@ -5972,7 +6026,7 @@ table_patrimoine |>
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
          title = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 50)) +
-    geom_label(aes(x = Var, y = n+10, label = paste0(round(percent, 0), "%")),
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
     custom_theme() +
