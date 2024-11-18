@@ -245,7 +245,10 @@ data <- raw_data |>
                                           population >= 100000 ~ "population très élevée",
                                           .default = NA_character_)) |> 
     # Retrait des réponses doublons
-  filter(`Submission ID` != "01469ecf-0ff8-4973-8a21-5da18677cc07" | is.na(`Submission ID`)) |>  # Culinariob, doublon avec Culinarion
+  filter(`Submission ID` %in% c("01469ecf-0ff8-4973-8a21-5da18677cc07", # Culinariob, doublon avec Culinarion
+                                "88dba71d-21c4-4e5b-be95-1b474fb98769", # Well nest
+                                "782e8920-1a3f-4ea2-88d4-2dfd8c9083b2" # Iokko
+                                ) == FALSE | is.na(`Submission ID`)) |>  
   filter(`Quel est le nom de votre commerce ?` != "La Trésoerie" | is.na(`Quel est le nom de votre commerce ?`),
          `Quel est le nom de votre commerce ?` != "Betjeman & Barton" | `Quelle est l'adresse de votre commerce ?` != "53 rue aux Juifs Rouen Normandie 76000 France",
          `Quel est le nom de votre commerce ?` != "INSTINC ´ TIF" | !is.na(`Êtes-vous indépendant ?`),
@@ -276,9 +279,8 @@ rio::export(idf, "data/out/export_reponses_idf.csv")
 
 # Filtre sur Paris
 paris <- data |> 
-  filter(Libelle_acheminement == "PARIS") |> 
-  select(`Quel est le nom de votre commerce ?`, adresses, zip_code, Nom_de_la_commune)
-rio::export(paris, "data/out/export_commerces_paris.csv")
+  filter(Libelle_acheminement == "PARIS")
+rio::export(paris |> select(`Quel est le nom de votre commerce ?`, adresses, zip_code, Nom_de_la_commune), "data/out/export_commerces_paris.csv")
 
 
 # Nom des colonnes
@@ -363,7 +365,9 @@ datatable(table)
 table <- data |> 
     filter(code_departement_partenaires == 75) |> 
     select(`Quel est le nom de votre commerce ?`, Nom_de_la_commune) |> 
-    summarise(Commerces = paste(`Quel est le nom de votre commerce ?`, collapse = ", "), .by = Nom_de_la_commune)
+    summarise(Commerces = paste(`Quel est le nom de votre commerce ?`, collapse = ", "), .by = Nom_de_la_commune) |> 
+    arrange(Nom_de_la_commune)
+rio::export(table, "data/out/nom_commerces_repondants_paris.csv")
 ```
 
 
@@ -6036,4 +6040,244 @@ table_patrimoine |>
     guides(alpha = "none") +
     coord_flip()
 ```
+
+<br>
+
+# Portraits de territoire
+
+
+
+
+```{r carto indic, eval=FALSE, include=FALSE}
+# Affichage de la carte
+library(sf)
+library(geojsonR)
+library(httr)
+
+temp_file <- tempfile(fileext = ".geojson")
+GET("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-france-commune/exports/geojson?lang=fr&timezone=Europe%2FBerlin", write_disk(temp_file, overwrite = TRUE))
+communes_contours_geo <- st_read(temp_file, quiet = TRUE)
+
+
+test <- stat_commune |> 
+    left_join(communes_contours_geo |> 
+                  select(geometry, com_code) |> 
+                  mutate(com_code = as.character(com_code)), 
+              by = c("COG INSEE" = "com_code"))
+
+library(mapview)
+library(leafpop)
+test |> 
+    st_as_sf() |> 
+    mapview(zcol = "Catégorie",
+      layer.name = "Aide des personnes précaires",
+      legend = TRUE, 
+      basemaps.color.shuffle = FALSE, map.types = "CartoDB.Positron",
+      col.regions = c("Faible" = "#e3f2fd", "Moyen" = "#b5dbfb", 
+                      "Élevé" = "#1d82df", "Très élevé" = "#0d47a1"),
+      popup = popupTable(test, zcol = c("Commune")))
+```
+
+## Paris
+
+### Présentation générale
+
+
+En 2023, la commune de Paris compte près de [61.000 commerces et services commerciaux](https://presse.paris.fr/pages/20995), pour plus de [2.1 millions d'habitants](https://www.insee.fr/fr/statistiques/serie/001760155), soit environ 29 commerces pour 1.000 habitants.
+
+`r nrow(paris)` réponses ont été collectées à Paris, soit `r round(nrow(paris)/nrow(data)*100, 0)`% de l'échantillon des répondants à l'enquête.
+
+```{r fig.width=9}
+# Données répartition des commerces par arrondissement
+    # source : https://www.apur.org/dataviz/commerces-paris/
+ref_commerces_paris <- data.frame(arrondissement = c("Paris 01", 
+                                                     "Paris 02",
+                                                     "Paris 03",
+                                                     "Paris 04",
+                                                     "Paris 05",
+                                                     "Paris 06",
+                                                     "Paris 07",
+                                                     "Paris 08",
+                                                     "Paris 09",
+                                                     "Paris 10",
+                                                     "Paris 11",
+                                                     "Paris 12",
+                                                     "Paris 13",
+                                                     "Paris 14",
+                                                     "Paris 15",
+                                                     "Paris 16",
+                                                     "Paris 17",
+                                                     "Paris 18",
+                                                     "Paris 19",
+                                                     "Paris 20"),
+                                  nb_commerces = c(2229,
+                                                   1934,
+                                                   2082,
+                                                   1909,
+                                                   2385,
+                                                   2993,
+                                                   2090,
+                                                   3225,
+                                                   3625,
+                                                   3577,
+                                                   4674,
+                                                   3270,
+                                                   2560,
+                                                   2723,
+                                                   4581,
+                                                   3243,
+                                                   4537,
+                                                   4909,
+                                                   2286,
+                                                   2709)) |> 
+    mutate(percent_Paris = nb_commerces/sum(nb_commerces))
+
+
+
+# Table de comparaison avec les réponses à l'enquête
+table <- paris |> 
+    count(Nom_de_la_commune) |> 
+    mutate(percent_Echantillon = n/sum(n)) |> 
+    right_join(ref_commerces_paris |> mutate(arrondissement = toupper(arrondissement)), 
+               by = c("Nom_de_la_commune" = "arrondissement")) |> 
+    select(Nom_de_la_commune, percent_Echantillon, percent_Paris) |> 
+    pivot_longer(cols = -Nom_de_la_commune, names_to = "group", values_to = "percent", names_prefix = "percent_") |> 
+    mutate(Nom_de_la_commune = str_remove(Nom_de_la_commune, "PARIS "))
+
+# Graphique
+table |> 
+    ggplot(aes(x = Nom_de_la_commune, y = percent, group = group, fill = group), col = "white") +
+    geom_bar(position="dodge", stat="identity")+
+    scale_fill_manual(values = c("Paris" = "#9ECAE1", "Echantillon" = "#3182BD")) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,.35)) +
+    labs(title = str_wrap("Comparaison de la répartition des commerces répondants et des commerces existants par arrondissement", 
+                          width = 55),
+         x = "Arrondissement", y = "Pourcentage de commerces", fill = "") +
+    custom_theme() +
+    theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"))
+```
+
+
+
+```{r}
+ggplot() +
+  geom_bar(data = data,
+       aes(x = reorder(`Quelle est la catégorie de votre commerce ?`,`Quelle est la catégorie de votre commerce ?`,
+                     function(x)+length(x))),
+       fill = "grey") +
+  geom_bar(data = paris,
+       aes(x = `Quelle est la catégorie de votre commerce ?`),
+       fill = "#3182BD") +
+  labs(y = "Nombre de commerces",
+       title = str_wrap("Catégorie des commerces parisiens répondants, parmi l'ensemble des commerces répondants", width = 50)) +
+  coord_flip() +
+  theme_minimal() +
+  custom_theme() +
+  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+        panel.grid.major.y = ggplot2::element_blank(),
+        axis.title.y = element_blank())
+```
+
+```{r}
+# Données
+graphique_apercu_portrait <- function(variable, titre){
+    
+    table <- bind_rows(data |> 
+        filter(!is.na({{variable}})) |> 
+        mutate(`Travaillez-vous seul ?` = substr(`Travaillez-vous seul ?`, 1, 3)) |> 
+        count({{variable}}) |> 
+        mutate(percent = n/sum(n),
+               geo = "Échantillon global"),
+        paris |> 
+            filter(!is.na({{variable}})) |> 
+            mutate(`Travaillez-vous seul ?` = substr(`Travaillez-vous seul ?`, 1, 3)) |> 
+            count({{variable}}) |> 
+            mutate(percent = n/sum(n),
+                    geo = "Paris"))
+    
+    # Graphique
+    ggplot(table) +
+      aes(x = geo, y = percent, fill = {{variable}}) +
+      geom_bar(stat = "summary", fun = "sum") +
+      scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+      scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+      labs(title = str_wrap(titre, width = 50),
+           y = "Pourcentage des commerces") +
+      theme_minimal() +
+      custom_theme() +
+      theme(axis.title.x = element_blank())
+}
+graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
+                          titre = "Statut des commerces parisiens répondants, parmi l'ensemble des commerces répondants")
+```
+
+```{r}
+graphique_apercu_portrait(variable = `Êtes-vous en contact direct avec des clients ?`,
+                          titre = "Relation clientèle des commerces parisiens répondants, parmi l'ensemble des commerces répondants")
+```
+
+```{r}
+graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
+                          titre = "Modalité de travail des commerces parisiens répondants, parmi l'ensemble des commerces répondants")
+```
+
+### Les effets positifs du commerce
+
+```{r table indic}
+# Calcul de l'indicateur
+table <- paris |> 
+    filter(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") ==  FALSE) |> 
+    mutate(propose_qqchose = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, 0, 1)) |> 
+    select(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`,
+           propose_qqchose, Libelle_acheminement, Code_commune_INSEE)
+stat <- table |> 
+    count(propose_qqchose) |> 
+    mutate(percent = n / sum(n) * 100)
+stat_commune <- table |> 
+    group_by(Libelle_acheminement) |> 
+    count(propose_qqchose) |> 
+    mutate(percent = round(n / sum(n) * 100, 0),
+           nb_reponses = sum(n)) |> 
+    ungroup() |> 
+    filter(propose_qqchose == 1) |> 
+    mutate(Catégorie = case_when(percent <= 25 ~ "Faible",
+                                 percent > 25 & percent <= 50 ~ "Moyen",
+                                 percent > 50 & percent <= 75 ~ "Élevé",
+                                 percent > 75 ~ "Très élevé")) |> 
+    arrange(desc(nb_reponses)) |> 
+    select(Libelle_acheminement, nb_reponses, percent, Catégorie) |> 
+    rename(Commune = Libelle_acheminement,
+           `Nombre de réponses` = nb_reponses,
+           `%` = percent) |> 
+    na.omit()
+    # mutate(`COG INSEE` = case_when(Commune == "PARIS" ~ "75056",
+    #                                Commune == "LYON" ~ "69123",
+    #                                Commune == "MARSEILLE" ~ "13055",
+    #                                .default = `COG INSEE`))
+
+# Fonction pour colorer les catégories
+category_styles <- function(Catégorie) {
+  dplyr::case_when(
+    Catégorie == "Faible" ~ list(background = "#e3f2fd", color = "black"),
+    Catégorie == "Moyen" ~ list(background = "#b5dbfb", color = "black"),
+    Catégorie == "Élevé" ~ list(background = "#1d82df", color = "white"),
+    Catégorie == "Très élevé" ~ list(background = "#0d47a1", color = "white"),
+    Catégorie == "NA" ~ list(background = "#CCCCCC", color = "black"),
+    TRUE ~ list(background = NA, color = NA)
+  )
+}
+
+# Affichage de la table
+stat_commune |> 
+    reactable(columns = list(Catégorie = colDef(style = function(value){category_styles(value)}),
+                             `%` = colDef(align = "center")),
+              defaultPageSize = 10)
+```
+
+
+## Saint Ouen
+
+## Rouen
+
+
 
