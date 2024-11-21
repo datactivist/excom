@@ -772,13 +772,6 @@ data |>
 
 # ![](images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT>
 
-
-## <FONT COLOR="#B4B1B1">Socialiser & réduire l'isolement</FONT>
-
-
-
-### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
-
 ```{r out.width = '80%'}
 # Fonction pour les inforgraphies
 infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, valeur3, texte3, icone3){
@@ -818,6 +811,46 @@ infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, 
         guides(fill = FALSE)
 }
 
+# Données
+    # boxe 1
+        #pre-run stats 
+table <- data |> 
+    select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
+    mutate(cat = case_when(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)` == "Je n'ai pas l'habitude de collaborer avec des associations" ~ 0,
+                           .default = str_count(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`, "Oui")))
+val1 <- table |> 
+    count(cat) |> 
+    filter(cat != 0) |> 
+    summarise(somme = sum(n))
+    # boxe 2
+val2 <- data |>  
+  summarise(n = n(), .by = `À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`) |> 
+  filter(!is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1) |> 
+  filter(Var == "Très régulièrement (plusieurs fois par jour)")
+    # boxe 3
+val3 <- paste0(round((1 - ((data |> 
+    count(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`) |> 
+    na.omit() |> 
+    rename(Var = 1) |> 
+    mutate(percent = n/sum(n)) |> 
+    filter(Var == "Jamais") |> 
+    select(percent))$percent)) * 100, 0), "%")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$somme / nrow(data) * 100, 0), "%"), "des commerces collaborent avec des associations locales", 'fa-handshake-o',
+                  paste0(round(val2$percent, 0), "%"), "des commerces donnent plusieurs fois par jour des explications approfondies sur leurs produits à leurs clients", 'fa-comment',
+                  val3, "des commerces ont des discussiones privées avec leurs clients", 'fa-comments')
+```
+
+## <FONT COLOR="#B4B1B1">Socialiser & réduire l'isolement</FONT>
+
+
+
+### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
+
+```{r out.width = '80%'}
 # Données
     # boxe 1
         #pre-run stats 
@@ -1039,11 +1072,11 @@ graph_questions_freq(table, ref_discussions, "Communes de 100.000 habitants et p
                      "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#0C4C8A")
 ```
 
-#### Comparaison
+#### Comparaison 
 
 ```{r fig.height=7, fig.width=8}
 # Graphique factorisé
-graph_comparaison_pop <- function(data, subtitle_name){
+graph_comparaison_pop <- function(data, title_name, subtitle_name){
   data |> 
     mutate(nb_reponses_freq = sum(n), .by = Var) |> 
     mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)")),
@@ -1059,7 +1092,7 @@ graph_comparaison_pop <- function(data, subtitle_name){
     scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
     labs(x = "", y = "Pourcentage des commerces", linetype = "",
          subtitle = stringr::str_wrap(subtitle_name, width = 55),
-         title = stringr::str_wrap("Comparaison des communes selon leur population", width = 50)) +
+         title = stringr::str_wrap(title_name, width = 50)) +
     theme_classic() +
     custom_theme() +
     theme(legend.position = "top",
@@ -1079,7 +1112,57 @@ table <- data |>
   mutate(percent_freq = n/sum(n), .by = Var) 
 
 # On applique la fonction créée
-graph_comparaison_pop(table, "Répartition des commerces selon leurs discussions privées avec des clients")
+graph_comparaison_pop(data = table, 
+                      title_name = "d",
+                      subtitle_name = "Répartition des commerces selon leurs discussions privées avec des clients")
+```
+
+```{r}
+# Graphique factorisé
+graph_comparaison_pop_3frequences <- function(data, title_name, subtitle_name){
+  data |> 
+    mutate(nb_reponses_freq = sum(n), .by = Var) |> 
+    mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", "1 fois par semaine et plus")),
+           categorie_population = factor(categorie_population, levels = c("moyenne", "élevée", "très élevée"))) |> 
+    ggplot() + 
+    geom_bar(aes(y=percent_freq, x=Var, fill = categorie_population, group = categorie_population, alpha = Var != ""),
+             position="stack", stat="identity", width=.6) +
+    geom_text(aes(label = paste(nb_reponses_freq, ifelse(nb_reponses_freq <= 1, "réponse", "réponses")), x=Var, fill = categorie_population, group = categorie_population, y = 0.01), 
+              hjust = 0, color = "white", fontface = "italic", size = 5) +
+    scale_fill_manual(values = c("moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap(subtitle_name, width = 55),
+         title = stringr::str_wrap(title_name, width = 50)) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 1, reverse = TRUE)) +
+    coord_flip()
+}
+
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population "),
+         Var = str_replace_all(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, 
+                                 c("Je ne sais pas" = NA_character_, 
+                                   "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = c(Var, categorie_population)) |> 
+  na.omit() |>
+  mutate(percent_freq = n/sum(n), .by = Var) 
+
+# On applique la fonction créée
+graph_comparaison_pop_3frequences(data = table, 
+                                  title_name = "Les villes moyennes sont plus propices aux discussions privées des commerçants avec leurs clients",
+                                  subtitle_name = "Répartition des commerces selon leurs discussions privées avec des clients")
 ```
 
 ### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
@@ -1144,8 +1227,8 @@ table <- data |>
   mutate(percent = n/sum(n)*100)
 
 # On applique la fonction créée
-graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd") +
+graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, "Près de 7 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus", 
+                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "1 fois par semaine et plus", "#3182bd") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
@@ -1456,8 +1539,8 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Ensemble des commerces", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "", "#3182bd") +
+graph_questions_freq(table, ref_explications_produits, "Expliquer et détailler ses produits est le quotidien de plus de 7 commerçants sur 10", 
+                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "Très régulièrement (plusieurs fois par jour)", "#3182bd") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
@@ -1786,6 +1869,7 @@ table_collab <- data |>
     mutate(var = str_replace_all(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`, "Oui, ", "Oui ")) |> 
     mutate(var = strsplit(as.character(var), ",")) |> 
     unnest(var) |> 
+    mutate(var = str_squish(var)) |> #retire les espaces en début et fin de string
     count(var) #vérifier que ce sont les asso de quartier en tête
 val1 <- data |> 
     select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
@@ -1825,17 +1909,51 @@ table_collab_treemap <- table_collab |>
     mutate(var = str_replace_all(var, c("Je n'ai pas l'habitude de collaborer avec des associations" = "Aucune",
                                         "Oui avec des a" = "A",
                                         "Oui avec de a" = "A")))
+
+# Stats pour annotation
+percent_collab_quartier <- table_collab_treemap |> 
+    filter(var != "Aucune") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(var == "Associations de quartier")
+
 # Treemap
+library(ggtext)
 table_collab_treemap |> 
-  ggplot() +
-      geom_treemap(aes(area = n, fill = var), col = "white", size = 4) +
-      geom_treemap_text(aes(area = n, fill = var, 
-                            label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
-                        colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
-      labs(title = "Collaborations des commerçants avec des \nassociations locales") +
-      custom_theme() +
-      theme(legend.position = "none")
+    mutate(var = fct_reorder(var, n)) |> 
+    ggplot( aes(x=var, y=n)) +
+    geom_segment(aes(xend=var, yend=0), 
+                 color=ifelse(table_collab_treemap$var == "Associations de quartier", "#3182BD", "grey"), 
+                 size=ifelse(table_collab_treemap$var == "Associations de quartier", 1.3, 0.7)) +
+    geom_point(color=ifelse(table_collab_treemap$var == "Associations de quartier", "#3182BD", "grey"), 
+               size=ifelse(table_collab_treemap$var == "Associations de quartier", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent", #str_wrap() ne marche plus avec le element_markdown()
+         subtitle = "Collaborations des commerçants avec des associations \nlocales",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+             x = grep("Associations de quartier", table_collab_treemap$var),
+             y = table_collab_treemap$n[which(table_collab_treemap$var=="Associations de quartier")]*1.1,
+             label = paste0(round(percent_collab_quartier$percent, 0), "% des collaborations \nse font avec des \nassociations de quartier"),
+             color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
+
+# table_collab_treemap |> 
+#   ggplot() +
+#       geom_treemap(aes(area = n, fill = var), col = "white", size = 4) +
+#       geom_treemap_text(aes(area = n, fill = var, 
+#                             label = paste0(str_wrap(var, width = 30), "\n(", n, " commerces)")),
+#                         colour = "white", place = "centre", size = 15, grow = TRUE) +
+#       scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
+#       labs(title = "Collaborations des commerçants avec des \nassociations locales") +
+#       custom_theme() +
+#       theme(legend.position = "none")
 ```
 
 
@@ -1851,7 +1969,8 @@ val2 |>
       geom_bar(stat="identity", width=1, color="white", size = 2) +
       coord_polar("y") +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-      labs(title = str_wrap("Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent", width = 35)) +
+      labs(title = str_wrap("Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent", width = 35),
+           subtitle = paste(data |> filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) |> nrow(), "réponses de commerçants")) +
       theme_classic() + 
       theme(legend.position = "top",
             strip.text.x = element_text(size = 12, face = "bold"),
@@ -6224,15 +6343,16 @@ graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
 ### Les effets positifs du commerce
 
 ```{r table indic}
-# Calcul de l'indicateur
-table <- paris |> 
+# Calcul de l'indicateur : aider les personnes précaires
+    # Sélection des données
+table <- data |> 
     filter(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") ==  FALSE) |> 
     mutate(propose_qqchose = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, 0, 1)) |> 
-    select(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`,
-           propose_qqchose, Libelle_acheminement, Code_commune_INSEE)
-stat <- table |> 
-    count(propose_qqchose) |> 
-    mutate(percent = n / sum(n) * 100)
+    select(`Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`, propose_qqchose, Libelle_acheminement)
+# stat <- table |> 
+#     count(propose_qqchose) |> 
+#     mutate(percent = n / sum(n) * 100)
+    # Calcul de l'indicateur
 stat_commune <- table |> 
     group_by(Libelle_acheminement) |> 
     count(propose_qqchose) |> 
@@ -6240,20 +6360,50 @@ stat_commune <- table |>
            nb_reponses = sum(n)) |> 
     ungroup() |> 
     filter(propose_qqchose == 1) |> 
-    mutate(Catégorie = case_when(percent <= 25 ~ "Faible",
-                                 percent > 25 & percent <= 50 ~ "Moyen",
-                                 percent > 50 & percent <= 75 ~ "Élevé",
-                                 percent > 75 ~ "Très élevé")) |> 
+    mutate(Catégorie = case_when(percent <= quantile(percent, 0.25, na.rm = TRUE) ~ "Faible",
+                                 percent > quantile(percent, 0.25, na.rm = TRUE) & percent <= median(percent, na.rm = T) ~ "Moyen",
+                                 percent > median(percent, na.rm = T) & percent <= quantile(percent, 0.75, na.rm = TRUE) ~ "Élevé",
+                                 percent > quantile(percent, 0.75, na.rm = TRUE) ~ "Très élevé")) |> 
     arrange(desc(nb_reponses)) |> 
-    select(Libelle_acheminement, nb_reponses, percent, Catégorie) |> 
-    rename(Commune = Libelle_acheminement,
-           `Nombre de réponses` = nb_reponses,
+    filter(Libelle_acheminement == "PARIS") |> 
+    select(nb_reponses, percent, Catégorie) |> 
+    rename(`Nombre de réponses` = nb_reponses,
            `%` = percent) |> 
-    na.omit()
+    na.omit() |> 
+    mutate(Externalité = "Solidarités",
+           Indicateur = "% des commerces sollicités par des personnes précaires proposant une aide", .before = `Nombre de réponses`)
     # mutate(`COG INSEE` = case_when(Commune == "PARIS" ~ "75056",
     #                                Commune == "LYON" ~ "69123",
     #                                Commune == "MARSEILLE" ~ "13055",
     #                                .default = `COG INSEE`))
+
+# # Calcul de l'indicateur : Prendre soin des gens
+#     # Sélection des données
+# table <- data |> 
+#     filter(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` %in% c("Jamais", "Je ne sais pas") ==  FALSE) |> 
+#     mutate(propose_qqchose = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`) == TRUE, 0, 1)) |> 
+#     select(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`, propose_qqchose, Libelle_acheminement)
+#     # Calcul de l'indicateur
+# stat_commune <- table |> 
+#     group_by(Libelle_acheminement) |> 
+#     count(propose_qqchose) |> 
+#     mutate(percent = round(n / sum(n) * 100, 0),
+#            nb_reponses = sum(n)) |> 
+#     ungroup() |> 
+#     filter(propose_qqchose == 1) |> 
+#     mutate(Catégorie = case_when(percent <= quantile(percent, 0.25, na.rm = TRUE) ~ "Faible",
+#                                  percent > quantile(percent, 0.25, na.rm = TRUE) & percent <= median(percent, na.rm = T) ~ "Moyen",
+#                                  percent > median(percent, na.rm = T) & percent <= quantile(percent, 0.75, na.rm = TRUE) ~ "Élevé",
+#                                  percent > quantile(percent, 0.75, na.rm = TRUE) ~ "Très élevé")) |> 
+#     arrange(desc(nb_reponses)) |> 
+#     filter(Libelle_acheminement == "PARIS") |> 
+#     select(nb_reponses, percent, Catégorie) |> 
+#     rename(`Nombre de réponses` = nb_reponses,
+#            `%` = percent) |> 
+#     na.omit() |> 
+#     mutate(Externalité = "Solidarités",
+#            Indicateur = "% des commerces sollicités par des personnes précaires proposant une aide", .before = `Nombre de réponses`)
+
 
 # Fonction pour colorer les catégories
 category_styles <- function(Catégorie) {
