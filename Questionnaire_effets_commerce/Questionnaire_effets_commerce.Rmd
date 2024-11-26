@@ -3734,6 +3734,41 @@ data |>
 
 # ![](images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT>
 
+```{r out.width='80%'}
+# Données
+    # boxe 1
+table <- data |>  
+        summarise(n = n(), .by = `L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`) |> 
+        filter(!is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |> 
+        mutate(percent = n/sum(n)*100) |> 
+        rename(Var = 1)
+val1 <- table |> 
+        filter(Var %in% c("Jamais", "Je ne sais pas") == FALSE) |> 
+        summarise(percent=sum(percent))
+    # boxe 2
+table <- data |>  
+  summarise(n = n(), .by = `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`) |> 
+  filter(!is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+         `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` != "Je ne sais pas") |> 
+  mutate(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Très rarement (moins d'une fois par an) ", "Très rarement (moins d'une fois par an)", `Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`),
+        percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+val2 <- table |> 
+  filter(Var %in% c("Jamais", "Je ne sais pas") == FALSE) |> 
+  summarise(percent=sum(percent))
+    # boxe 3
+table <- data |> 
+    count(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`) |> 
+    na.omit() |> 
+    rename(Var = 1)
+val3 <- table |> 
+    filter(Var == "J'agis dès que je vois quelque chose d'inhabituel. J'interviens directement ou j'appelle les forces de l'ordre")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants ont affaire à des citoyens en insécurité qui se réfugient dans leur commerce", 'fa-shield',
+                  paste0(round(val2$percent, 0), "%"), "des commerces témoins d’un malaise ou d’un accident interviennent ", 'fa-users',
+                  paste0(round(val3$n / sum(table$n) * 100, 0), "%"), "des commerçants agissent immédiatemment lorsqu'ils sont témoins d'une situation d'insécurité", 'fa-shield')
+```
 
 
 ## <FONT COLOR="#00A589">Intervenir en cas d'insécurité</FONT>
@@ -3850,8 +3885,8 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_intervention_insecurite, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "", "#3182bd") +
+graph_questions_freq2(table, ref_intervention_insecurite, "Près de 2 commerçants sur 10 qui interviennent en cas d'insécurité le font au moins tous les mois", 
+                     "Répartition des commerces selon leur intervention dans des situations d'insécurité", "Ponctuellement (1 à 2 fois par mois)", "#3182bd") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
@@ -4341,8 +4376,17 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_aide_personnes, "Ensemble des commerces", 
+table |> 
+    mutate(a_surligner = case_when(Var %in% c("Très régulièrement (plusieurs fois par semaine)", 
+                                              "Régulièrement (3 à 5 fois par mois)", 
+                                              "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
+                                   .default = "0")) |> 
+    graph_questions_freq2(ref_aide_personnes, "Près de 2 commerçants sur 10 aident en cas de malaise ou accident au moins une fois par mois", 
                      "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd") +
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
+    guides(fill = "none") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
@@ -4721,7 +4765,7 @@ val3 <- table |>
     
 # Application de la fonction
 infographie_graph(round(val1$ratio, 1), paste("Les commerces dans l'équipement de la maison ont", round(val1$ratio, 1), "fois plus affaire à des situations où des citoyens en insécurité se réfugient dans leur commerce que l'ensemble des commerces"), 'fa-cutlery',
-                  paste0(round(val2$percent, 0), "%"), paste0("des commerçants ont affaire au moins une fois par mois à des situations où des citoyens en insécurité se réfugient dans leur commerce"), 'fa-calendar',
+                  paste0(round(val2$percent, 0), "%"), "des commerçants ont affaire au moins une fois par mois à des situations où des citoyens en insécurité se réfugient dans leur commerce", 'fa-calendar',
                   paste0(round(val3$percent, 0), "%"), "des commerçants ont affaire à des situations où des citoyens en insécurité se réfugient dans leur commerce", 'fa-shield')
 ```
 
@@ -4749,8 +4793,17 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq2(table, ref_insecurite_citoyens, "Ensemble des commerces", 
+table |> 
+    mutate(a_surligner = case_when(Var %in% c("Très régulièrement (plusieurs fois par semaine)", 
+                                              "Régulièrement (3 à 5 fois par mois)", 
+                                              "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
+                                   .default = "0")) |> 
+    graph_questions_freq2(ref_insecurite_citoyens, "Plus d'un commerçant sur 10 est confronté à l'insécurité au moins chaque mois", 
                      "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd") +
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
+    guides(fill = "none") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
@@ -5066,6 +5119,61 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 # ![](images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT>
 
+```{r out.width = '80%'}
+# Données
+    # boxe 1
+table <- data |> 
+    mutate(Var = str_replace_all(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`, 
+                                 c("Mise à disposition d'emballages réutilisables : sacs en tissu, pots en verre, etc" = "Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc",  
+                                   "Utilisation de contenants durables : en verre, inox ou bois" = "Utilisation de contenants durables : en verre inox ou bois",
+                                   "Je recycle les déchets engendrés par la fabrication de mes produits. \\(exemples : recycler la cire d'abeille en la transformant en bougie ou bee wrap, recycler le pain en chapelure, réutiliser des chutes de vêtements\\)" = "Recyclage des déchets engendrés par la fabrication de mes produits"))) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc" = "Mise à disposition d'emballages réutilisables",
+                                        "Utilisation de contenants durables : en verre inox ou bois" = "Utilisation de contenants durables",
+                                        "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100)
+val1 <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
+    summarise(percent = sum(percent)) 
+    # boxe 2
+val2 <- data |> 
+    mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "J'ai parfois des discussions informelles sur le sujet")
+    # boxe 3
+table <- data |> 
+    mutate(Var = str_replace_all(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`, c("Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence, multiprises avec timer\\)" = "Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence multiprises avec timer\\)",  "Low tech \\(technologies ou machines simples à basse consommation\\) pour fabriquer mes produits \\(exemples : saponification à froid, feu de bois, marmite norvégienne\\)" = "Low tech\\(technologies ou machines simples à basse consommation\\) pour fabriquer les produits \\(exemples : saponification à froid feu de bois marmite norvégienne\\)"))) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_remove(Var, "\\([^)]*\\)"),
+           Var = str_remove(Var, "\\([^)]*\\)"),
+           Var = str_replace_all(Var, c("La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+                                    "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var)
+val3 <- table |> 
+    filter(Var != "Non concerné") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "Equipements visant à réduire la consommation d'électricité" |
+           Var == "Equipements économes en eau")
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
+                  paste0(round(val2$percent, 0), "%"), "des commerçants ont des discussions informelles avec leurs clients sur le sujet de l'environnement", 'fa-comments',
+                  paste0(round(sum(val3$percent), 0), "%"), "des commerces concernés ont mis en place une initiative pour réduire leur consommation d’eau et/ou d’électricité", 'fa-pie-chart')
+```
+
+
 ## <FONT COLOR="#E1B441">Réduire la consommation d'eau / d'éléctricité</FONT>
 
 ### <FONT COLOR="#E1B441">Chiffres clés</FONT>
@@ -5083,6 +5191,7 @@ table <- data |>
            Var = str_replace_all(Var, c("La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
                                     "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
     select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var)
         #valeur boxe
 val1 <- table |> 
@@ -5117,34 +5226,71 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des installations 
 ```{r}
 # Données
 table <- data |> 
-    mutate(Var = str_replace_all(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`, c("Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence, multiprises avec timer\\)" = "Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence multiprises avec timer\\)",  "Low tech \\(technologies ou machines simples à basse consommation\\) pour fabriquer mes produits \\(exemples : saponification à froid, feu de bois, marmite norvégienne\\)" = "Low tech\\(technologies ou machines simples à basse consommation\\) pour fabriquer les produits \\(exemples : saponification à froid feu de bois marmite norvégienne\\)"))) |> 
-    mutate(Var = str_split(Var, ",")) |> 
-    unnest(Var) |> 
-    mutate(Var = str_remove(Var, "\\([^)]*\\)"),
-           Var = str_remove(Var, "\\([^)]*\\)"),
-           Var = str_replace_all(Var, c("La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+    mutate(var = str_replace_all(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`, c("Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence, multiprises avec timer\\)" = "Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence multiprises avec timer\\)",  "Low tech \\(technologies ou machines simples à basse consommation\\) pour fabriquer mes produits \\(exemples : saponification à froid, feu de bois, marmite norvégienne\\)" = "Low tech\\(technologies ou machines simples à basse consommation\\) pour fabriquer les produits \\(exemples : saponification à froid feu de bois marmite norvégienne\\)"))) |> 
+    mutate(var = str_split(var, ",")) |> 
+    unnest(var) |> 
+    mutate(var = str_remove(var, "\\([^)]*\\)"),
+           var = str_remove(var, "\\([^)]*\\)"),
+           var = str_replace_all(var, c("La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre / pas une priorité",
                                     "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
-    select(Var) |> 
-    count(Var)
+    select(var) |> 
+    mutate(var = str_squish(var)) |> 
+    count(var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    arrange(n)
 
-# Graphique
+# Stats pour annotation
+percent_reduc_conso <- table |> 
+    filter(var != "Non concerné",
+           var != "Compliqué à mettre en oeuvre / pas une priorité") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(var == "Equipements visant à réduire la consommation d'électricité")
+
+# Lolipop chart
 table |> 
-  ggplot() +
-      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
-      geom_treemap_text(aes(area = n, fill = Var, 
-                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
-                        colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#0C4C8A")) +
-      labs(title = "Équipements installés à l'initiative des \ncommerçants pour réduire leur consommation \nd'eau et d'électricité") +
-      custom_theme() +
-      theme(legend.position = "none")
+    mutate(var = fct_reorder(var, n)) |> 
+    ggplot( aes(x=var, y=n)) +
+    geom_segment(aes(xend=var, yend=0), 
+                 color=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", "#3182BD", "grey"), 
+                 size=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", 1.3, 0.7)) +
+    geom_point(color=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", "#3182BD", "grey"), 
+               size=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants",
+         subtitle = "Équipements installés à l'initiative des commerçants \npour réduire leur consommation d'eau et d'électricité",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 250)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+             x = 6.2,
+             y = table$n[which(table$var=="Equipements visant à réduire la consommation d'électricité")]*1.1,
+             label = paste0(round(percent_reduc_conso$percent, 0), "% des équipements \ninstallés sont axés \nsur l'électricité"),
+             color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
+
 
 ```{r include=FALSE}
 # Data
 data_wordcloud <- data |> 
   mutate(`Pouvez-vous préciser ? (3)` = str_replace_all(`Pouvez-vous préciser ? (3)`, ",", " ")) |> 
-  glimpse()
+  select(`Pouvez-vous préciser ? (3)`) |> 
+  na.omit() |> 
+  glimpse() |> 
+  mutate(`Pouvez-vous préciser ? (3)` = str_replace_all(`Pouvez-vous préciser ? (3)`, #lemmatisation des réponses autres
+                                                        c("Eclairages Leds" = "LED",
+                                                          "Débranchement d'appareils consommateurs d'électricité hors période d'utilisation \\(ballon eau chaude  radiateurs\\)" = "Débrancher appareils",
+                                                          "Eau coupée si non utilisée" = "couper eau",
+                                                          "Allumer chauffage et clim tard" = "retarder allumage chauffage",
+                                                          "bassine pour nettoyer son poste et recuperation d'eau" = "bassine récupérer eau",
+                                                          "Éclairage éteint hors horaires ouverture|Éteindre la nuit|Éteindre la vitrine le soir  LED|Lumière de la vitrine éteinte la nuit|Vitrine éteinte aux horaires de fermeture" = "éteindre vitrine"))) |> 
+    add_row(`Pouvez-vous préciser ? (3)` = "LED") # ajout d'un LED car 2 éléments dans la réponse 'Éteindre la vitrine le soir  LED'
 corpus = Corpus(VectorSource(data_wordcloud$`Pouvez-vous préciser ? (3)`))
     # mise en forme des mots
 corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
@@ -5158,7 +5304,7 @@ DTM <- TermDocumentMatrix(corpus)
 mat <- as.matrix(DTM)
 f <- sort(rowSums(mat),decreasing=TRUE) 
 word_data <- data.frame(word = names(f),freq=f) |> 
-    mutate(word = str_replace(word, "led", "LED")) |> 
+    mutate(word = str_replace_all(word, "led", "LED")) |> 
     filter(row_number() <= 20)
 ```
 
@@ -5168,10 +5314,11 @@ word_data |>
   ggplot(aes(label = word, size = freq)) +
       geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
       scale_size_area(max_size = 18) +
-      labs(title = str_wrap("Autres équipements installés par les commerçants pour réduire leur consommation d'eau et d'électricité", width = 45)) +
+      labs(title = str_wrap("Éteindre la vitrine hors des horaires d'ouverture du commerce est un autre moyen utilisé pour réduire l'impact sur l'environnement", width = 50),
+           subtitle = str_wrap("Autres équipements installés par les commerçants pour réduire leur consommation d'eau et d'électricité", width = 55)) +
       theme_minimal() +
       theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
-            plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = -60, l = 0)))
+            plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, -30, 0)))
 ```
 
 
@@ -5214,33 +5361,44 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des choses propos
 
 **Question posée dans l'enquête :** "*Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ? (Plusieurs réponses sont possibles)*".
 
-```{r fig.height=9}
+```{r}
 # Données
 table <- data |> 
     mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
     unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
     na.omit() |> 
-    mutate(percent = n/sum(n)*100)
+    mutate(percent = n/sum(n)*100,
+           Var = str_replace_all(Var, c("J'ai des affiches et supports visuels" = "Affiches et supports visuels",
+                                        "J'ai parfois des discussions informelles sur le sujet" = "Discussions informelles",
+                                        "Je donne des conseils pratiques" = "Conseils pratiques",
+                                        "Je ne communique pas sur le sujet" = "Pas de communication",
+                                        "Je propose des réductions sur des produits si utilisation d'emballages réutilisables" = "Réductions si utilisation d'emballages réutilisables")))
 
 # Graphique
 table |> 
-  mutate(Var = fct_reorder(Var, n)) |> 
+  mutate(Var = fct_reorder(Var, n),
+         a_surligner = case_when(Var == "Discussions informelles" ~ "1", 
+                               .default = "0")) |> 
   ggplot() + 
-    geom_bar(aes(y=n, x=Var),
-             position="dodge", stat="identity", width=.6, fill = "#3182BD") +
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 50)) +
+         title = str_wrap("Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement", width = 50),
+         subtitle = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
     custom_theme() +
-    theme(legend.position = "top",
+    theme(legend.position = "none",
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
     guides(alpha = "none") +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     coord_flip()
+icici
 ```
 
 
