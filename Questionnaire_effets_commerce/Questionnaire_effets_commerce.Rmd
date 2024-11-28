@@ -448,7 +448,78 @@ custom_theme <- function(){
 }
 ```
 
-```{r carto geoloc, cache=TRUE}
+```{r carto générale, include=FALSE}
+# Affichage de la carte
+library(sf)
+library(geojsonR)
+library(httr)
+
+# Import des contours des communes
+    # Rouen
+temp_file <- tempfile(fileext = ".geojson")
+GET("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-france-commune/exports/geojson?lang=fr&refine=epci_name%3A%22M%C3%A9tropole%20Rouen%20Normandie%22&facet=facet(name%3D%22epci_name%22%2C%20disjunctive%3Dtrue)&timezone=Europe%2FBerlin", write_disk(temp_file, overwrite = TRUE))
+contour_rouen <- st_read(temp_file, quiet = TRUE)
+    # Paris
+temp_file <- tempfile(fileext = ".geojson")
+GET("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-france-commune/exports/geojson?lang=fr&refine=dep_name%3A%22Paris%22&facet=facet(name%3D%22dep_name%22%2C%20disjunctive%3Dtrue)&qv1=(com_name%3D%22Paris%22)&timezone=Europe%2FBerlin", write_disk(temp_file, overwrite = TRUE))
+contour_paris <- st_read(temp_file, quiet = TRUE)
+    # St Ouen
+temp_file <- tempfile(fileext = ".geojson")
+GET("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-france-commune/exports/geojson?lang=fr&refine=com_name%3A%22Saint-Ouen-sur-Seine%22&facet=facet(name%3D%22com_name%22%2C%20disjunctive%3Dtrue)&qv1=(com_name%3D%22Saint%20Ouen%22)&timezone=Europe%2FBerlin", write_disk(temp_file, overwrite = TRUE))
+contour_stouen <- st_read(temp_file, quiet = TRUE)
+
+# Compilation en 1 fichier
+contours_3territoires <- rbind(contour_rouen |> 
+                                       filter(com_name %in% c("Rouen", "Duclair", "Elbeuf", "Le Trait")) |> 
+                                       select(com_name, geometry),
+                                   contour_paris |> select(com_name, geometry),
+                                   contour_stouen |> select(com_name, geometry))
+
+# Carto des réponses
+library(tidygeocoder)
+data_geoloc <- data |> 
+    select(zip_code) |> 
+    mutate(pays = "France") |> 
+    na.omit() |> 
+    geocode(postalcode = zip_code, country = pays, method = 'osm', lat = latitude , long = longitude)
+data_geoloc2 <- data_geoloc |> 
+    summarise(n = n(), .by = c(longitude, latitude)) |> 
+    mutate(nb_commerces = ifelse(n==1, paste(n, "répondant"), paste(n, "répondants")))
+
+# Carto de ça
+library(mapview)
+library(leafpop)
+library(leaflet)
+map <- mapview(contours_3territoires$geometry, 
+        alpha.regions = .5, 
+        col.regions = "#CC0000", 
+        lwd = 2,
+        layer.name = "Territoires d'étude",
+        label = contours_3territoires$com_name, 
+        popup = popupTable(contours_3territoires, zcol = c("com_name")),
+        legend = TRUE) +
+mapview(st_as_sf(na.omit(data_geoloc2), coords = c("longitude", "latitude"), crs = 4326),
+        layer.name = "Commerces répondants",
+        col.regions = "#3182BD", 
+        alpha.regions = .5,
+        cex = "n", 
+        popup = data_geoloc2$nb_commerces, 
+        label = data_geoloc2$nb_commerces, 
+        legend = FALSE)
+```
+
+```{r affichage carto}
+# Conversion en objet leaflet pour ajouter un titre
+leaflet_map <- map@map %>% 
+  addControl(
+    html = "<h6 style='text-align:center; color: darkblue;'>Répartition géographique des commerces répondants</h6>",
+    position = "topright"
+  )
+leaflet_map
+```
+
+
+```{r carto geoloc, eval=FALSE, cache=TRUE, include=FALSE}
 # Carto des réponses
 library(tidygeocoder)
 data_geoloc <- data |> 
@@ -480,7 +551,7 @@ leaflet(data_geoloc) |>
   addControl(title, position = "topleft", className = "map-title") |> 
   setView(lng = 3, lat = 47, zoom = 4.8) |> 
   addMarkers(lng = data_geoloc$longitude, lat = data_geoloc$latitude, 
-             label = data_geoloc$n, clusterOptions = markerClusterOptions()) |> 
+             label = data_geoloc$n) |> #, clusterOptions = markerClusterOptions()
   addProviderTiles(provider = "Esri.WorldGrayCanvas")
 ```
 
@@ -5170,7 +5241,7 @@ val3 <- table |>
 # Application de la fonction
 infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
                   paste0(round(val2$percent, 0), "%"), "des commerçants ont des discussions informelles avec leurs clients sur le sujet de l'environnement", 'fa-comments',
-                  paste0(round(sum(val3$percent), 0), "%"), "des commerces concernés ont mis en place une initiative pour réduire leur consommation d’eau et/ou d’électricité", 'fa-pie-chart')
+                  paste0(round(sum(val3$percent), 0), "%"), "des commerces concernés ont mis en place une initiative pour réduire leur consommation d’eau et/ou d’électricité", 'fa-lightbulb-o')
 ```
 
 
@@ -5258,7 +5329,7 @@ table |>
     theme_bw() +
     coord_flip() +
     labs(title = "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants",
-         subtitle = "Équipements installés à l'initiative des commerçants \npour réduire leur consommation d'eau et d'électricité",
+         subtitle = "Équipements installés à l'initiative des commerçants pour \nréduire leur consommation d'eau et d'électricité",
          y = "Nombre de commerces") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
     scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 250)) + 
@@ -5269,7 +5340,7 @@ table |>
           panel.grid.major.y = ggplot2::element_blank(),
           plot.title = element_markdown()) +
     ggplot2::annotate("text",
-             x = 6.2,
+             x = 6.5,
              y = table$n[which(table$var=="Equipements visant à réduire la consommation d'électricité")]*1.1,
              label = paste0(round(percent_reduc_conso$percent, 0), "% des équipements \ninstallés sont axés \nsur l'électricité"),
              color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
@@ -5317,7 +5388,7 @@ word_data |>
       labs(title = str_wrap("Éteindre la vitrine hors des horaires d'ouverture du commerce est un autre moyen utilisé pour réduire l'impact sur l'environnement", width = 50),
            subtitle = str_wrap("Autres équipements installés par les commerçants pour réduire leur consommation d'eau et d'électricité", width = 55)) +
       theme_minimal() +
-      theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
+      theme(plot.title = ggplot2::element_text(family = font,size = 20, face = "bold", color = "#222222"),
             plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, -30, 0)))
 ```
 
@@ -5333,6 +5404,7 @@ word_data |>
 table <- data |> 
     mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
     unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
     na.omit() |> 
     mutate(percent = n/sum(n)*100)
@@ -5393,12 +5465,13 @@ table |>
     theme_classic() +
     custom_theme() +
     theme(legend.position = "none",
+          plot.margin = unit(c(0, 1, 0, 0), "cm"),
+          plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
     guides(alpha = "none") +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     coord_flip()
-icici
 ```
 
 
@@ -5421,6 +5494,7 @@ table <- data |>
                                         "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
                                         "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
     select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
     mutate(percent = n/sum(n)*100)
 val1 <- table |> 
@@ -5437,6 +5511,7 @@ val2 <- table |>
 table <- data |> 
     mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
     unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
     na.omit() |> 
     mutate(percent = n/sum(n)*100)
@@ -5456,12 +5531,12 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des actions mises
 
 **Question posée dans l'enquête :** "*Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)*".
 
-```{r}
+```{r fig.height=7}
 # Données
 table <- data |> 
     mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
     unnest(Var) |> 
-    mutate(Var = str_replace_all(Var, c("Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
+    mutate(Var = str_replace_all(Var, c("Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre / pas une priorité",
                                         "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné",
                                         "Bornes de recyclage pour p" = "P",
                                         "Bornes de recyclage pour a" = "A",
@@ -5471,29 +5546,52 @@ table <- data |>
                                         "Recyclage de cheveux ou poils d'animaux" = "Cheveux ou poils d'animaux",
                                         "Récupération de boîtes d'oeuf ou bocaux" = "Boîtes d'oeuf ou bocaux"))) |> 
     select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var)
 
-# Graphique
+# Stats pour annotation
+percent_solut_recy <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre / pas une priorité") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "Cartons et tout venant")
+
+# Lolipop chart
 table |> 
-  ggplot() +
-      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
-      geom_treemap_text(aes(area = n, fill = Var, 
-                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
-                        colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
-                                   "#3081bc", "#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
-                                   "#3081bc", "#345E68", "#afc7de", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", 
-                                   "#3081bc")) +
-      labs(title = "Solutions de recycalge ou récupération \nproposées par les commerçants") +
-      custom_theme() +
-      theme(legend.position = "none")
+    mutate(Var = fct_reorder(Var, n)) |> 
+    ggplot( aes(x=Var, y=n)) +
+    geom_segment(aes(xend=Var, yend=0), 
+                 color=ifelse(table$Var == "Cartons et tout venant", "#3182BD", "grey"), 
+                 size=ifelse(table$Var == "Cartons et tout venant", 1.3, 0.7)) +
+    geom_point(color=ifelse(table$Var == "Cartons et tout venant", "#3182BD", "grey"), 
+               size=ifelse(table$Var == "Cartons et tout venant", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant",
+         subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 250)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+                      x = 8,
+                      y = table$n[which(table$Var=="Cartons et tout venant")]*1.6,
+                      label = paste0(round(percent_solut_recy$percent, 0), "% des solutions \nportent sur le \ncarton"),
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r include=FALSE}
 # Data
 data_wordcloud <- data |> 
-  mutate(`Pouvez-vous préciser ? (2)` = str_replace_all(`Pouvez-vous préciser ? (2)`, ",", " ")) |> 
-  glimpse()
+    mutate(`Pouvez-vous préciser ? (2)` = str_replace_all(`Pouvez-vous préciser ? (2)`, ",", " ")) |> 
+    glimpse() |> 
+    select(`Pouvez-vous préciser ? (2)`) |> 
+    na.omit()
 corpus = Corpus(VectorSource(data_wordcloud$`Pouvez-vous préciser ? (2)`))
     # mise en forme des mots
 corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
@@ -5540,6 +5638,7 @@ table <- data |>
                                         "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
                                         "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
     select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var)
 
 # Graphique
@@ -5550,17 +5649,32 @@ table |>
                             label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
                         colour = "white", place = "centre", size = 15, grow = TRUE) +
       scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
-      labs(title = "Actions mises en œuvre par les commerçants \npour réduire leurs déchêts") +
+      labs(title = "Près de 2 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts",
+           subtitle = "Actions mises en œuvre par les commerçants pour réduire \nleurs déchêts") +
       custom_theme() +
       theme(legend.position = "none")
 ```
 
+<br>
+
 ```{r include=FALSE}
 # Data
 data_wordcloud <- data |> 
-  mutate(`Pouvez-vous préciser ? (1)` = str_replace_all(`Pouvez-vous préciser ? (1)`, ",", " ")) |> 
-  glimpse()
-corpus = Corpus(VectorSource(data_wordcloud$`Pouvez-vous préciser ? (1)`))
+    mutate(`Pouvez-vous préciser ? (1)` = str_replace_all(`Pouvez-vous préciser ? (1)`, ",", " ")) |> 
+    glimpse() |> 
+    select(`Pouvez-vous préciser ? (1)`) |> 
+    na.omit() |> 
+    mutate(cat = case_when(grepl("tri", `Pouvez-vous préciser ? (1)`) ~ "tri sélectif",
+                           grepl("Tri", `Pouvez-vous préciser ? (1)`) ~ "tri sélectif",
+                           grepl("Cartons", `Pouvez-vous préciser ? (1)`) ~ "carton",
+                           grepl("Don", `Pouvez-vous préciser ? (1)`) ~ "don",
+                           grepl("sac", `Pouvez-vous préciser ? (1)`) ~ "sac",
+                           grepl("Sac", `Pouvez-vous préciser ? (1)`) ~ "sac",
+                           grepl("Récupération", `Pouvez-vous préciser ? (1)`) ~ "récupération",
+                           .default = `Pouvez-vous préciser ? (1)`)) |> 
+    count(cat) |> 
+    mutate(percent = n/sum(n)*100)
+corpus = Corpus(VectorSource(data_wordcloud$cat))
     # mise en forme des mots
 corpus = tm_map(corpus, PlainTextDocument) #Conversion to Lowercase
 corpus = tm_map(corpus, tolower)
@@ -5592,6 +5706,57 @@ word_data |>
 
 # ![](images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT>
 
+```{r out.width='80%'}
+# Données
+    # boxe 1
+val1 <- data |> 
+    mutate(Var = str_replace_all(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`, 
+                                 c("Je ne sais pas" = NA_character_, 
+                                   "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+    summarise(n = n(), .by = Var) |> 
+    filter(!is.na(Var)) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "1 fois par semaine et plus")
+    # boxe 2
+        #pre-run stats 
+table <- data |>  
+  summarise(n = n(), .by = `Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`) |> 
+  filter(!is.na(`Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?`)) |> 
+  mutate(percent = n/sum(n)*100) |> 
+  rename(Var = 1)
+ref_interpellation_mairie <- table |> select(-n) |> rename(percent_ref = percent)
+        #valeur boxe
+val2 <- ref_interpellation_mairie |> 
+    filter(Var != "Jamais") |> 
+    summarise(percent = sum(percent_ref))
+    # boxe 3
+table_embellissement <- data |> 
+    mutate(Var = str_replace_all(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?`, 
+                                 "Verdissement \\(exemples : jardinières, pots de fleurs\\)", "Verdissement")) |> 
+    mutate(Var = str_split(Var, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Je n’ai pas mené d’initiative particulière" = "Pas mené d’initiative particulière",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+    select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var) |> 
+    na.omit() |> 
+    filter(Var != "Non concerné") |> 
+    mutate(percent = n/sum(n)*100)
+val3 <- table_embellissement |> 
+    filter(Var != "Pas mené d’initiative particulière") |> 
+    summarise(percent = sum(percent))
+
+    
+# Application de la fonction
+infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des commerçants nettoyent les abords extérieurs de leur commerce au moins une fois par semaine"), 'fa-calendar-check-o',
+                  paste0(round(val2$percent, 0), "%"), "des commerçants ont déjà interpellé les services techniques de la mairie pour signaler une dégradation ou du matériel public défectueux", 'fa-phone',
+                  paste0(round(val3$percent, 0), "%"), "des commerçants concernés sont impliqués dans des initiatives d'embellissement de la rue", 'fa-shower')
+```
 
 ## <FONT COLOR="#FF5757">Prendre soin de l'espace public</FONT>
 
@@ -5609,6 +5774,7 @@ table_embellissement <- data |>
     mutate(Var = str_replace_all(Var, c("Je n’ai pas mené d’initiative particulière" = "Pas mené d’initiative particulière",
                                         "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
     select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
     na.omit() |> 
     mutate(percent = n/sum(n)*100)
@@ -5651,17 +5817,39 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des initiatives d'
 ### <FONT COLOR="#FF5757">Analyse globale</FONT>{.tabset}
 
 ```{r}
-# Graphique
+# Stats pour annotation
+percent_embel <- table_embellissement |> 
+    filter(Var != "Pas mené d’initiative particulière") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "Embellissement et soin de la vitrine")
+
+# Lolipop chart
 table_embellissement |> 
-  ggplot() +
-      geom_treemap(aes(area = n, fill = Var), col = "white", size = 4) +
-      geom_treemap_text(aes(area = n, fill = Var, 
-                            label = paste0(str_wrap(Var, width = 30), "\n(", n, " commerces)")),
-                        colour = "white", place = "centre", size = 15, grow = TRUE) +
-      scale_fill_manual(values = c("#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc", "#345E68", "#afc7de", "#0C4C8A", "#9ecae1","#7A9BB1", "#3081bc")) +
-      labs(title = "Implication des commerçants dans les initiatives \nd'embellissement de la rue") +
-      custom_theme() +
-      theme(legend.position = "none")
+    mutate(Var = fct_reorder(Var, n)) |> 
+    ggplot( aes(x=Var, y=n)) +
+    geom_segment(aes(xend=Var, yend=0), 
+                 color=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", "#3182BD", "grey"), 
+                 size=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", 1.3, 0.7)) +
+    geom_point(color=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", "#3182BD", "grey"), 
+               size=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "Les commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>",
+         subtitle = "Implication des commerçants dans les initiatives \nd'embellissement de la rue",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250), limits = c(0, 280)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+                      x = 5.8,
+                      y = table_embellissement$n[which(table_embellissement$Var=="Embellissement et soin de la vitrine")]*1.1,
+                      label = paste0(round(percent_embel$percent, 0), "% des initiatives \nportent sur le \nsoin de la vitrine"),
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
@@ -5679,9 +5867,12 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Ensemble des commerces", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
+graph_questions_freq(table, ref_interpellation_mairie, "Près de 4 commerçants sur 10 interpellent les services de la mairie moins d'un fois par mois", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", "Très rarement (moins d'une fois par mois)", "#3182bd") +
+    labs(title = str_wrap("Près de 4 commerçants sur 10 interpellent les services de la mairie moins d'un fois par mois", width = 50)) +
+    theme(plot.caption = element_blank(),
+          plot.title = element_text(size = 19),
+          plot.margin = unit(c(0, 1, 0, 0), "cm")) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
@@ -6083,9 +6274,10 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_nettoyage_abords, "Ensemble des commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs",  "", "#3182bd") +
-    theme(plot.caption = element_blank()) +
+graph_questions_freq(table, ref_nettoyage_abords, "15% des commerçants nettoient les abords de leur commerce plusieurs fois par jour", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs",  "Très régulièrement (plusieurs fois par jour)", "#3182bd") +
+    theme(plot.caption = element_blank(),
+          plot.margin = unit(c(0, 1, 0, 0), "cm")) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
@@ -6435,9 +6627,9 @@ val3 <- data |>
   filter(Var == "Oui")
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerces permanents qui se situent dans un local classé au patrimoine architectural le ressentent comme une contrainte", 'fa-link',
-                  paste0(round(val2$percent, 0), "%"), "des commerces permanents se situent dans un local ancien non classé, auquel ils apportent un soin particulier", 'fa-thumbs-up',
-                  paste0(round(val3$Pourcentage, 0), "%"), "des commerces permanents se situent dans un local classé au patrimoine architectural", 'fa-building')
+infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerces qui se situent dans un local classé au patrimoine architectural le ressentent comme une contrainte", 'fa-link',
+                  paste0(round(val2$percent, 0), "%"), "des commerces se situent dans un local ancien non classé, auquel ils apportent un soin particulier", 'fa-thumbs-up',
+                  paste0(round(val3$Pourcentage, 0), "%"), "des commerces se situent dans un local classé au patrimoine architectural", 'fa-building')
 ```
 
 
@@ -6461,7 +6653,8 @@ table |>
       geom_bar(stat="identity", width=1, color="white", size = 2) +
       coord_polar("y") +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-      labs(title = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 35)) +
+      labs(title = str_wrap("2 commerces sur 10 se situent dans un bâtiment classé", width = 35),
+           subtitle = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 42)) +
       theme_classic() + 
       theme(legend.position = "top",
             strip.text.x = element_text(size = 12, face = "bold"),
@@ -6477,6 +6670,7 @@ table |>
             plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
             plot.title.position = "plot", 
+            plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
             plot.caption.position = "plot") +
       guides(fill = guide_legend(reverse = F, title = "Classé")) +
       geom_text(aes(y = ypos, x = 2, label = paste0(round(Pourcentage,0), "%")), color = "#333333", 
@@ -6488,22 +6682,26 @@ table |>
 ```{r}
 # Graphique
 table_patrimoine |> 
-  mutate(Var = fct_reorder(Var, n)) |> 
+  mutate(Var = fct_reorder(Var, n),
+         a_surligner = ifelse(Var == "Non classé", "1", "0")) |> 
   ggplot() + 
-    geom_bar(aes(y=n, x=Var),
-             position="dodge", stat="identity", width=.6, fill = "#3182BD") +
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 50)) +
+         title = stringr::str_wrap("2/3 des commerces sont situés dans des batiments non classés", width = 45),
+         subtitle = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     theme_classic() +
     custom_theme() +
     theme(legend.position = "top",
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
     guides(alpha = "none") +
-    coord_flip()
+    coord_flip() +
+    guides(fill = "none")
 ```
 
 <br>
