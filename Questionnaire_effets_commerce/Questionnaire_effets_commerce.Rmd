@@ -484,7 +484,8 @@ data_geoloc <- data |>
     geocode(postalcode = zip_code, country = pays, method = 'osm', lat = latitude , long = longitude)
 data_geoloc2 <- data_geoloc |> 
     summarise(n = n(), .by = c(longitude, latitude)) |> 
-    mutate(nb_commerces = ifelse(n==1, paste(n, "répondant"), paste(n, "répondants")))
+    mutate(nb_commerces = ifelse(n==1, paste(n, "répondant"), paste(n, "répondants"))) |> 
+    na.omit()
 
 # Carto de ça
 library(mapview)
@@ -498,7 +499,7 @@ map <- mapview(contours_3territoires$geometry,
         label = contours_3territoires$com_name, 
         popup = popupTable(contours_3territoires, zcol = c("com_name")),
         legend = TRUE) +
-mapview(st_as_sf(na.omit(data_geoloc2), coords = c("longitude", "latitude"), crs = 4326),
+mapview(st_as_sf(data_geoloc2, coords = c("longitude", "latitude"), crs = 4326),
         layer.name = "Commerces répondants",
         col.regions = "#3182BD", 
         alpha.regions = .5,
