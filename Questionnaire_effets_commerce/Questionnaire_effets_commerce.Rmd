@@ -30,7 +30,7 @@ knitr::opts_chunk$set(eval = TRUE,
 ```
 
 ```{r logo}
-# Logo Datactivist haut de page
+# Logos haut de page
 htmltools::img(src = "images/logos_partenaires.png", 
                alt = 'logo', 
                style = 'position:absolute; top:0; left:0.5; padding-top:10px;') #padding=taille des espaces autour
@@ -2021,7 +2021,8 @@ viz_liensocial_associations <- function(donnees, title_name){
     percent_collab_quartier <- table_collab_treemap |> 
         filter(var != "Aucune") |> 
         mutate(percent = n/sum(n)*100) |> 
-        filter(var == "Associations de quartier")
+        arrange(desc(n)) |> 
+        slice(1)
     
     # Lolipop chart
     library(ggtext)
@@ -2029,30 +2030,30 @@ viz_liensocial_associations <- function(donnees, title_name){
         mutate(var = fct_reorder(var, n)) |> 
         ggplot( aes(x=var, y=n)) +
         geom_segment(aes(xend=var, yend=0), 
-                     color=ifelse(table_collab_treemap$var == "Associations de quartier", "#3182BD", "grey"), 
-                     size=ifelse(table_collab_treemap$var == "Associations de quartier", 1.3, 0.7)) +
-        geom_point(color=ifelse(table_collab_treemap$var == "Associations de quartier", "#3182BD", "grey"), 
-                   size=ifelse(table_collab_treemap$var == "Associations de quartier", 5, 2)) +
+                     color=ifelse(table_collab_treemap$var == percent_collab_quartier$var, "#3182BD", "grey"), 
+                     size=ifelse(table_collab_treemap$var == percent_collab_quartier$var, 1.3, 0.7)) +
+        geom_point(color=ifelse(table_collab_treemap$var == percent_collab_quartier$var, "#3182BD", "grey"), 
+                   size=ifelse(table_collab_treemap$var == percent_collab_quartier$var, 5, 2)) +
         theme_bw() +
         coord_flip() +
         labs(title = title_name, #str_wrap() ne marche plus avec le element_markdown()
              subtitle = "Collaborations des commerçants avec des associations \nlocales",
              y = "Nombre de commerces") +
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
-        scale_y_continuous(breaks = c(0, 50, 100, 150), limits = c(0, 180)) + 
+        scale_y_continuous(breaks = c(0, 50, 100, 150), limits = c(0, 190)) + 
         custom_theme() +
         theme(legend.position = "none", 
               axis.title.y = element_blank(),
               panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
               panel.grid.major.y = ggplot2::element_blank(),
-              plot.title = element_markdown()) +
-        ggplot2::annotate("text",
-                 x = grep("Associations de quartier", table_collab_treemap$var),
-                 y = table_collab_treemap$n[which(table_collab_treemap$var=="Associations de quartier")]*1.1,
-                 label = paste0(round(percent_collab_quartier$percent, 0), "% des collaborations \nse font avec des \nassociations de quartier"),
-                 color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
+              plot.title = element_markdown())
 }
-viz_liensocial_associations(data, "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent")
+viz_liensocial_associations(data, "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent") +
+        ggplot2::annotate("text",
+                 x = 5,
+                 y = 98.4,
+                 label = "29% des collaborations \nse font avec des \nassociations de quartier",
+                 color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 
@@ -3692,6 +3693,96 @@ viz_viequartier_matrice_collab <- function(donnees, title_name){
 viz_viequartier_matrice_collab(data, "La collaboration avec des associations et \nl'aide aux commerçants voisins vont de \npaire chez les commerces répondants")
 ```
 
+<br>
+
+```{r}
+# Données
+table <- data |> 
+    mutate(Var = str_split(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100,
+           Var = str_replace_all(Var, c("J'offre des réductions sur des produits lorsqu'un autre commerçant vient dans mon magasin" = "Réductions sur les produits",
+                                        "Je co-organise des évènements avec d'autres commerçants de ma ville" = "Évènements co-organisés",
+                                        "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services" = "Pas de services rendus",
+                                        "Je garde un oeil sur le magasin de mes collègues" = "Veiller sur le magasin",
+                                        "Cette situation ne s'applique pas à mon activité" = "Pas de collègues commerçants",
+                                        "Je ne connais pas vraiment les autres commerçants de ma rue/quartier" = "Ne connait pas les autres commerçants",
+                                        "Je recommande et j'adresse des clients à d'autres commerces" = "Recommander / adresser des clients",
+                                        "Je réceptionne des colis pour d'autres commerçants de la rue" = "Réception de colis")))
+
+# Graphique
+table |> 
+  mutate(Var = fct_reorder(Var, n),
+         a_surligner = case_when(Var == "Recommander / adresser des clients" ~ "1", 
+                               .default = "0")) |> 
+  ggplot() + 
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         title = str_wrap("Un quart des commerçants recommandent et adressent des clients à leurs collègues commerçants", width = 40),
+         subtitle = stringr::str_wrap("Services rendus par les commerces aux commerces voisins", width = 55)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "none",
+          plot.margin = unit(c(0, 1, 0, 0), "cm"),
+          plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
+    coord_flip()
+```
+
+
+```{r}
+# Données
+table <- data |> 
+    mutate(Var = str_split(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var) |> 
+    na.omit() |> 
+    mutate(percent = n/sum(n)*100,
+           Var = str_replace_all(Var, c("J'offre des réductions sur des produits lorsqu'un habitant de mon immeuble vient dans mon magasin" = "Réductions sur les produits",
+                                        "Je co-organise des évènements avec les habitants de mon immeuble" = "Évènements co-organisés",
+                                        "Je connais les habitants mais je n'ai pas l'occasion de rendre ces services" = "Pas de services rendus",
+                                        "Je garde un oeil sur les appartements des habitants de mon immeuble en leur absence" = "Veiller sur les appartements",
+                                        "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce" = "Pas de voisins d'immeuble",
+                                        "Je ne connais pas vraiment les habitants de mon immeuble" = "Ne connait pas les habitants",
+                                        "Je réceptionne des colis pour les habitants de mon immeuble" = "Réception de colis")))
+
+# Graphique
+table |> 
+  mutate(Var = fct_reorder(Var, n),
+         a_surligner = case_when(Var == "Réception de colis" ~ "1", 
+                               .default = "0")) |> 
+  ggplot() + 
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         title = str_wrap("Plus d'un tiers des commerçants réceptionnent des colis pour leurs voisins d'immeuble", width = 50),
+         subtitle = stringr::str_wrap("Services rendus par les commerçants aux habitants de leur immeuble", width = 55)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "none",
+          plot.margin = unit(c(0, 1, 0, 0), "cm"),
+          plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
+    coord_flip()
+```
+
 ## <FONT COLOR="#0097B2">Animer la rue</FONT>
 
 
@@ -3869,7 +3960,7 @@ viz_viequartier_events <- function(donnees, title_name){
             labs(y = "Nombre de commerces", 
                  subtitle = str_wrap("Nombre d'évènements organisés chaque année par les commerçants dynamisant la vie du quartier", width = 80),
                  title = str_wrap(title_name, width = 70)) +
-            geom_label(aes(x = var_cat, y = n+10, label = paste0(round(percent, 0), "%")), size = 5, fill = "white", label.size = NA) +
+            geom_label(aes(x = var_cat, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")), size = 5, fill = "white", label.size = NA) +
             theme_minimal() +
             custom_theme() +
             theme(axis.title.x = element_blank()) +
@@ -5397,7 +5488,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des installations 
 
 ```{r}
 # Fonction pour générer le graph
-viz_environnement_conso_eauelec <- function(donnees, title_name){
+viz_environnement_conso_eauelec <- function(donnees, title_name, x_pos_text, y_pos_text){
     # Données
     table <- donnees |> 
         mutate(var = str_replace_all(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`, c("Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence, multiprises avec timer\\)" = "Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence multiprises avec timer\\)",  "Low tech \\(technologies ou machines simples à basse consommation\\) pour fabriquer mes produits \\(exemples : saponification à froid, feu de bois, marmite norvégienne\\)" = "Low tech\\(technologies ou machines simples à basse consommation\\) pour fabriquer les produits \\(exemples : saponification à froid feu de bois marmite norvégienne\\)"))) |> 
@@ -5443,12 +5534,12 @@ viz_environnement_conso_eauelec <- function(donnees, title_name){
               panel.grid.major.y = ggplot2::element_blank(),
               plot.title = element_markdown()) +
         ggplot2::annotate("text",
-                 x = 6.5,
-                 y = table$n[which(table$var=="Equipements visant à réduire la consommation d'électricité")]*1.1,
+                 x = x_pos_text,
+                 y = y_pos_text,
                  label = paste0(round(percent_reduc_conso$percent, 0), "% des équipements \ninstallés sont axés \nsur l'électricité"),
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_environnement_conso_eauelec(data, "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants")
+viz_environnement_conso_eauelec(data, "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants", 6.5, 135)
 ```
 
 
@@ -5642,7 +5733,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des actions mises
 
 ```{r fig.height=7}
 # Fonction pour générer le graph
-viz_environnement_recyclage <- function(donnees, title_name){
+viz_environnement_recyclage <- function(donnees, title_name,x_pos_text, y_pos_text){
     # Données
     table <- donnees |> 
         mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
@@ -5690,12 +5781,12 @@ viz_environnement_recyclage <- function(donnees, title_name){
               panel.grid.major.y = ggplot2::element_blank(),
               plot.title = element_markdown()) +
         ggplot2::annotate("text",
-                          x = 8,
-                          y = table$n[which(table$Var=="Cartons et tout venant")]*1.6,
+                          x = x_pos_text,
+                          y = y_pos_text,
                           label = paste0(round(percent_solut_recy$percent, 0), "% des solutions \nportent sur le \ncarton"),
                           color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_environnement_recyclage(data, "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant")
+viz_environnement_recyclage(data, "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant", 8, 49.6)
 ```
 
 ```{r include=FALSE}
@@ -5942,7 +6033,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des initiatives d'
 
 ```{r}
 # Fonction pour générer le graph
-viz_espacepublic_embellissement <- function(donnees, title_name){
+viz_espacepublic_embellissement <- function(donnees, title_name, x_pos_text, y_pos_text){
     # Données
     table_embellissement <- donnees |> 
         mutate(Var = str_replace_all(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?`, 
@@ -5986,12 +6077,12 @@ viz_espacepublic_embellissement <- function(donnees, title_name){
               panel.grid.major.y = ggplot2::element_blank(),
               plot.title = element_markdown()) +
         ggplot2::annotate("text",
-                          x = 5.8,
-                          y = table_embellissement$n[which(table_embellissement$Var=="Embellissement et soin de la vitrine")]*1.1,
+                          x = x_pos_text,
+                          y = y_pos_text,
                           label = paste0(round(percent_embel$percent, 0), "% des initiatives \nportent sur le \nsoin de la vitrine"),
                           color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_espacepublic_embellissement(data, "Les commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>")
+viz_espacepublic_embellissement(data, "Les commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.8, 167)
 ```
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
@@ -6914,7 +7005,7 @@ test |>
 
 ## Paris
 
-### Présentation générale
+### Présentation générale {-}
 
 
 En 2023, la commune de Paris compte près de [61.000 commerces et services commerciaux](https://presse.paris.fr/pages/20995), pour plus de [2.1 millions d'habitants](https://www.insee.fr/fr/statistiques/serie/001760155), soit environ 29 commerces pour 1.000 habitants.
@@ -7010,7 +7101,7 @@ ggplot(paris) +
 
 ```{r}
 # Données
-graphique_apercu_portrait <- function(variable, titre, nom_legende){
+graphique_apercu_portrait <- function(variable, nom_geo, titre, nom_legende){
     
     table <- bind_rows(data |> 
         filter(!is.na({{variable}})) |> 
@@ -7023,7 +7114,7 @@ graphique_apercu_portrait <- function(variable, titre, nom_legende){
             mutate(`Travaillez-vous seul ?` = substr(`Travaillez-vous seul ?`, 1, 3)) |> 
             count({{variable}}) |> 
             mutate(percent = n/sum(n),
-                    geo = "Paris"))
+                   geo = nom_geo))
     
     # Graphique
     ggplot(table) +
@@ -7039,18 +7130,21 @@ graphique_apercu_portrait <- function(variable, titre, nom_legende){
       theme(axis.title.x = element_blank())
 }
 graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
+                          nom_geo = "Paris",
                           titre = "Statut des commerces parisiens répondants, parmi l'ensemble des répondants",
                           nom_legende = "Indépendance")
 ```
 
 ```{r eval=FALSE, include=FALSE}
 graphique_apercu_portrait(variable = `Êtes-vous en contact direct avec des clients ?`,
+                          nom_geo = "Paris",
                           titre = "Relation clientèle des commerces parisiens répondants, parmi l'ensemble des répondants",
                           nom_legende = "Contact direct avec des clients")
 ```
 
 ```{r}
 graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
+                          nom_geo = "Paris",
                           titre = "Modalité de travail des commerces parisiens répondants, parmi l'ensemble des répondants",
                           nom_legende = "Travail seul")
 ```
@@ -7075,7 +7169,13 @@ viz_liensocial_frequence_expliproduits(paris,
 ```
 
 ```{r}
-viz_liensocial_associations(paris, "À Paris, les <span style='color: #3182BD'>associations de quartier</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent")
+viz_liensocial_associations(paris, "À Paris, les <span style='color: #3182BD'>associations de quartier</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
+    scale_y_continuous(breaks = c(0, 25, 50, 75, 100), limits = c(0, 120))+
+    ggplot2::annotate("text",
+                      x = 5,
+                      y = 45,
+                      label = "41% des collaborations \nse font avec des \nassociations de quartier",
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
@@ -7108,7 +7208,7 @@ viz_solidarites_redirection(paris, "À Paris, le <span style='color: #3182BD'>so
 ```
 
 ```{r}
-viz_solidarites_frequence_redirection(paris, "À Paris, plus d'un quart des commerçants dirigent des clients vers des aides extérieures", "1 fois par semaine et plus")
+viz_solidarites_frequence_redirection(paris, "À Paris, plus d'un quart des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
 ```
 
 #### Vie de quartier
@@ -7152,20 +7252,22 @@ viz_santesecu_frequence_vols(paris, "À Paris, plus d'un commerçant sur 10 est 
 cc_environnement(paris, "     À Paris :")
 ```
 
-```{r}
-viz_environnement_conso_eauelec(paris, "À Paris, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants")
+```{r fig.height=6}
+viz_environnement_conso_eauelec(paris, "À Paris, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants", 6, 43) +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
 ```{r}
-viz_environnement_discu_envt(paris, "À Paris, 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
+viz_environnement_discu_envt(paris, "À Paris, 3 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement")
+```
+
+```{r fig.height=7}
+viz_environnement_recyclage(paris, "À Paris, le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant", 7, 25) +
+    scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 150), limits = c(0, 75))
 ```
 
 ```{r}
-viz_environnement_recyclage(paris, "À Paris, le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant")
-```
-
-```{r}
-viz_environnement_fournisseurs(paris, "À Paris, plus de 2 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts")
+viz_environnement_fournisseurs(paris, "À Paris, plus de 2 commerçants sur 10 font le \nchoix de fournisseurs écoresponsables \npour réduire leurs déchêts")
 ```
 
 
@@ -7176,7 +7278,8 @@ cc_espacepublic(paris, "     À Paris :")
 ```
 
 ```{r}
-viz_espacepublic_embellissement(paris, "À Paris, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>")
+viz_espacepublic_embellissement(paris, "À Paris, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 65) +
+    scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 150), limits = c(0, 100))
 ```
 
 ```{r}
@@ -7202,7 +7305,7 @@ stouen <- data |>
   filter(Libelle_acheminement == "ST OUEN SUR SEINE")
 ```
 
-### Présentation générale
+### Présentation générale{-}
 
 
 La commune de Saint-Ouen-sur-Seine compte [1.561 commerces et entreprises de services](https://www.linternaute.com/ville/saint-ouen-sur-seine/ville-93070/entreprises), pour un peu plus de [53.200 habitants](https://www.insee.fr/fr/statistiques/2011101?geo=COM-93070), soit environ 29 commerces pour 1.000 habitants.
@@ -7231,18 +7334,15 @@ ggplot(stouen) +
 ```{r}
 # Données
 graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
+                          nom_geo = "St Ouen",
                           titre = "Statut des commerces audoniens répondants, parmi l'ensemble des répondants",
                           nom_legende = "Indépendance")
 ```
 
-```{r eval=FALSE, include=FALSE}
-graphique_apercu_portrait(variable = `Êtes-vous en contact direct avec des clients ?`,
-                          titre = "Relation clientèle des commerces audoniens répondants, parmi l'ensemble des répondants",
-                          nom_legende = "Contact direct avec des clients")
-```
 
 ```{r}
 graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
+                          nom_geo = "St Ouen",
                           titre = "Modalité de travail des commerces audoniens répondants, parmi l'ensemble des répondants",
                           nom_legende = "Travail seul")
 ```
@@ -7267,7 +7367,61 @@ viz_liensocial_frequence_expliproduits(stouen,
 ```
 
 ```{r}
-viz_liensocial_associations(stouen, "À St Ouen, les <span style='color: #3182BD'>associations sociales</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent")
+# Code non factorisé car trop de paramètres à changer
+table_collab <- stouen |> 
+    select(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) |> 
+    mutate(var = str_replace_all(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`, "Oui, ", "Oui ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    mutate(var = str_squish(var)) |> #retire les espaces en début et fin de string
+    count(var) 
+table_collab_treemap <- table_collab |> 
+    mutate(var = str_replace_all(var, c("Je n'ai pas l'habitude de collaborer avec des associations" = "Aucune",
+                                        "Oui avec des a" = "A",
+                                        "Oui avec de a" = "A")))
+
+# Stats pour annotation
+percent_collab_quartier <- table_collab_treemap |> 
+    filter(var != "Aucune") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    arrange(desc(n)) |> 
+    slice(1:2)
+
+# Lolipop chart
+table_collab_treemap |> 
+    mutate(var = fct_reorder(var, n)) |> 
+    ggplot( aes(x=var, y=n)) +
+    geom_segment(aes(xend=var, yend=0), 
+                 color=ifelse(table_collab_treemap$var %in% c("Associations culturelles",
+                                                              "Associations d'aide sociale et/ou humanitaire"), 
+                              "#3182BD", "grey"), 
+                 size=ifelse(table_collab_treemap$var %in% c("Associations culturelles",
+                                                              "Associations d'aide sociale et/ou humanitaire"), 
+                             1.3, 0.7)) +
+    geom_point(color=ifelse(table_collab_treemap$var%in% c("Associations culturelles",
+                                                              "Associations d'aide sociale et/ou humanitaire"), 
+                            "#3182BD", "grey"), 
+               size=ifelse(table_collab_treemap$var %in% c("Associations culturelles",
+                                                              "Associations d'aide sociale et/ou humanitaire"), 
+                           5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "À St Ouen, les <span style='color: #3182BD'>associations culturelles et sociales</span> <br>sont les principales associations avec lesquelles <br>les commerçants s'associent", 
+         subtitle = "Collaborations des commerçants avec des associations \nlocales",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 5, 10, 15, 20), limits = c(0, 12)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown(size = 20)) +
+    ggplot2::annotate("text",
+                 x = 5,
+                 y = 6,
+                 label = paste0(round(sum(percent_collab_quartier$percent), 0), "% des collaborations \nse font avec des \nassociations culturelles \nou sociales"),
+                 color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
@@ -7296,7 +7450,52 @@ viz_solidarites_frequence_nouvelles(stouen, "À St Ouen, plus de 7 commerçants 
 ```
 
 ```{r}
-viz_solidarites_redirection(stouen, "À St Ouen, la <span style='color: #3182BD'>santé</span> est le principal type de <br>service vers lequel les commerçants orientent")
+# Données
+table_redirection_treemap <- stouen |> 
+    select(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) |> 
+    mutate(var = str_replace_all(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`, "Oui, ", "Oui ")) |> 
+    mutate(var = strsplit(as.character(var), ",")) |> 
+    unnest(var) |> 
+    mutate(var = str_squish(var)) |> 
+    count(var)  |> 
+    mutate(var = str_replace_all(var, c("Je n'oriente pas ou alors rarement" = "Aucune",
+                                        "Oui vers des s" = "S",
+                                        "Oui vers les s" = "S"))) |> 
+    na.omit()
+
+# Stats pour annotation
+percent_collab_quartier <- table_redirection_treemap |> 
+    filter(var != "Aucune") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(var == "Services de santé")
+
+# Lolipop chart
+table_redirection_treemap |> 
+    mutate(var = fct_reorder(var, n)) |> 
+    ggplot( aes(x=var, y=n)) +
+    geom_segment(aes(xend=var, yend=0), 
+                 color=ifelse(table_redirection_treemap$var == "Services de santé", "#3182BD", "grey"), 
+                 size=ifelse(table_redirection_treemap$var == "Services de santé", 1.3, 0.7)) +
+    geom_point(color=ifelse(table_redirection_treemap$var == "Services de santé", "#3182BD", "grey"), 
+               size=ifelse(table_redirection_treemap$var == "Services de santé", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "À St Ouen, la <span style='color: #3182BD'>santé</span> est le principal type de <br>service vers lequel les commerçants orientent", #str_wrap() ne marche plus avec le element_markdown()
+         subtitle = "Orientation des clients vers une aide extérieure par les \ncommerçants",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) +
+    scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7), limits = c(0, 7)) +
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+             x = 3,
+             y = table_redirection_treemap$n[which(table_redirection_treemap$var=="Services de santé")]*1.1,
+             label = paste0(round(percent_collab_quartier$percent, 0), "% des orientations \nse font vers des \nservices sociaux"),
+             color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
@@ -7315,7 +7514,7 @@ viz_viequartier_matrice_collab(stouen,
 ```
 
 ```{r fig.width=11}
-viz_viequartier_events(stouen, "À St Ouen, 4 commerçants sur 10 participent à l'organisation d'évènements dans leur quartier")
+viz_viequartier_events(stouen, "À St Ouen, 2 commerçants sur 5 participent à l'organisation d'évènements dans leur quartier")
 ```
 
 
@@ -7345,19 +7544,70 @@ cc_environnement(stouen, "     À Saint Ouen :")
 ```
 
 ```{r}
-viz_environnement_conso_eauelec(stouen, "À St Ouen, la réduction des factures <br>d'<span style='color: #3182BD'>électricité</span> est la priorité des commerçants")
+viz_environnement_conso_eauelec(stouen, "À St Ouen, la réduction des factures <br>d'<span style='color: #3182BD'>électricité</span> est la seule action menée par <br>les commerçants", 1, 3) +
+    scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), limits = c(0, 10))
 ```
 
 ```{r}
 viz_environnement_discu_envt(stouen, "À St Ouen, près de 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
 ```
 
-```{r}
-viz_environnement_recyclage(stouen, "À St Ouen, le recyclage des <span style='color: #3182BD'>vêtements</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant")
+```{r fig.height=6}
+# Données
+table <- stouen |> 
+    mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre / pas une priorité",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné",
+                                        "Bornes de recyclage pour p" = "P",
+                                        "Bornes de recyclage pour a" = "A",
+                                        "Bornes de recyclage traditionnelles : carton et tout venant" = "Cartons et tout venant",
+                                        "Container de recyclage pour vêtements" = "Vêtements",
+                                        "Récupération de capsules de café" = "Capsules de café",
+                                        "Recyclage de cheveux ou poils d'animaux" = "Cheveux ou poils d'animaux",
+                                        "Récupération de boîtes d'oeuf ou bocaux" = "Boîtes d'oeuf ou bocaux"))) |> 
+    select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var)
+
+# Stats pour annotation
+percent_solut_recy <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre / pas une priorité") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var %in% c("Boîtes d'oeuf ou bocaux", "Vêtements"))
+
+# Lolipop chart
+table |> 
+    mutate(Var = fct_reorder(Var, n)) |> 
+    ggplot( aes(x=Var, y=n)) +
+    geom_segment(aes(xend=Var, yend=0), 
+                 color=ifelse(table$Var %in% c("Boîtes d'oeuf ou bocaux", "Vêtements"), "#3182BD", "grey"), 
+                 size=ifelse(table$Var %in% c("Boîtes d'oeuf ou bocaux", "Vêtements"), 1.3, 0.7)) +
+    geom_point(color=ifelse(table$Var %in% c("Boîtes d'oeuf ou bocaux", "Vêtements"), "#3182BD", "grey"), 
+               size=ifelse(table$Var %in% c("Boîtes d'oeuf ou bocaux", "Vêtements"), 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "À St Ouen, le recyclage des <span style='color: #3182BD'>vêtements et boîts <br>d'oeufs</span> est adopté par les commerçants <br>répondants",
+         subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7,8,9), limits = c(0, 10)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+                      x = 6.5,
+                      y = 3,
+                      label = paste0(round(percent_solut_recy$percent, 0), "% des solutions \nportent sur le \ncarton"),
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
-viz_environnement_fournisseurs(stouen, "À St Ouen, plus de 2 commerçants sur 10 mettent à \ndisposition des emballages \nréutilisables")
+viz_environnement_fournisseurs(stouen, "À St Ouen, plus de 2 commerçants sur 10 \nmettent à disposition des emballages \nréutilisables")
 ```
 
 
@@ -7368,7 +7618,8 @@ cc_espacepublic(stouen, "     À Saint Ouen :")
 ```
 
 ```{r}
-viz_espacepublic_embellissement(stouen, "À St Ouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>")
+viz_espacepublic_embellissement(stouen, "À St Ouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 4, 2.5) +
+    scale_y_continuous(breaks = c(0, 1,2,3,4,5,6,7,8,9), limits = c(0, 6))
 ```
 
 ```{r}
@@ -7396,7 +7647,7 @@ rouen <- data |>
   filter(Libelle_acheminement %in% c("ROUEN", "ELBEUF", "DUCLAIR", "LE TRAIT"))
 ```
 
-### Présentation générale
+### Présentation générale {-}
 
 
 La ville de Rouen compte [3.259 commerces](https://www.linternaute.com/ville/rouen/ville-76540/entreprises), pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 28.6 commerces pour 1.000 habitants.
@@ -7418,24 +7669,22 @@ ggplot(rouen) +
   custom_theme() +
   theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
         panel.grid.major.y = ggplot2::element_blank(),
-        axis.title.y = element_blank())
+        axis.title.y = element_blank(),
+        plot.title = element_text(size = 20))
 ```
 
 ```{r}
 # Données
 graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
+                          nom_geo = "Rouen",
                           titre = "Statut des commerces rouennais répondants, parmi l'ensemble des répondants",
                           nom_legende = "Indépendance")
 ```
 
-```{r eval=FALSE, include=FALSE}
-graphique_apercu_portrait(variable = `Êtes-vous en contact direct avec des clients ?`,
-                          titre = "Relation clientèle des commerces rouennais répondants, parmi l'ensemble des répondants",
-                          nom_legende = "Contact direct avec des clients")
-```
 
 ```{r}
 graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
+                          nom_geo = "Rouen",
                           titre = "Modalité de travail des commerces rouennais répondants, parmi l'ensemble des répondants",
                           nom_legende = "Travail seul")
 ```
@@ -7450,21 +7699,27 @@ cc_liensocial(rouen, "     À Rouen :")
 ```
 
 ```{r fig.height=6}
-viz_liensocial_frequence_confidence(rouen, "À Rouen, près de 7 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
+viz_liensocial_frequence_confidence(rouen, "À Rouen, 6 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
 ```
 
 ```{r}
 viz_liensocial_frequence_expliproduits(rouen, 
-                                       "À Rouen, 97% des commerçants expliquent leurs produits au moins une fois par semaine", 
+                                       "À Rouen, 9 commerçants sur 10 expliquent leurs produits au moins une fois par semaine", 
                                        "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_liensocial_associations(rouen, "À Rouen, les <span style='color: #3182BD'>associations de quartier</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent")
+viz_liensocial_associations(rouen, "À Rouen, les <span style='color: #3182BD'>associations sociales</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50), limits = c(0, 50)) +
+    ggplot2::annotate("text",
+                      x = 5,
+                      y = 22.8,
+                      label = "40% des collaborations \nse font avec des \nassociations sociales",
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
-viz_liensocial_techniquestra(rouen, "À Rouen, plus de 7 commerçants sur 10 utilisent des techniques traditionnelles ou artisanales pour fabriquer leurs produits")
+viz_liensocial_techniquestra(rouen, "À Rouen, 8 commerçants sur 10 utilisent des techniques traditionnelles ou artisanales pour fabriquer leurs produits")
 ```
 
 #### Solidarités
@@ -7480,7 +7735,7 @@ viz_solidarites_wordcloud_aides(rouen, "À Rouen, l'accès aux toilettes et le d
 
 ```{r}
 viz_solidarites_frequence_sollicitations(rouen, 
-                                         "À Rouen, 1 commerce sur 4 est sollicité au moins une fois par semaine par des personnes précaires", 
+                                         "À Rouen, 22% des commerçants sont sollicités au moins une fois par semaine par des personnes précaires", 
                                          "1 fois par semaine et plus")
 ```
 
@@ -7489,11 +7744,11 @@ viz_solidarites_frequence_nouvelles(rouen, "À Rouen, près de 9 commerçants su
 ```
 
 ```{r}
-viz_solidarites_redirection(rouen, "À Rouen, le <span style='color: #3182BD'>social</span> est le principal type de service <br>vers lequel les commerçants orientent")
+viz_solidarites_redirection(rouen, "À Rouen, le <span style='color: #3182BD'>social</span> est le principal type de <br>service vers lequel les commerçants orientent")
 ```
 
 ```{r}
-viz_solidarites_frequence_redirection(rouen, "À Rouen, plus d'un quart des commerçants dirigent des clients vers des aides extérieures", "1 fois par semaine et plus")
+viz_solidarites_frequence_redirection(rouen, "À Rouen, 45% des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
 ```
 
 #### Vie de quartier
@@ -7508,7 +7763,7 @@ viz_viequartier_matrice_collab(rouen,
 ```
 
 ```{r fig.width=11}
-viz_viequartier_events(rouen, "À Rouen, 3 commerçants sur 10 participent à l'organisation d'évènements dans leur quartier")
+viz_viequartier_events(rouen, "À Rouen, 44% des commerçants participent à l'organisation d'évènements dans leur quartier")
 ```
 
 
@@ -7519,15 +7774,15 @@ cc_santesecu(rouen, "     À Rouen :")
 ```
 
 ```{r}
-viz_santesecu_frequence_insecurite(rouen, "À Rouen, 2 commerces sur 10 interviennent en cas d'insécurité au moins chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_insecurite(rouen, "À Rouen, près de 4 commerces sur 10 interviennent en cas d'insécurité au moins chaque mois", "1 fois par mois et plus")
 ```
 
 ```{r}
-viz_santesecu_frequence_accidents(rouen, "À Rouen, près d'un quart des commerçants aide en cas d'accidents ou malaise au moins chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_accidents(rouen, "À Rouen, 22% des commerçants aident en cas d'accidents ou malaise au moins chaque mois", "1 fois par mois et plus")
 ```
 
 ```{r}
-viz_santesecu_frequence_vols(rouen, "À Rouen, plus d'un commerçant sur 10 est confronté à l'insécurité chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_vols(rouen, "À Rouen, près de 2 commerçants sur 10 sont confrontés à l'insécurité chaque mois", "1 fois par mois et plus")
 ```
 
 
@@ -7538,19 +7793,70 @@ cc_environnement(rouen, "     À Rouen :")
 ```
 
 ```{r}
-viz_environnement_conso_eauelec(rouen, "À Rouen, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants")
+viz_environnement_conso_eauelec(rouen, "À Rouen, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants", 6.5, 43) +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
 ```{r}
-viz_environnement_discu_envt(rouen, "À Rouen, 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
+viz_environnement_discu_envt(rouen, "À Rouen, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
+```
+
+```{r fig.height=6}
+# Données
+table <- rouen |> 
+    mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
+    unnest(Var) |> 
+    mutate(Var = str_replace_all(Var, c("Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre / pas une priorité",
+                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné",
+                                        "Bornes de recyclage pour p" = "P",
+                                        "Bornes de recyclage pour a" = "A",
+                                        "Bornes de recyclage traditionnelles : carton et tout venant" = "Cartons et tout venant",
+                                        "Container de recyclage pour vêtements" = "Vêtements",
+                                        "Récupération de capsules de café" = "Capsules de café",
+                                        "Recyclage de cheveux ou poils d'animaux" = "Cheveux ou poils d'animaux",
+                                        "Récupération de boîtes d'oeuf ou bocaux" = "Boîtes d'oeuf ou bocaux"))) |> 
+    select(Var) |> 
+    mutate(Var = str_squish(Var)) |> 
+    count(Var)
+
+# Stats pour annotation
+percent_solut_recy <- table |> 
+    filter(Var != "Non concerné",
+           Var != "Compliqué à mettre en oeuvre / pas une priorité") |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == "Piles électriques")
+
+# Lolipop chart
+table |> 
+    mutate(Var = fct_reorder(Var, n)) |> 
+    ggplot( aes(x=Var, y=n)) +
+    geom_segment(aes(xend=Var, yend=0), 
+                 color=ifelse(table$Var == "Piles électriques", "#3182BD", "grey"), 
+                 size=ifelse(table$Var == "Piles électriques", 1.3, 0.7)) +
+    geom_point(color=ifelse(table$Var == "Piles électriques", "#3182BD", "grey"), 
+               size=ifelse(table$Var == "Piles électriques", 5, 2)) +
+    theme_bw() +
+    coord_flip() +
+    labs(title = "À Rouen, le recyclage des <span style='color: #3182BD'>piles électriques</span> est <br>une solution adoptée par une majorité de <br>commerçants recyclant",
+         subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
+         y = "Nombre de commerces") +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60), limits = c(0, 30)) + 
+    custom_theme() +
+    theme(legend.position = "none", 
+          axis.title.y = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_markdown()) +
+    ggplot2::annotate("text",
+                      x = 6.5,
+                      y = 9,
+                      label = paste0(round(percent_solut_recy$percent, 0), "% des solutions \nportent sur la \nrécupération des piles"),
+                      color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 ```
 
 ```{r}
-viz_environnement_recyclage(rouen, "À Rouen, le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant")
-```
-
-```{r}
-viz_environnement_fournisseurs(rouen, "À Rouen, plus de 2 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts")
+viz_environnement_fournisseurs(rouen, "À Rouen, 2 commerçants sur 10 recyclent \nleurs déchêts")
 ```
 
 
@@ -7561,7 +7867,8 @@ cc_espacepublic(rouen, "     À Rouen :")
 ```
 
 ```{r}
-viz_espacepublic_embellissement(rouen, "À Rouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>")
+viz_espacepublic_embellissement(rouen, "À Rouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 75))
 ```
 
 ```{r}
@@ -7569,15 +7876,15 @@ viz_espacepublic_frequence_appelmairie(rouen, "À Rouen, 1 commerçant sur 2 app
 ```
 
 ```{r}
-viz_espacepublic_frequence_nettoyage(rouen, "À Rouen, 7 commerçants sur 10 nettoyent les abords de leur commerce chaque semaine", "1 fois par semaine et plus")
+viz_espacepublic_frequence_nettoyage(rouen, "À Rouen, 6 commerçants sur 10 nettoyent les abords de leur commerce chaque semaine", "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_espacepublic_patrimoine(rouen, "À Rouen, 1 commerce sur 10 se situe dans un bâtiment classé")
+viz_espacepublic_patrimoine(rouen, "À Rouen, 28% des commerces intérrogés se situent dans un bâtiment classé")
 ```
 
 ```{r}
-viz_espacepublic_detail_partimoine(rouen, "À Rouen, plus de 7 commerces sur 10 sont situés dans des bâtiments non classés")
+viz_espacepublic_detail_partimoine(rouen, "À Rouen, plus de 6 commerces sur 10 sont situés dans des bâtiments non classés")
 ```
 
 
@@ -7611,6 +7918,32 @@ fonction_stat_commune <- function(table, territoire, Externalité_texte, Indicat
     assign(glue("stat_commune_{nom_export}"), stat_commune, envir = .GlobalEnv)
 }
 
+# Fonction de calcul de l'indicateur RÉSUMÉ et sauvegarde
+fonction_stat_commune_resume <- function(table, territoire, Externalité_texte, Indicateur_texte, nom_export){
+    # Calcul de l'indicateur
+    stat_commune <- table |> 
+        group_by(Libelle_acheminement2) |> 
+        mutate(is_all1 = ifelse(`a_considerer...1` == "1" & `variable_indic...2` == "1" & `a_considerer...4` == "1" & 
+                                   `variable_indic...5` == "1" & `a_considerer...6` == "1" &  `variable_indic...7` == "1",
+                                "1", "0")) |> 
+        count(is_all1) |> 
+        mutate(percent = round(n / sum(n) * 100, 0),
+               nb_reponses = sum(n)) |> 
+        ungroup() |> 
+        filter(is_all1 == "1") |> 
+        arrange(desc(nb_reponses)) |> 
+        filter(Libelle_acheminement2 == territoire) |> 
+        select(nb_reponses, percent) |> 
+        rename(`Nombre de réponses` = nb_reponses,
+               `%` = percent) |> 
+        na.omit() |> 
+        mutate(Externalité = Externalité_texte,
+               Indicateur = Indicateur_texte, .before = `Nombre de réponses`)
+    # Export
+    assign(glue("stat_commune_{nom_export}"), stat_commune, envir = .GlobalEnv)
+}
+
+
 #--- Calcul des indicateurs 
 calcul_indicateur_territoire <- function(territoire, territoire_nom){
     # Aider les personnes précaires
@@ -7619,7 +7952,6 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
         filter(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") ==  FALSE,
                !is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
         mutate(variable_indic = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, "0", "1"))
-        
         # Calcul de l'indicateur
     fonction_stat_commune(table,
                           territoire = territoire,
@@ -7632,12 +7964,12 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
     table <- data |> 
         filter(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` != "Je ne sais pas",
                !is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
-        mutate(variable_indic = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` == "Jamais", "0", "1"))
+        mutate(variable_indic = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0"))
         # Calcul de l'indicateur
     fonction_stat_commune(table,
                           territoire = territoire,
                           Externalité_texte = "Solidarités", 
-                          Indicateur_texte = "% de commerces a qui se confient les clients sur des sujets privés",
+                          Indicateur_texte = "% de commerces a qui se confient les clients sur des sujets privés chaque semaine",
                           nom_export = glue("{territoire_nom}_solidarites_soin_gens"))
     
     # Orienter vers l'aide sociale
@@ -7652,17 +7984,40 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
                           Indicateur_texte = "% de commerces ayant déjà redirigé des clients vers des aides extérieures",
                           nom_export = glue("{territoire_nom}_solidarites_aide_ext"))
     
+    # Indicateur récap - Solidarités
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") == TRUE | is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`), "0", "1"),
+               variable_indic = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, "0", "1")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`== "Je ne sais pas" | is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`), "0", "1"),
+               variable_indic = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`), "0", "1"),
+               variable_indic = ifelse(grepl("Oui", `Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) == TRUE, "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume(table,
+                                 territoire = territoire,
+                                 Externalité_texte = "Lien social", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_solidarites_resume"))
+
+    
     # Socialisation et réduire l'isolement
         # Sélection des données
     table <- data |> 
         filter(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` != "Je ne sais pas",
                !is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
-        mutate(variable_indic = ifelse(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` == "Jamais", "0", "1"))
+        mutate(variable_indic = ifelse(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0"))
         # Calcul de l'indicateur
     fonction_stat_commune(table,
                           territoire = territoire,
                           Externalité_texte = "Lien social", 
-                          Indicateur_texte = "% de commerces ayant des discussions informelles avec leurs clients",
+                          Indicateur_texte = "% de commerces ayant des discussions informelles avec leurs clients chaque semaine",
                           nom_export = glue("{territoire_nom}_liensocial_socialiser"))
     
     # Partager des savoirs-faire
@@ -7670,12 +8025,12 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
     table <- data |> 
         filter(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` != "Je ne sais pas",
                !is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
-        mutate(variable_indic = ifelse(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` == "Jamais", "0", "1"))
+        mutate(variable_indic = ifelse(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) 
         # Calcul de l'indicateur
     fonction_stat_commune(table,
                           territoire = territoire,
                           Externalité_texte = "Lien social", 
-                          Indicateur_texte = "% de commerces donnant des explications approfondies sur les produits",
+                          Indicateur_texte = "% de commerces donnant des explications approfondies sur les produits chaque semaine",
                           nom_export = glue("{territoire_nom}_liensocial_savoirs-faires"))
     
     # Construire une communauté locale
@@ -7695,12 +8050,14 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
     table <- data |> 
         filter(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` != "Cette situation ne s'applique pas à mon activité",
                !is.na(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`)) |> 
-        mutate(variable_indic = ifelse(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` %in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services"), "0", "1"))
+        mutate(nb_aides = str_count(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`, ",") +1,
+               variable_indic = ifelse(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` %in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services") == FALSE & nb_aides >= 2, "1", "0")) 
+        #%in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services"), "0", "1"
         # Calcul de l'indicateur
     fonction_stat_commune(table,
                           territoire = territoire,
                           Externalité_texte = "Vie de quartier", 
-                          Indicateur_texte = "% de commerces rendant des services à leurs collègues commerçants",
+                          Indicateur_texte = "% de commerces rendant au moins deux types de service à leurs collègues commerçants",
                           nom_export = glue("{territoire_nom}_viequartier_entreaide_co"))
     
     # Animer la rue
@@ -7929,7 +8286,25 @@ stat_commune_finale |>
     tab_style(style = list(cell_borders(sides = c("t", "b"), color = "white", weight = px(2))),
               locations = cells_row_groups()) |> 
     # centrage des colonnes
-    cols_align(align = "center", columns = c(`Nombre de réponses`, `%`, ` Nombre de réponses`, ` %`, `Nombre de réponses `, `% `)) 
+    cols_align(align = "center", columns = c(`Nombre de réponses`, `%`, ` Nombre de réponses`, ` %`, `Nombre de réponses `, `% `)) |> 
+    # fixe les noms de colonnes et titre 
+    opt_css(css = "
+      /* Fixer le titre */
+      .gt_title, .gt_subtitle {
+        position: sticky;
+        top: 0; 
+        background-color: #f9f9f9; /* Couleur de fond pour le titre */
+        z-index: 2;               /* Met le titre au-dessus */
+        padding: 5px;             /* Ajoute un peu de marge interne */
+      }
+      
+      /* Fixer les noms des colonnes */
+      thead th {
+        position: sticky;
+        top: 30px;                /* Ajuste en fonction de la hauteur du titre */
+        background-color: #ffffff; /* Couleur de fond pour l'en-tête */
+        z-index: 1;               /* Met les noms de colonnes devant les lignes */
+      }")
 ```
 
 
