@@ -1254,6 +1254,45 @@ graph_comparaison_pop_3frequences(data = table,
                                   subtitle_name = "Répartition des commerces selon leurs discussions privées avec des clients")
 ```
 
+```{r eval=FALSE, include=FALSE}
+table <- data |>  
+    mutate(Var = str_replace_all(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, 
+                                 c("Je ne sais pas" = NA_character_, 
+                                   "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+    summarise(n = n(), .by = c(Var, `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`)) |> 
+    na.omit() |>
+    mutate(percent_freq = n/sum(n), .by = Var) 
+
+table |> 
+    mutate(nb_reponses_freq = sum(n), .by = Var) |> 
+    mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", "1 fois par semaine et plus")),
+           `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)` = factor(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, 
+                                                                                                                                       levels = c("Plus de 200", "100 et 200", "50 à 100", "20 à 50", "1 à 20"))) |> 
+    ggplot() + 
+    geom_bar(aes(y=percent_freq, x=Var, fill = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, group = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, alpha = Var != ""),
+             position="stack", stat="identity", width=.6) +
+    #scale_fill_manual(values = c("moyenne" = "#9ECAE1", "élevée" = "#3182BD", "très élevée" = "#0C4C8A")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap("subtitle_name", width = 55),
+         title = stringr::str_wrap("title_name", width = 45)) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          legend.title = ggplot2::element_text(family = font, size = 16, color = "#222222"),
+          legend.text = ggplot2::element_text(family = font, size = 14,color = "#222222"), 
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none", fill = guide_legend(title = "Population", nrow = 1, reverse = TRUE)) +
+    coord_flip()
+```
+
 ### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
@@ -5861,7 +5900,7 @@ viz_environnement_fournisseurs <- function(donnees, title_name){
           custom_theme() +
           theme(legend.position = "none")
 }
-viz_environnement_fournisseurs(data, "Près de 2 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts")
+viz_environnement_fournisseurs(data, "Plus de 3 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts")
 ```
 
 <br>
@@ -6101,12 +6140,19 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-graph_questions_freq(table, ref_interpellation_mairie, "Près de 4 commerçants sur 10 interpellent les services de la mairie moins d'un fois par mois", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", "Très rarement (moins d'une fois par mois)", "#3182bd") +
-    labs(title = str_wrap("Près de 4 commerçants sur 10 interpellent les services de la mairie moins d'un fois par mois", width = 50)) +
+table |> 
+    mutate(a_surligner = case_when(Var == "Jamais" ~ "1", 
+                                   .default = "0")) |> 
+    graph_questions_freq(ref_interpellation_mairie, "Plus de la moitié des commerçants ont déjà interpellé les services de la mairie", 
+                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
+    labs(title = str_wrap("Plus de la moitié des commerçants ont déjà interpellé les services de la mairie", width = 50)) +
     theme(plot.caption = element_blank(),
           plot.title = element_text(size = 19),
           plot.margin = unit(c(0, 1, 0, 0), "cm")) +
+    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+             position="dodge", stat="identity", width=.6) +
+    scale_fill_manual(values = c("1" = "#ACCDE4", "0" = "#3182bd")) +
+    guides(fill = "none") +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
 ```
@@ -6945,7 +6991,7 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name){
     # Graphique
     table_patrimoine |> 
       mutate(Var = fct_reorder(Var, n),
-             a_surligner = ifelse(Var == "Non classé", "1", "0")) |> 
+             a_surligner = ifelse(Var %in% c("Classé, soin particulier apporté", "Non classé mais ancien, efforts faits pour préserver l'aspect original"), "1", "0")) |> 
       ggplot() + 
         geom_bar(aes(y=n, x=Var, fill = a_surligner),
                  position="dodge", stat="identity", width=.6) +
@@ -6965,7 +7011,7 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name){
         coord_flip() +
         guides(fill = "none")
 }
-viz_espacepublic_detail_partimoine(data, "2/3 des commerces sont situés dans des batiments non classés")
+viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade")
 ```
 
 <br>
