@@ -3722,6 +3722,7 @@ table |>
     geom_bar(aes(y=n, x=Var, fill = a_surligner),
              position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(breaks = c(0, 100, 200), limits = c(0, 280)) +
     labs(x = "", y = "Nombre de commerces", linetype = "",
          title = str_wrap("Un quart des commerçants recommandent et adressent des clients à leurs collègues commerçants", width = 40),
          subtitle = stringr::str_wrap("Services rendus par les commerces aux commerces voisins", width = 55)) +
@@ -3730,7 +3731,6 @@ table |>
     theme_classic() +
     custom_theme() +
     theme(legend.position = "none",
-          plot.margin = unit(c(0, 1, 0, 0), "cm"),
           plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
@@ -3766,15 +3766,15 @@ table |>
     geom_bar(aes(y=n, x=Var, fill = a_surligner),
              position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 170)) +
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = str_wrap("Plus d'un tiers des commerçants réceptionnent des colis pour leurs voisins d'immeuble", width = 50),
+         title = str_wrap("Plus d'un tiers des commerçants réceptionnent des colis pour leurs voisins d'immeuble", width = 45),
          subtitle = stringr::str_wrap("Services rendus par les commerçants aux habitants de leur immeuble", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
     custom_theme() +
     theme(legend.position = "none",
-          plot.margin = unit(c(0, 1, 0, 0), "cm"),
           plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
           panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
           panel.grid.major.y = ggplot2::element_blank()) +
@@ -5663,7 +5663,7 @@ viz_environnement_discu_envt <- function(donnees, title_name){
         theme_classic() +
         custom_theme() +
         theme(legend.position = "none",
-              plot.margin = unit(c(0, 1, 0, 0), "cm"),
+              plot.margin = unit(c(0, 0, 0, 0), "cm"),
               plot.title = ggplot2::element_text(size = 20, face = "bold", color = "#222222"), 
               panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
               panel.grid.major.y = ggplot2::element_blank()) +
@@ -5671,7 +5671,8 @@ viz_environnement_discu_envt <- function(donnees, title_name){
         scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
         coord_flip()
 }
-viz_environnement_discu_envt(data, "Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement")
+viz_environnement_discu_envt(data, "Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement") +
+        scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 140))
 ```
 
 
@@ -6516,7 +6517,8 @@ graph_questions_freq(table, ref_nettoyage_abords, "15% des commerçants nettoien
     theme(plot.caption = element_blank(),
           plot.margin = unit(c(0, 1, 0, 0), "cm")) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 150, 200), limits = c(0, 110))
 ```
 
 #### IDF
@@ -7258,7 +7260,8 @@ viz_environnement_conso_eauelec(paris, "À Paris, la réduction des factures d'<
 ```
 
 ```{r}
-viz_environnement_discu_envt(paris, "À Paris, 3 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement")
+viz_environnement_discu_envt(paris, "À Paris, 3 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement") +
+    scale_y_continuous(breaks = c(0, 20, 40, 60, 100, 150, 200), limits = c(0, 65))
 ```
 
 ```{r fig.height=7}
@@ -7549,7 +7552,8 @@ viz_environnement_conso_eauelec(stouen, "À St Ouen, la réduction des factures 
 ```
 
 ```{r}
-viz_environnement_discu_envt(stouen, "À St Ouen, près de 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
+viz_environnement_discu_envt(stouen, "À St Ouen, près de 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
+     scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 9), limits = c(0, 7))
 ```
 
 ```{r fig.height=6}
@@ -7592,7 +7596,7 @@ table |>
          subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
          y = "Nombre de commerces") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
-    scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7,8,9), limits = c(0, 10)) + 
+    scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7,8,9), limits = c(0, 8)) + 
     custom_theme() +
     theme(legend.position = "none", 
           axis.title.y = element_blank(),
@@ -7798,7 +7802,8 @@ viz_environnement_conso_eauelec(rouen, "À Rouen, la réduction des factures d'<
 ```
 
 ```{r}
-viz_environnement_discu_envt(rouen, "À Rouen, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement")
+viz_environnement_discu_envt(rouen, "À Rouen, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 37))
 ```
 
 ```{r fig.height=6}
@@ -7868,7 +7873,7 @@ cc_espacepublic(rouen, "     À Rouen :")
 
 ```{r}
 viz_espacepublic_embellissement(rouen, "À Rouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
-    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 75))
+    scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
 ```{r}
