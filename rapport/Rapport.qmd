@@ -1,0 +1,209 @@
+---
+title: "Mise en équivalence <br>des externalités positives <br>du commerce de proximité"
+subtitle: "Projet de recherche-action EXCOM"
+author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Allyson Pallisser <br>Samuel Goëta
+date: 01/31/2025
+format:
+  html:
+    toc: true
+    toc-title: Sommaire
+    toc-location: left
+    number-sections: false
+    page-layout: full
+    embed-resources: true
+    code-fold: false
+    css: styles.css
+    grid:
+      sidebar-width: 300px
+      body-width: 1200px
+      margin-width: 300px
+      gutter-width: 3rem
+execute:
+  cache: false
+  echo: false
+  warning: false
+  message: false
+  eval: true
+  collapse: true
+  fig.show: "hold"
+---
+
+
+```{=html}
+<script>
+  $(document).ready(function() {
+    $('#TOC').parent().prepend('<div id=\"nav_logo\"><img src=\"https://nextcloud.datactivist.coop/s/QBsAD4P7b9KNd5g/preview"></div>');
+  });
+</script>
+```
+
+```{r logo et police, echo = FALSE, message = FALSE, warning=FALSE, error=FALSE}
+# Graphisme haut droit de page
+htmltools::img(src = "https://nextcloud.datactivist.coop/s/oEqjKtbKBnm5j22/preview", 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; right:0; width:300px')
+
+# Polices
+library(showtext)
+font_add("Montserrat", 
+         regular = "../Questionnaire_effets_commerce/fonts/Montserrat-VariableFont_wght.ttf",
+         bold = "../Questionnaire_effets_commerce/fonts/Montserrat-Bold.ttf")
+font_add("Open sans", regular = "../Questionnaire_effets_commerce/fonts/OpenSans-VariableFont_wdth,wght.ttf")
+showtext_auto()
+
+# {-} après les headers 3 et 4 pour enlever le numérotage automatique
+```
+
+```{css, echo = FALSE}
+#nav_logo { /*paramètres logo Data Publica en haut à gauche*/
+  width: 80%;
+  margin-top: 20px;
+  margin-left: -15px;
+}
+#TOC {
+    background-color: #f9f9f9; /* Couleur de fond */
+    border: 1px solid #ddd;   /* Bordure autour de la TOC */
+    padding: 15px;            /* Espacement interne */
+    border-radius: 5px;       /* Coins arrondis */
+    margin-bottom: 20px;      /* Espacement sous la TOC */
+    /*box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+}
+#toc-title {
+    font-size: 1.5em;         /* Taille du texte */
+    font-weight: bold;        /* Texte en gras */
+    color: #304B95;           /* Couleur du texte */
+    text-align: left;       /* Centrer le texte */
+    margin-top: -5px;      /* Espacement sous le titre */
+    margin-bottom: 10px;      /* Espacement sous le titre */
+    margin-left: -65px;      /* Espacement sous le titre */
+}
+/* Style pour les liens dans la TOC */
+#TOC ul {
+    list-style-type: none;    /* Supprimer les puces */
+    padding: 0;               /* Supprimer le padding */
+    padding: 5px;               /*espace avant*/
+    margin: 0;                /* Supprimer les marges */
+}
+#TOC ul li a:hover {
+    color: #0056b3;           /* Couleur au survol */
+}
+.sidenote, .marginnote { 
+  float: left;
+  clear: left;
+  margin-left: -27%; 
+  margin-right: -40%;
+  margin-top: -70px; /*vertical alignement*/
+  position: relative;
+}
+.sidenote2, .marginnote2 { 
+  float: left;
+  clear: left;
+  width: 7%;
+  margin-left: 0%; 
+  margin-right: -40%;
+  margin-top: 38px; /*vertical alignement*/
+  position: relative;
+}
+.sidenote3, .marginnote3 { 
+  float: left;
+  clear: left;
+  margin-left: 5%; 
+  margin-right: -40%;
+  margin-top: 38px; /*vertical alignement*/
+  position: relative;
+}
+```
+
+
+![](../Questionnaire_effets_commerce/images/logos_partenaires.png){width=1100px}
+
+<br>
+
+*[Télécharger cette étude en PDF](mettre lien)*
+
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+# Aperçu des données
+
+<div align="center">
+<iframe frameborder="0" width="600" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/cartographie_repondants.html"></iframe>
+</div>
+
+
+
+En plus de diffuser le questionnaire en ligne, nous avons sollicité directement des commerces à Paris, Saint-Ouen, Marseille et Rouen, qui sont donc les territoires les plus représentés dans l’échantillon. 
+
+<br>
+
+:::: {.columns}
+::: {.column width="50%"}
+Celui-ci comprend par ailleurs des réponses d’une grande variété de types de commerce. Dans l’ensemble, nous avons observé que tous les types de commerces, quelle que soit la taille de la ville dans laquelle ils sont implantés, contribuent positivement à leur environnement. Dans ce rapport, nous n’avons donc relevé les différences que lorsqu’elles étaient marquées. 
+:::
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="45%"}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-4-1.png)
+:::
+::::
+
+
+
+:::: {.columns}
+::: {.column width="35%"}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-5-1.png)
+:::
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="60%"}
+Si les produits ou services vendus varient grandement, les commerces interrogés ont en commun d’être très largement **indépendants** (près de 90%), tous **en contact avec des clients** à l’exception d’un, et d’avoir un lieu de **vente dédié**. 
+:::
+::::
+
+Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces derniers sont représentés dans l’enquête mais constituent une minorité de répondants. Car **une partie des micro-commerçants occupe l’espace public différemment des commerçants ayant un pas-de-porte** (ex : via une présence sur des marchés réguliers ou ponctuels/thématiques), une étude focalisée sur leur profil permettrait de préciser leurs apports à l’espace public, aux passants et habitants. 
+
+<br>
+
+:::: {.columns}
+::: {.column width="60%"}
+Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces au quartier.** 
+:::
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="35%"}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-11-1.png)
+:::
+::::
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-12-1.png){width=400px}
+
+Le rapport est divisé en 6 parties, afin de rendre compte des apports des commerces dans autant de grandes catégories d’effets sociaux et environnementaux : lien social, solidarités, vie de quartier, santé et sécurité, environnement, espace public. 
+
+::: {.column-margin}
+Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu’ils recouvrent exactement…), vous pouvez consulter le [premier rapport du projet EXCOM](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p). 
+:::
+
+# ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT> {-}
+#### <FONT COLOR="#B4B1B1">Les commerces au cœur des interactions quotidiennes</FONT>
+
+# ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT> {-}
+#### <FONT COLOR="#004654">Des interlocuteurs essentiels pour les personnes en situation de précarité</FONT>
+
+# ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT> {-}
+#### <FONT COLOR="#0097B2">Entre services rendus et organisation d’évènements, l’entretien du sentiment de vivre ensemble
+
+# ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT> {-}
+#### <FONT COLOR="#00A589">Une présence dans la rue permettant des réponses immédiates</FONT>
+
+# ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT> {-}
+#### <FONT COLOR="#E1B441">Une prise de conscience générale des enjeux environnementaux</FONT>
+
+# ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT> {-}
+#### <FONT COLOR="#FF5757">Des apports concrets au cadre de vie</FONT>
+
+# Notice technique
