@@ -94,12 +94,12 @@ body { /*corps de texte*/
 
 /* Custom l'apparence des hyperliens du doc */
 a:link { /*lien hyper texte*/
-    color: #0056b3;
+    color: #304B95;
 }
 a:hover { /*souris au-dessus du lien hyper texte*/
-    color: #0056b3;
+    color: #304B95;
 }
 a:visited { /*lien visité*/
-    color: #0000FF;
+    color: #0056b3;
 }
 

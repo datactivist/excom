@@ -524,6 +524,7 @@ leaflet_map <- map@map %>%
     position = "topright"
   )
 leaflet_map
+saveWidget(leaflet_map, file="Questionnaire_effets_commerce_files/cartographie_repondants.html")
 ```
 
 
