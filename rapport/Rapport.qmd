@@ -6,6 +6,7 @@ date: 01/31/2025
 format:
   html:
     toc: true
+    toc-active: true
     toc-title: Sommaire
     toc-location: left
     number-sections: false
@@ -23,19 +24,12 @@ citation-location: margin
 ---
 
 
-```{=html}
-<script>
-  $(document).ready(function() {
-    $('#TOC').parent().prepend('<div id=\"nav_logo\"><img src=\"https://nextcloud.datactivist.coop/s/QBsAD4P7b9KNd5g/preview"></div>');
-  });
-</script>
-```
 
 ```{r logo et police, echo = FALSE, message = FALSE, warning=FALSE, error=FALSE}
 # Graphisme haut droit de page
-htmltools::img(src = "https://nextcloud.datactivist.coop/s/oEqjKtbKBnm5j22/preview", 
+htmltools::img(src = "visuel_haut_droit.png", 
                alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; width:300px')
+               style = 'position:absolute; top:0; right:0; width:400px')
 
 # Polices
 library(showtext)
@@ -60,7 +54,6 @@ showtext_auto()
     padding: 15px;            /* Espacement interne */
     border-radius: 5px;       /* Coins arrondis */
     margin-bottom: 20px;      /* Espacement sous la TOC */
-    /*box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
 }
 #toc-title {
     font-size: 1.5em;         /* Taille du texte */
@@ -75,38 +68,16 @@ showtext_auto()
 #TOC ul {
     list-style-type: none;    /* Supprimer les puces */
     padding: 0;               /* Supprimer le padding */
-    padding: 5px;               /*espace avant*/
+    padding: 5px;             /*espace avant*/
     margin: 0;                /* Supprimer les marges */
 }
-.sidenote, .marginnote { 
-  float: left;
-  clear: left;
-  margin-left: -27%; 
-  margin-right: -40%;
-  margin-top: -70px; /*vertical alignement*/
-  position: relative;
-}
-.sidenote2, .marginnote2 { 
-  float: left;
-  clear: left;
-  width: 7%;
-  margin-left: 0%; 
-  margin-right: -40%;
-  margin-top: 38px; /*vertical alignement*/
-  position: relative;
-}
-.sidenote3, .marginnote3 { 
-  float: left;
-  clear: left;
-  margin-left: 5%; 
-  margin-right: -40%;
-  margin-top: 38px; /*vertical alignement*/
-  position: relative;
+.sidebar.toc-left .nav-link.active {
+  color: #304B95 !important; /* Couleur pour l'élément actif */
+  font-weight: bold; /* Gras pour l'élément actif */
 }
 ```
 
 
-![](../Questionnaire_effets_commerce/images/logos_partenaires.png){width=1100px}
 
 <br>
 
@@ -185,10 +156,6 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 # ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT> {-}
 #### <FONT COLOR="#B4B1B1">Les commerces au cœur des interactions quotidiennes</FONT>
 
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
-</p>
-
 <center>
 :::: {.columns}
 ::: {.column width="70%"}
@@ -201,6 +168,10 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 :::
 ::::
 </center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
+</p>
 
 Les commerces locaux, tels que cafés, librairies, bars et salons de coiffure, jouent un rôle crucial en offrant des espaces de rencontre, favorisant la santé sociale, la vitalité démocratique et le bien-être individuel. Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, ils constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles. 
 
@@ -270,33 +241,43 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 
 <center>
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-51-1.png){width=600px}
+
+<br>
+
 </center>
 
-**En résumé, les commerces proposent à la fois un espace d’échange du quotidien, de partage, et contribuent à faire vivre le tissu associatif local.** 
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : les commerces proposent à la fois un espace d’échange du quotidien, de partage, et contribuent à faire vivre le tissu associatif local.
+</div>
+
+<br>
+
 
 # ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT> {-}
 #### <FONT COLOR="#004654">Des interlocuteurs essentiels pour les personnes en situation de précarité</FONT>
 
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-53-1.png" width = "600">
-</p>
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“Notre engagement est social, écologique et politique, c'est le cœur battant de tout commerçant de centre-ville !”*
 
-*-- Magasin de vêtements, Sénas --*
+<div style="text-align: right">*-- Magasin de vêtements, Sénas*</div>
 
 > *“Nous sommes une boutique solidaire et nous sommes identifiés comme un lieu bienveillant par la population. On crée du lien et de l’écoute avec l'équipe de bénévoles mais aussi entre les clients.”*
 
-*-- Recyclerie, Elbeuf --*
+<div style="text-align: right">*-- Recyclerie, Elbeuf*</div>
 </FONT>
 :::
 ::::
-</center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-53-1.png" width = "600">
+</p>
 
 De nombreux commerçants de proximité sont régulièrement au contact de personnes en situation de précarité et peuvent agir directement auprès d’elles, en leur offrant l’accès à des services de base. Ils peuvent aussi être des points relais pour diverses formes d'aide sociale, particulièrement dans les zones moins denses, où l’accès aux services peut être limité, [comme le souligne entre autres l’Avise](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], association de soutien à l’économie sociale et solidaire. Enfin, de nombreux commerçants ont déclaré être impliqués dans des actions caritatives, comme la collecte de dons alimentaires ou la participation à des programmes d'aide aux personnes isolées. Ils sont ainsi comme de véritables acteurs de la solidarité, contribuant activement à soutenir les membres les plus vulnérables de leur communauté.
 
@@ -354,7 +335,7 @@ Cependant, nous observons une sur-sollicitation des cafés/restaurants par rappo
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #0056b3; font-weight: bold;">45%</p>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">45%</p>
 de tous les commerçants ont déjà renvoyé au moins un client vers une aide extérieure (services sociaux, de santé ou forces de l’ordre).
 :::
 
@@ -381,16 +362,18 @@ Il existe une différence marquée selon la taille de ville. Les commerçants de
 
 **Dans les zones rurales et peu denses, les commerces de proximité sont souvent les seuls points de services essentiels pour les habitants**. [59% des communes rurales n'ont plus aucun commerce de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], ce qui rend les commerces existants d'autant plus cruciaux. 
 
-Dans l’ensemble, les commerces de proximité sont donc des **points d’échange informels** avec les clients, mais également des **relais vers des services adaptés** à répondre à des besoins spécifiques. Ils sont également **en première ligne face à des personnes précaires**.
 
+<br>
 
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : les commerces de proximité sont des points d’échange informels avec les clients, mais également des relais vers des services adaptés à répondre à des besoins spécifiques. Ils sont également en première ligne face à des personnes précaires.
+</div>
+
+<br>
 
 # ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT> {-}
 #### <FONT COLOR="#0097B2">Entre services rendus et organisation d’évènements, l’entretien du sentiment de vivre ensemble</FONT>
 
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-106-1.png" width = "600">
-</p>
 
 <center>
 :::: {.columns}
@@ -404,6 +387,10 @@ Dans l’ensemble, les commerces de proximité sont donc des **points d’échan
 :::
 ::::
 </center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-106-1.png" width = "600">
+</p>
 
 Les commerces de proximité sont des piliers essentiels à la construction d’une communauté locale dynamique et attrayante. Ils jouent un rôle crucial dans le tissu social, économique et culturel d’un quartier. 
 
@@ -477,14 +464,16 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 :::
 ::::
 
+<br>
 
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : les commerces de proximité sont des acteurs clés de la vie de quartier, tissant des réseaux d’entraide professionnelle et sociale entre commerçants et habitants. Ils soutiennent les dynamiques locales par des services réciproques, des liens de sociabilité, et l’organisation d’événements.
+</div>
+
+<br>
 
 # ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT> {-}
 #### <FONT COLOR="#00A589">Une présence dans la rue permettant des réponses immédiates</FONT>
-
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-116-1.png" width = "600">
-</p>
 
 <center>
 :::: {.columns}
@@ -498,6 +487,10 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 :::
 ::::
 </center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-116-1.png" width = "600">
+</p>
 
 Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américain, a souligné l'importance des commerçants en tant que "yeux sur la rue", autrement dit **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
 
@@ -544,16 +537,20 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
     
     **Arrêtons les violences**, 2020
 
+
 <br>
 
-L'impact des commerces de proximité sur la sécurité se manifeste donc à plusieurs niveaux : **prévention** par leur simple présence et l'affluence qu'ils génèrent, **intervention** en cas de situations d’insécurité ou d’incidents, **accueil** des personnes qui ont besoin d’un lieu sûr. 
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : l'impact des commerces de proximité sur la sécurité se manifeste à plusieurs niveaux : prévention par leur simple présence et l'affluence qu'ils génèrent, intervention en cas de situations d’insécurité ou d’incidents, accueil des personnes qui ont besoin d’un lieu sûr.
+</div>
+
+<br>
+
 
 # ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT> {-}
 #### <FONT COLOR="#E1B441">Une prise de conscience générale des enjeux environnementaux</FONT>
 
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-165-1.png" width = "600">
-</p>
+
 
 <center>
 :::: {.columns}
@@ -571,6 +568,10 @@ L'impact des commerces de proximité sur la sécurité se manifeste donc à plus
 :::
 ::::
 </center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-165-1.png" width = "600">
+</p>
 
 Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble de démarches pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (79% des répondants), réduction de ses consommations (59%), sensibilisation de la clientèle à des pratiques plus durables (32%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
 
@@ -652,17 +653,20 @@ Concernant la réduction des déchets, de nombreux commerçants s’inscrivent d
 :::
 ::::
 
-Les commerces ont donc un triple rôle à jouer dans le cadre de la transition écologique : en plus de mettre en place des actions de **réduction des déchets et de recyclage**, ils peuvent **réduire leurs consommations d’eau et d’électricité** et ont un **rôle de sensibilisation de leurs clients** (et dans une moindre mesure de leurs fournisseurs). 
 
+<br>
+
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : les commerces de proximité ont un triple rôle à jouer dans le cadre de la transition écologique : en plus de mettre en place des actions de réduction des déchets et de recyclage, ils peuvent réduire leurs consommations d’eau et d’électricité et ont un rôle de sensibilisation de leurs clients (et dans une moindre mesure de leurs fournisseurs). 
+</div>
+
+
+::: {.column-margin}
 Ces pratiques sont encouragées par des associations, parmi laquelle Zero Waste France, qui a élaboré un guide “Mon commerçant zéro déchet” à destination des commerçants qui souhaiteraient mettre en place des pratiques écoresponsables. 
-
+:::
 
 # ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT> {-}
 #### <FONT COLOR="#FF5757">Des apports concrets au cadre de vie</FONT>
-
-<p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-179-1.png" width = "600">
-</p>
 
 <center>
 :::: {.columns}
@@ -680,6 +684,10 @@ Ces pratiques sont encouragées par des associations, parmi laquelle Zero Waste 
 :::
 ::::
 </center>
+
+<p align="center">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-179-1.png" width = "600">
+</p>
 
 Les commerçants contribuent de plusieurs manières à la propreté de la rue et à l'amélioration de l'espace public : **nettoyage des trottoirs, signalement des problèmes, décorations saisonnales, participation à des projets d’aménagement (y compris informels)...** Ces initiatives contribuent à la perception positive d’espaces piétons rendus plus agréables et sont un complément direct aux projets menés par les services municipaux.  
 
@@ -752,5 +760,13 @@ Nous avons également cherché à mesurer les **apports des commerces à la pré
 :::
 ::::
 
+
+<br>
+
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
+**En résumé** : les commerces de proximité jouent un rôle important dans l’embellissement et la propreté des espaces publics, qu’il s’agisse de nettoyer les abords, décorer les vitrines, ou contribuer au verdissement et à l’entretien de leur environnement. Ils participent également en partie à préserver le patrimoine architectural et signalent les problèmes dans l’espace public.
+</div>
+
+<br>
 
 # Notice technique
