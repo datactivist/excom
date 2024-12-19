@@ -3,7 +3,7 @@ title: "Mise en équivalence <br>des externalités positives <br>du commerce de 
 subtitle: "Projet de recherche-action EXCOM"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Allyson Pallisser <br>Samuel Goëta
 date: 01/31/2025
-format:
+format: 
   html:
     toc: true
     toc-active: true
@@ -14,6 +14,8 @@ format:
     embed-resources: true
     code-fold: false
     css: styles.css
+    includes:
+      in_header: header.html
     grid:
       sidebar-width: 300px
       body-width: 1200px
@@ -83,9 +85,14 @@ showtext_auto()
 
 *[Télécharger cette étude en PDF](mettre lien)*
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Les commerces ne sont pas de stricts acteurs économiques, dont la valeur sociale serait équivalente à la valeur marchande. Cette intuition est largement partagée dans les espaces politiques, académiques ou encore économiques.
+Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
+Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux académiques ou produits par des experts se concentrent quasi exclusivement sur leur rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur rôle dans les processus de gentrification). En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
+Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
+Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundation, Datactivist.
 
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu 324 réponses, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
+
 
 # Aperçu des données
 
@@ -95,19 +102,21 @@ It is a long established fact that a reader will be distracted by the readable c
 
 
 
-En plus de diffuser le questionnaire en ligne, nous avons sollicité directement des commerces à Paris, Saint-Ouen, Marseille et Rouen, qui sont donc les territoires les plus représentés dans l’échantillon. 
+En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen, Marseille et Rouen, qui sont donc les territoires les plus représentés dans l’échantillon. 
 
 <br>
 
 :::: {.columns}
 ::: {.column width="50%"}
-Celui-ci comprend par ailleurs des réponses d’une grande variété de types de commerce. Dans l’ensemble, nous avons observé que tous les types de commerces, quelle que soit la taille de la ville dans laquelle ils sont implantés, contribuent positivement à leur environnement. Dans ce rapport, nous n’avons donc relevé les différences que lorsqu’elles étaient marquées. 
+<br>
+<br>
+Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l’ensemble, nous avons observé que toutes les catégories de commerces, quelle que soit la taille de la ville dans laquelle ils sont implantés, contribuent positivement à leur environnement (rue, quartier, voire ville). Dans ce rapport, nous n’avons donc relevé les différences que lorsqu’elles étaient marquées. 
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-4-1.png)
+<iframe width="550" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html"></iframe>
 :::
 ::::
 
@@ -115,39 +124,42 @@ Celui-ci comprend par ailleurs des réponses d’une grande variété de types d
 
 :::: {.columns}
 ::: {.column width="35%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-5-1.png)
+<iframe width="550" height="405" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="60%"}
 <br>
-Si les produits ou services vendus varient grandement, les commerces interrogés ont en commun d’être très largement **indépendants** (près de 90%), tous **en contact avec des clients** à l’exception d’un, et d’avoir un lieu de **vente dédié**. 
+<br>
+<br>
+Si les produits ou services vendus varient grandement, les commerces interrogés ont en commun d’être très largement **indépendants** (près de 90%), tous **en contact avec des clients** (à l’exception d’un), et d’avoir un lieu de **vente dédié**. 
 :::
 ::::
 
-Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces derniers sont représentés dans l’enquête mais constituent une minorité de répondants. Car **une partie des micro-commerçants occupe l’espace public différemment des commerçants ayant un pas-de-porte** (ex : via une présence sur des marchés réguliers ou ponctuels/thématiques), une étude focalisée sur leur profil permettrait de préciser leurs apports à l’espace public, aux passants et habitants. 
+Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces derniers sont représentés dans l’enquête mais constituent une minorité de répondants (12). Car **une partie des micro-commerçants occupe l’espace public différemment des commerçants ayant un pas-de-porte** (ex : via une présence sur des marchés), une étude focalisée sur leur profil permettrait de préciser leurs apports à l’espace public, aux passants et habitants. 
 
 <br>
 
 :::: {.columns}
 ::: {.column width="60%"}
-Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces au quartier.** 
+<br>
+<br>
+Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou sont composés de deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces.** 
 :::
-::: {.column width="5%"}
+::: {.column width="0%"}
 <!-- empty column to create gap -->
 :::
-::: {.column width="35%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-11-1.png)
+::: {.column width="40%"}
+<iframe width="585" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
 :::
 ::::
 
+<iframe width="650" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html"></iframe>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-12-1.png){width=500px}
-
-<br>
 
 Le rapport est divisé en 6 parties, afin de rendre compte des apports des commerces dans autant de grandes catégories d’effets sociaux et environnementaux : lien social, solidarités, vie de quartier, santé et sécurité, environnement, espace public. 
+Les citations qui introduisent chaque partie sont tirées d’une réponse libre du questionnaire (*“Avez-vous une anecdote à nous raconter pour illustrer l'impact de votre commerce sur le quartier ?”*). 
 
 ::: {.column-margin}
 Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu’ils recouvrent exactement…), vous pouvez consulter le [premier rapport du projet EXCOM](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p). 
@@ -173,11 +185,11 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
 </p>
 
-Les commerces locaux, tels que cafés, librairies, bars et salons de coiffure, jouent un rôle crucial en offrant des espaces de rencontre, favorisant la santé sociale, la vitalité démocratique et le bien-être individuel. Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, ils constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles. 
+Les commerces locaux offrent des espaces de rencontre, favorisant la santé sociale, la vitalité démocratique et le bien-être individuel. Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, ils constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles. 
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-23-1.png)
+<iframe width="550" height="405" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -189,9 +201,9 @@ Concrètement, **deux tiers des commerces entretiennent régulièrement des conv
 :::
 ::::
 
-Ces interactions sont essentielles pour les personnes isolées, qui ont dans une journée très peu d’autres échanges. Les intéractions peuvent également répondre à des besoins plus ponctuels de se sentir écouté. 
+Ces interactions sont essentielles pour les personnes isolées, qui ont au cours d'une journée très peu d’autres échanges. Les interactions peuvent également répondre à des besoins plus ponctuels de se sentir écouté face à une situation difficile. 
 
-**L’accessibilité à des commerces est cependant très disparate en France.** [En 2018, l’Observatoire des territoires](https://www.observatoire-des-territoires.gouv.fr/kiosque/2021-2022-rapport-cahier-1-demo-chap-03-07-lisolement-des-personnes-agees-des-enjeux)[^1] montrait qu’en zones de très faibles densités (espaces ruraux notamment), 40,5% des personnes de plus de 75 ans résident à plus de 10 minutes en voiture des commerces et services les plus proches, contre 1% dans les zones denses. Face à cette problématique, la mise en place de commerces itinérants, avec le soutien des collectivités territoriales, est parfois vue comme une solution. Leur développement est par exemple [encouragé par les Intercommunalités de France](https://www.intercommunalites.fr/actualite/le-commerce-itinerant-une-reponse-a-lisolement-des-personnes-agees-dans-les-zones-rurales/)[^2]. 
+**L’accessibilité des commerces est cependant très disparate en France.** [En 2018, l’Observatoire des territoires](https://www.observatoire-des-territoires.gouv.fr/kiosque/2021-2022-rapport-cahier-1-demo-chap-03-07-lisolement-des-personnes-agees-des-enjeux)[^1] montrait qu’en zones de très faibles densités (espaces ruraux notamment), 40,5% des personnes de plus de 75 ans résident à plus de 10 minutes en voiture des commerces et services les plus proches, contre 1% dans les zones denses. Face à cette problématique, la mise en place de commerces itinérants, avec le soutien des collectivités territoriales, est parfois vue comme une solution. Leur développement est par exemple [encouragé par les Intercommunalités de France](https://www.intercommunalites.fr/actualite/le-commerce-itinerant-une-reponse-a-lisolement-des-personnes-agees-dans-les-zones-rurales/)[^2]. 
 
 [^1]: <ins>Source</ins> : *"L’isolement des personnes âgées : des enjeux différenciés selon les territoires, entre accessibilité aux services et isolement résidentiel."* 
 
@@ -205,32 +217,33 @@ Ces interactions sont essentielles pour les personnes isolées, qui ont dans une
 :::: {.columns}
 ::: {.column width="50%"}
 <br>
-Seuls 22 répondants sur les 324 déclarent ne jamais évoquer de sujets privés avec leurs clients. Parmi ceux-là, une majorité est installée dans une ville de plus de 100 000 habitants. On peut faire l’hypothèse qu’un flux de clients plus intense rend difficile d’être disponible pour celles et ceux qui souhaitent discuter plus longuement.
+<br>
+Seuls 22 répondants sur les 324 déclarent ne jamais évoquer de sujets privés avec leurs clients. Parmi ceux-là, une grande majorité (20) est installée dans une ville de plus de 100 000 habitants, mais l’écart statistique selon le nombre d’habitants du territoire reste relativement faible. La densité du flux de clients n’influence aussi que très modérément le temps passé par les commerçants à discuter avec les clients.
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-22-1.png) 
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-discu-privees-23.html"></iframe>
 :::
 ::::
 
 Toutes les catégories de commerces sont par ailleurs concernées par le fait d’échanger longuement avec certains clients. Le croisement des données ne fait en effet pas ressortir d’écart marqué selon ce qui est vendu. Concrètement, les commerces alimentaires autant que les commerces culturels/de loisir sont des **acteurs de la socialisation quotidienne**. 
 
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-33-1.png){width=600px}
+<iframe width="650" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-categorie-discu-privees-34.html"></iframe>
 </center>
 
 En plus de contribuer à **réduire l’isolement** des personnes, les commerces **font vivre des savoirs et savoir-faire**. 
 
-Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 répondants), une large majorité (80%) utilise des techniques artisanales. Et l’ensemble des commerçants (72%) prennent le temps plusieurs fois par jour d’échanger longuement avec leurs clients sur les produits vendus. Environ la moitié d’entre eux (47%) organise par ailleurs au moins une fois par an un moment d’échange collectif dans sa boutique (atelier, démonstration, etc.).
+Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 répondants), une large majorité (80%) utilise des techniques artisanales. Et l’ensemble des commerçants (72%) prend le temps plusieurs fois par jour d’échanger longuement avec ses clients sur les produits vendus. Presque la moitié d’entre eux (47%) organise par ailleurs au moins une fois par an un moment d’échange collectif dans sa boutique (atelier, démonstration, etc.).
 
 :::: {.columns}
 ::: {.column width="55%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-52-1.png) 
+<iframe width="550" height="401" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
 :::
 ::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-35-1.png) 
+<iframe width="550" height="431" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -239,8 +252,10 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 
 <br>
 
+Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au sein de communautés locales**. Plus de la moitié des répondants collaborent ainsi avec des associations. Cela peut prendre des formes variées : adhérer à une association de quartier en tant que commerçant, faire des dons à des associations d’aide sociale/humanitaire ou encore participer à la tombola d’une association sportive. 
+
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-51-1.png){width=600px}
+<iframe width="750" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso-quartier-52.html"></iframe>
 
 <br>
 
@@ -276,10 +291,10 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-53-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-54-1.png" width = "600">
 </p>
 
-De nombreux commerçants de proximité sont régulièrement au contact de personnes en situation de précarité et peuvent agir directement auprès d’elles, en leur offrant l’accès à des services de base. Ils peuvent aussi être des points relais pour diverses formes d'aide sociale, particulièrement dans les zones moins denses, où l’accès aux services peut être limité, [comme le souligne entre autres l’Avise](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], association de soutien à l’économie sociale et solidaire. Enfin, de nombreux commerçants ont déclaré être impliqués dans des actions caritatives, comme la collecte de dons alimentaires ou la participation à des programmes d'aide aux personnes isolées. Ils sont ainsi comme de véritables acteurs de la solidarité, contribuant activement à soutenir les membres les plus vulnérables de leur communauté.
+De nombreux commerçants de proximité sont régulièrement au contact de personnes en situation de précarité et peuvent agir directement auprès d’elles, en leur offrant l’accès à des services de base. Ils peuvent aussi être des points relais pour diverses formes d'aide sociale, particulièrement dans les zones moins denses, où l’accès aux services peut être limité, [comme le souligne l’Avise](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], association de soutien à l’économie sociale et solidaire. De nombreux commerçants ont également déclaré être impliqués dans des actions caritatives, comme la collecte de dons alimentaires ou la participation à des programmes d'aide aux personnes isolées. Ils sont ainsi comme de véritables acteurs de la solidarité, contribuant activement à soutenir les membres les plus vulnérables de leur communauté.
 
 [^3]: <ins>Source</ins> : *"Le maintien des commerces de proximité en milieu rural."* 
     
@@ -289,42 +304,39 @@ De nombreux commerçants de proximité sont régulièrement au contact de person
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-55-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-<br>
 Face à la précarité, **le premier réflexe des commerçants est d’offrir une aide “d’urgence” aux personnes qui les sollicitent**. Cela prend souvent la forme d’un verre d’eau ou de don de nourriture (24% des 63% ayant déjà été sollicités), d’un thé ou d’un café (14%) ou encore d’accès aux toilettes (24%). 
 :::
 ::::
 
 :::: {.columns}
 ::: {.column width="45%"}
-<br>
-<br>
 Les sollicitations sont cependant relativement rares. Seuls 23% des commerçants sont interpellés au moins une fois par semaine. 
 
 Il n’y a pas de variation marquée selon la taille de la ville. 
-Cependant, nous observons une sur-sollicitation des cafés/restaurants par rapport à l’ensemble des commerces. Plus de la moitié d’entre eux sont interpellés au moins une fois par semaine, soit 27 points de pourcentage de plus que l’échantillon général. Cela s’explique par la facilité d’accès à des services de base qu’ils proposent. 
+Cependant, nous observons une sur-sollicitation des cafés-restaurants par rapport à l’ensemble des commerces. Plus de la moitié d’entre eux sont interpellés au moins une fois par semaine, soit 27 points de pourcentage de plus que l’échantillon général. Cela s’explique par la facilité d’accès à des services de base qu’ils proposent. 
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png) 
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-58-1.png) 
 :::
 ::::
 
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-71-1.png){width=600px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-72-1.png){width=600px}
 </center>
 
 <br>
 
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-90-1.png){width=600px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-91-1.png){width=600px}
 </center>
 
 
@@ -340,15 +352,9 @@ de tous les commerçants ont déjà renvoyé au moins un client vers une aide ex
 :::
 
 <br>
-Il existe une différence marquée selon la taille de ville. Les commerçants des villes de moins 100 000 habitants sont moins concernés par cette réorientation. Cela s’explique par le fait que dans les zones moins denses, ils deviennent plus facilement des intermédiaires entre des usagers et des services publics plus éloignés. Par ailleurs, nous pouvons faire l’hypothèse que dans les villes plus petites, les commerçants connaissent mieux le tissu local et sont plus à même de renvoyer une personne dans le besoin vers un interlocuteur adapté. 
+Il existe une différence marquée selon la taille de ville. **Les commerçants des villes de moins de 100 000 habitants sont moins concernés par cette réorientation. Cela s’explique par le fait que, dans les zones moins denses, ils deviennent plus facilement des intermédiaires entre des usagers et des services publics plus éloignés.** Par ailleurs, nous pouvons faire l’hypothèse que dans les villes plus petites, les commerçants connaissent mieux le tissu local et sont plus à même de renvoyer une personne dans le besoin vers un interlocuteur adapté. 
 
 :::: {.columns}
-::: {.column width="30%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-93-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
 ::: {.column width="30%"}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-94-1.png)
 :::
@@ -357,6 +363,12 @@ Il existe une différence marquée selon la taille de ville. Les commerçants de
 :::
 ::: {.column width="30%"}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-95-1.png)
+:::
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="30%"}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-96-1.png)
 :::
 ::::
 
@@ -389,7 +401,7 @@ Il existe une différence marquée selon la taille de ville. Les commerçants de
 </center>
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-106-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-107-1.png" width = "600">
 </p>
 
 Les commerces de proximité sont des piliers essentiels à la construction d’une communauté locale dynamique et attrayante. Ils jouent un rôle crucial dans le tissu social, économique et culturel d’un quartier. 
@@ -398,13 +410,13 @@ Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximit
 
 :::: {.columns}
 ::: {.column width="47%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-108-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-109-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="48%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-109-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-110-1.png)
 :::
 ::::
 
@@ -419,31 +431,30 @@ Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidari
 <!-- empty column to create gap -->
 :::
 ::: {.column width="48%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-112-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-113-1.png)
 :::
 ::::
 
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-113-1.png){width=500px}
+    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-114-1.png){width=500px}
 </center>
 
 <br>
 
 :::: {.columns}
 ::: {.column width="55%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-110-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-111-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="40%"}
 <br>
-<br>
-Des relations de proximité sont également développées entre les commerçants et les habitants du quartier. Plus de deux tiers des commerçants (70%) rend ainsi service aux habitants de l’immeuble dans lequel se situe leur local (réception d’un colis, réductions…). 
+Des relations de proximité sont également développées entre les commerçants et les habitants du quartier. Plus de deux tiers des commerçants (70%) rendent ainsi service aux habitants de l’immeuble dans lequel se situe leur local (réception d’un colis, réductions…). 
 :::
 ::::
 
-Une [enquête réalisée par Clara Hercule pour *Sur-Mesure*](https://www.revuesurmesure.fr/contributions/l-ancrage-local-une-ressource-pour-les-commerces-dans-les-quartiers)[^5] a montré les liens particulièrement fort entre les commerçants et les habitants d’un quartier prioritaire de la politique de la ville (QPV), pour lesquels les lieux de vente répondent à des besoins particuliers, notamment en termes de sociabilité. À travers des portraits d’entrepreneurs, l’autrice montre **leur insertion dans des réseaux sociaux locaux et les formes de soutiens réciproques entre riverains à commerçants** (pour lesquels l’ancrage territorial peut par ailleurs être un avantage concurrentiel) : “*Multiplier les relations non-marchandes avec la population locale peut être un moyen de prouver son engagement dans la vie du quartier. Il s’agit d’échanger un service contre un autre de manière tacite et différée dans le temps. Cela génère de l’inter-reconnaissance et un intérêt pour les habitants à défendre le commerçant en cas de conflit.*”
+Une [enquête réalisée par Clara Hercule pour *Sur-Mesure*](https://www.revuesurmesure.fr/contributions/l-ancrage-local-une-ressource-pour-les-commerces-dans-les-quartiers)[^5] a montré les liens particulièrement fort entre les commerçants et les habitants d’un quartier prioritaire de la politique de la ville (QPV), pour lesquels les lieux de vente répondent à des besoins particuliers, notamment en termes de sociabilité. À travers des portraits d’entrepreneurs, l’autrice montre **leur insertion dans des réseaux sociaux locaux et les formes de soutiens réciproques entre riverains à commerçants** (pour lesquels l’ancrage territorial peut par ailleurs être un avantage concurrentiel). Elle écrit : “*Multiplier les relations non-marchandes avec la population locale peut être un moyen de prouver son engagement dans la vie du quartier. Il s’agit d’échanger un service contre un autre de manière tacite et différée dans le temps. Cela génère de l’inter-reconnaissance et un intérêt pour les habitants à défendre le commerçant en cas de conflit.*”
 
 [^5]: <ins>Source</ins> : *"L'ancrage local, une ressource pour les commerces dans les quartiers ?"* 
     
@@ -460,7 +471,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 :::
 ::: {.column width="50%"}
 <br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-115-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-116-1.png)
 :::
 ::::
 
@@ -489,10 +500,10 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 </center>
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-116-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-117-1.png" width = "600">
 </p>
 
-Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américain, a souligné l'importance des commerçants en tant que "yeux sur la rue", autrement dit **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
+Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américaine, a souligné l'importance des commerçants en tant que "yeux sur la rue", autrement dit comme **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
 
 En plus de générer du passage et d’avoir une activité ouverte sur la rue, les commerçants peuvent intervenir directement lorsqu’une situation problématique se présente (malaise, accident ou, plus rarement, altercation), ou transmettre l’information immédiatement aux services compétents. 
 Les situations d’insécurité sont relativement rares. 39% des commerçants n’en ont jamais rencontré. Et parmi ceux qui y ont fait face, 78% indiquent intervenir moins de deux fois par an. Mais lorsqu’elles se produisent, les commerçants sont souvent en première ligne. **En plus d’intervenir, quand la situation ne les met pas en danger, ils peuvent alerter rapidement**.  
@@ -500,7 +511,7 @@ Les situations d’insécurité sont relativement rares. 39% des commerçants n�
 
 :::: {.columns}
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-150-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-151-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -508,14 +519,14 @@ Les situations d’insécurité sont relativement rares. 39% des commerçants n�
 ::: {.column width="50%"}
 <br>
 <br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-140-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-141-1.png)
 :::
 ::::
 
 
 :::: {.columns}
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-134-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-135-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -524,11 +535,11 @@ Les situations d’insécurité sont relativement rares. 39% des commerçants n�
 <br>
 <br>
 <br>
-**Ils peuvent également répondre rapidement face à un malaise ou encore un accident**, en proposant un espace pour se reposer (dans les cas les moins graves), une aide de premier secours et, dans les cas les plus graves, prendre contact immédiatement avec les secours. 18% des commerçants interviennent au moins une fois par mois.  
+**Ils peuvent également répondre dans l'immédiat face à un malaise ou encore un accident**, en proposant un espace pour se reposer (dans les cas les moins graves), une aide de premier secours et, dans les cas les plus graves, prendre contact immédiatement avec les secours. 18% des commerçants interviennent au moins une fois par mois.  
 :::
 ::::
 
-Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur capacité d’intervention, ils jouent un rôle dans le sentiment de sécurité des passants, et notamment des passantes. Ils peuvent en effet être des espaces sûrs (“safe spaces”) dans lesquels entrer en urgence pour se protéger contre le harcèlement de rue, dans un contexte où 9 femmes sur 10 disent anticiper les actes et les propos sexistes, et adoptent des conduites d'évitement pour ne pas les subir (selon un [rapport du Haut Conseil à l’égalité femmes-hommes](https://www.haut-conseil-egalite.gouv.fr/IMG/pdf/hce_-_rapport_annuel_2024_sur_l_etat_du_sexisme_en_france.pdf)[^6]). Des dispositifs permettent d’identifier ces lieux sûrs, dont le plus connu est [Angela](https://arretonslesviolences.gouv.fr/focus/plan-angela)[^7] (un autocollant permet de reconnaître les établissements participants, au sein desquels une personne se sentant menacée peut demander “Où est Angela” et se voir offrir de l’assistance). 
+Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur capacité d’intervention, ils jouent un rôle dans le sentiment de sécurité des passants, et notamment des passantes. Ils peuvent en effet être des lieux sûrs (“safe spaces”) dans lesquels entrer en urgence pour se protéger contre le harcèlement de rue, dans un contexte où 9 femmes sur 10 disent anticiper les actes et les propos sexistes et adopter des conduites d'évitement pour ne pas les subir (selon un [rapport du Haut Conseil à l’égalité femmes-hommes](https://www.haut-conseil-egalite.gouv.fr/IMG/pdf/hce_-_rapport_annuel_2024_sur_l_etat_du_sexisme_en_france.pdf)[^6]). Des dispositifs permettent d’identifier ces lieux, dont le plus connu est [Angela](https://arretonslesviolences.gouv.fr/focus/plan-angela)[^7] (un autocollant permet de reconnaître les établissements participants, au sein desquels une personne se sentant menacée peut demander “Où est Angela” et se voir offrir de l’assistance). 
 
 [^6]: <ins>Source</ins> : *Rapport annuel 2024 sur l’état des lieux du sexisme en France* 
     
@@ -563,42 +574,40 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 
 > *“Notre épicerie était avant tout écologique, mais on s’est rendu compte avec le temps qu’on a un ÉNORME impact social. Les magasins de proximité c’est la vie ! Et c’est la paix. Sans ça il n’y a plus de lien et chacun commande sur internet, on meurt de solitude ou on finit par détester tout et tout le monde, c’est la guerre.”*
 
-*-- Epicerie, Paris --*
+*-- Épicerie, Paris --*
 </FONT>
 :::
 ::::
 </center>
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-165-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-166-1.png" width = "600">
 </p>
 
-Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble de démarches pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (79% des répondants), réduction de ses consommations (59%), sensibilisation de la clientèle à des pratiques plus durables (32%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
+Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble d'actions pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (79% des répondants), réduction de ses consommations (59%), sensibilisation de la clientèle à des pratiques plus durables (32%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
 
 
 :::: {.columns}
 ::: {.column width="45%"}
-<br>
 Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 22% des commerces.  
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-167-1.png) 
+<br>
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-168-1.png) 
 :::
 ::::
 
 :::: {.columns}
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-169-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-170-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="50%"}
-<br>
-<br>
 <br>
 D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipement, sont également mentionnées par les commerçants : arrêter l’éclairage la nuit, débrancher des appareils, réduire le chauffage, etc.  
 :::
@@ -606,19 +615,22 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 
 :::: {.columns}
 ::: {.column width="55%"}
-72% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 32% ont régulièrement des discussions informelles sur le sujet, 22% proposent des conseils. Une petite minorité (4%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent emmener leur propre contenant. 
+72% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 32% ont régulièrement des discussions informelles sur le sujet, 22% proposent des conseils. Une petite minorité (4%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent parfois emmener leur propre contenant (bien que certains commerçants déclarent ne pas souhaiter prendre de risque sanitaire en autorisant les emballages extérieurs). 
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-171-1.png)
+<br>
+<br>
+<br>
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-172-1.png)
 :::
 ::::
 
 :::: {.columns}
 ::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-173-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-174-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -626,30 +638,29 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 ::: {.column width="55%"}
 <br>
 <br>
-<br>
-Enfin, la meilleure gestion des déchets est un sujet important pour les commerçants, mais sur lequel nous observons une marge d’amélioration. Si une large majorité d’entre eux (79%) est attachée à la réduction des déchets, moins de la moitié (44%) déclare utiliser des solutions de recyclage. 
+Enfin, la meilleure gestion des déchets est un sujet important pour les commerçants, mais sur lequel nous observons une marge d’amélioration. Si une large majorité d’entre eux (79%) est attachée à la réduction des déchets, moins de la moitié (44%) utilise des solutions de recyclage. 
 :::
 ::::
 
 Environ 20% des répondants ont déclaré mettre en place des actions “autres” lorsque nous les avons interrogés sur leurs pratiques de recyclage. Ils ont fait remonter quelques pratiques que nous n’avions pas identifiées dans le questionnaire, par exemple : récupération des végétaux, dons d’invendu, reprise des lunettes, tri des métaux.  
 
 ::: {.column-margin}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-174-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-176-1.png)
 :::
 
 <br>
 
-Concernant la réduction des déchets, de nombreux commerçants s’inscrivent dans une chaîne de production plus responsable : ils sollicitent des fournisseurs ayant des pratiques plus durables, et proposent à leurs clients de consommer moins d’emballages. Ce dernier point s’inscrit par ailleurs dans le cadre d’un encouragement légal, les sacs en plastique à usage unique gratuits étant interdits depuis plusieurs années. 
+Concernant la réduction des déchets, de nombreux commerçants s’inscrivent dans une chaîne de production plus responsable : ils sollicitent des fournisseurs ayant des pratiques plus durables et proposent à leurs clients de consommer moins d’emballages. Ce dernier point s’inscrit par ailleurs dans le cadre d’un encouragement légal, les sacs en plastique à usage unique gratuits étant interdits depuis plusieurs années. 
 
 :::: {.columns}
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-176-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-177-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-177-1.png) 
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-179-1.png) 
 :::
 ::::
 
@@ -662,7 +673,7 @@ Concernant la réduction des déchets, de nombreux commerçants s’inscrivent d
 
 
 ::: {.column-margin}
-Ces pratiques sont encouragées par des associations, parmi laquelle Zero Waste France, qui a élaboré un guide “Mon commerçant zéro déchet” à destination des commerçants qui souhaiteraient mettre en place des pratiques écoresponsables. 
+Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Waste France, qui a élaboré un [guide “Mon commerçant zéro déchet”](https://www.zerowastefrance.org/wp-content/uploads/2020/09/zw-guide-commercant-2020-bd-compresse.pdf) à destination des commerçants qui souhaiteraient mettre en place des pratiques écoresponsables. 
 :::
 
 # ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT> {-}
@@ -686,22 +697,22 @@ Ces pratiques sont encouragées par des associations, parmi laquelle Zero Waste 
 </center>
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-179-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-180-1.png" width = "600">
 </p>
 
 Les commerçants contribuent de plusieurs manières à la propreté de la rue et à l'amélioration de l'espace public : **nettoyage des trottoirs, signalement des problèmes, décorations saisonnales, participation à des projets d’aménagement (y compris informels)...** Ces initiatives contribuent à la perception positive d’espaces piétons rendus plus agréables et sont un complément direct aux projets menés par les services municipaux.  
 
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-181-1.png){width=600px}
+    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-182-1.png){width=600px}
 </center>
 
-Des efforts concernant sa vitrine est la façon la plus évidente de contribuer à l’embellissement de la rue (la moitié des répondants indique s’impliquer particulièrement). Ils peuvent d’ailleurs être reconnus par des prix ou des concours organisés par les municipalités, les associations de commerçants, ou des acteurs nationaux (c’est par exemple le cas de [Petits Commerces, qui distingue la plus belle vitrine de Noël](https://www.petitscommerces.fr/laplusbellevitrinedenoel/)[^8]), qui encouragent l'émulation et valorisent les meilleures pratiques en matière de décoration et d'animation commerciale. 
+Mettre en place des actions venant prendre soin de sa vitrine est la façon la plus évidente de contribuer à l’embellissement de la rue. La moitié des répondants indique s’impliquer particulièrement. Ils peuvent d’ailleurs être reconnus par des prix ou des concours organisés par les municipalités, les associations de commerçants, ou des acteurs nationaux (c’est par exemple le cas de [Petits Commerces, qui distingue la plus belle vitrine de Noël](https://www.petitscommerces.fr/laplusbellevitrinedenoel/)[^8]), qui encouragent l'émulation et valorisent les meilleures pratiques en matière de décoration et d'animation commerciale. 
 
 [^8]: *La plus belle vitrine de Noël de France 2024!* 
     
     **Petits Commerces**, 2024
 
-En collaboration avec les services publics, en dans la limite de ce que permettent les règles d’urbanisme, les commerces peuvent également contribuer au verdissement de la rue (jardinières, plantes en pot, voire, dans des cas plus rares, co-entretien de jardins partagés) et plus largement occuper l’espace public.  
+En collaboration avec les services publics et dans la limite de ce que permettent les règles d’urbanisme, les commerces peuvent également contribuer au verdissement de la rue (jardinières, plantes en pot, voire, dans des cas plus rares, co-entretien de jardins partagés) et plus largement occuper l’espace public.  
 Des expérimentations d’accompagnement à l’embellissement des devantures, terrasses et abords existent localement. Dans la [commune de Bessan](https://www.herault.gouv.fr/contenu/telechargement/49087/366773/file/Etude%20livret%20redynamisation%20commerciale%20dans%20l'Herault_compressed.pdf)[^9], en Hérault, une charte oriente ainsi les commerçants dans leurs initiatives, et des aides (communales et de l’agglomération) les soutiennent financièrement.   
 
 [^9]: <ins>Source</ins> : *"REVITALISATION COMMERCIALE DES CŒURS DE VILLES DE L’HÉRAULT"* 
@@ -711,15 +722,13 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 :::: {.columns}
 ::: {.column width="50%"}
 <br>
-<br>
-<br>
 “Yeux sur la rue”, pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-182-1.png) 
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-183-1.png) 
 :::
 ::::
 
@@ -727,36 +736,34 @@ L’existence d’applications dans certaines collectivités facilite peut-être
 
 :::: {.columns}
 ::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-198-1.png)
+<br>
+<br>
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-199-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="55%"}
-<br>
-<br>
-En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient ainsi au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (café, restaurants, alimentaire…) ont tendance à le faire un peu plus fréquemment que les autres.
+En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (café, restaurants, alimentaire…) ont tendance à le faire un peu plus fréquemment que les autres. Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend compte de ce travail peu visible. 
 :::
 ::::
 
  
-Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend alors compte de ce travail peu visible. 
+
 
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-212-1.png){width=600px}
+    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-213-1.png){width=600px}
 </center>
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-215-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-216-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-<br>
-<br>
-Nous avons également cherché à mesurer les **apports des commerces à la préservation du patrimoine architectural**. Cela a révélé que 29% d’entre eux apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés. Ceux qui occupent des bâtiments historiques (classés ou non) contribuent en effet à leur entretien, voire à leur réhabilitation. 
+Nous avons également mesuré les **apports des commerces à la préservation du patrimoine architectural**. L'enquête révèle que 29% d’entre eux apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés. Ceux qui occupent des bâtiments historiques (classés ou non) contribuent en effet à leur entretien, voire à leur réhabilitation. 
 :::
 ::::
 

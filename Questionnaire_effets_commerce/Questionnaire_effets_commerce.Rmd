@@ -76,9 +76,10 @@ library(gtExtras)
 library(janitor)
 library(reactable)
 library(DT)
-library(plotly)
+library(ggiraph)
 library(ggVennDiagram) #devtools::install_github("gaospecial/ggVennDiagram")
 library(ggwordcloud)
+library(ggtext)
 library(tm)
 library(treemap)
 library(treemapify)
@@ -309,24 +310,21 @@ Au `r format(Sys.time(), '%d %B %Y')`, `r aa` réponses uniques ont été récol
 ```{r répartition échantillon}
 # Calcul de la répartition de notre échantillon
 repartition_reelle <- data |> 
-  summarise(`Échantillon réel de l'enquête` = n(), .by = code_departement_partenaires) |> 
+  summarise(`Échantillon de l'enquête` = n(), .by = code_departement_partenaires) |> 
   right_join(repartition_theorique |> mutate(`Code département` = as.character(`Code département`)), 
              by = c("code_departement_partenaires" = "Code département")) |> 
   relocate(code_departement_partenaires, .after = Ville) |> 
-  relocate(`Échantillon réel de l'enquête`, .after = `Échantillon théorique de l’enquête`) |> 
+  relocate(`Échantillon de l'enquête`, .after = `Échantillon théorique de l’enquête`) |> 
   arrange(code_departement_partenaires) |> 
   mutate(`Répartition des commerces français` = round(`Répartition des commerces français`, 1),
          `Échantillon théorique de l’enquête` = round(`Échantillon théorique de l’enquête`, 0),
-         `Échantillon réel de l'enquête` = replace_na(`Échantillon réel de l'enquête`, 0),
-         `Répartition de l'échantillon réel` = round(`Échantillon réel de l'enquête` / sum(`Échantillon réel de l'enquête`) * 100, 1)) |> 
+         `Échantillon de l'enquête` = replace_na(`Échantillon de l'enquête`, 0),
+         `Répartition de l'échantillon` = round(`Échantillon de l'enquête` / sum(`Échantillon de l'enquête`) * 100, 1)) |> 
   adorn_totals() |> 
-  mutate(`% de l'objectif de réponses atteint` = round(`Échantillon réel de l'enquête` / `Échantillon théorique de l’enquête` * 100, 0),
-         `% de l'objectif de réponses atteint` = replace_na(`% de l'objectif de réponses atteint`, 0)) |> 
+  select(-c(`Échantillon théorique de l’enquête`)) |> 
   mutate(across(-c(Ville, code_departement_partenaires), ~ if_else(Ville == "Total", round(., 0), .))) |> 
   mutate(`Répartition des commerces français` = paste0(`Répartition des commerces français`, "%"),
-         `Répartition de l'échantillon réel` = paste0(`Répartition de l'échantillon réel`, "%")) |> 
-  mutate_at(vars(-`% de l'objectif de réponses atteint`), as.character) |> 
-  mutate_at(vars(-`% de l'objectif de réponses atteint`), ~replace_na(., "")) |> 
+         `Répartition de l'échantillon` = paste0(`Répartition de l'échantillon`, "%")) |> 
   rename(`Code département` = code_departement_partenaires)
 
 # Affichage de la table
@@ -335,11 +333,9 @@ repartition_reelle |>
   gt_theme_nytimes() |> 
   tab_header(title = "Répartition des réponses à l'enquête par département") |>
   tab_style(style = list(cell_text(weight = "bold")), #en gras
-    locations = cells_body(columns = `Échantillon théorique de l’enquête`)) |> 
+    locations = cells_body(columns = `Échantillon de l'enquête`)) |> 
   cols_align(align = "center", columns = everything()) |> 
-  cols_align(align = "left", columns = Ville) |> 
-  gt_plt_bar_pct(`% de l'objectif de réponses atteint`, scaled = TRUE, labels=TRUE, decimals = 0, #attention à remplacer les NA par 0 sinon erreur
-           font_size = "14px", fill = "#00F193", height = 20)
+  cols_align(align = "left", columns = Ville)
 ```
 
 <br>
@@ -567,20 +563,27 @@ leaflet(data_geoloc) |>
 <br>
 
 ```{r}
-ggplot(data) +
-  aes(x = reorder(`Quelle est la catégorie de votre commerce ?`,`Quelle est la catégorie de votre commerce ?`,
-                     function(x)+length(x))) +
-  geom_bar(fill = "#3182BD") +
-  labs(
-    y = "Nombre de commerces",
-    title = "Catégorie des commerces répondants"
-  ) +
-  coord_flip() +
-  theme_minimal() +
-  custom_theme() +
-  theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
-        panel.grid.major.y = ggplot2::element_blank(),
-        axis.title.y = element_blank())
+mon_graph <- data |> 
+    count(`Quelle est la catégorie de votre commerce ?`) |> 
+    mutate(`Quelle est la catégorie de votre commerce ?` = fct_reorder(`Quelle est la catégorie de votre commerce ?`, n)) |> 
+    ggplot() +
+      aes(x = `Quelle est la catégorie de votre commerce ?`,
+          y = n,
+          tooltip = paste(`Quelle est la catégorie de votre commerce ?`, ":", n, "commerces")) +
+      geom_col_interactive(fill = "#3182BD") +
+      labs(y = "Nombre de commerces",
+           title = "Catégorie des commerces répondants") +
+      coord_flip() +
+      theme_minimal() +
+      custom_theme() +
+      theme(panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+            panel.grid.major.y = ggplot2::element_blank(),
+            axis.title.y = element_blank())
+mon_graph
+ #girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html", 
+           selfcontained = TRUE)
 ```
 
 <br>
@@ -594,9 +597,10 @@ table <- data |>
   mutate(ypos = cumsum(nb) - .5 * nb)
 
 # Dataviz
-table |> 
-    ggplot(aes(x="", y=nb, fill=`Êtes-vous indépendant ?`)) +  
-      geom_bar(stat="identity", width=1, color="white", size = 2) +
+mon_graph <- table |> 
+    ggplot(aes(x="", y=nb, fill=`Êtes-vous indépendant ?`, 
+               tooltip = paste("Indépendance", `Êtes-vous indépendant ?`, ":", nb, "commerces"))) +  
+      geom_bar_interactive(stat="identity", width=1, color="white", size = 2) +
       coord_polar("y") +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
       labs(title = str_wrap("Répartition des commerces répondants selon s'ils sont indépendants ou non", width = 35)) +
@@ -614,9 +618,14 @@ table |>
             plot.caption = ggplot2::element_text(face = "italic", size = 18,
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)),
             plot.title.position = "plot",
-            plot.caption.position = "plot") +
+            plot.caption.position = "plot",
+            plot.margin = ggplot2::margin(5, 0, 0, -170)) +
       guides(fill = guide_legend(reverse = T, title = " ")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
+mon_graph
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -801,9 +810,10 @@ table <- data |>
   mutate(ypos = cumsum(nb) - .5 * nb)
 
 # Dataviz
-table |> 
-    ggplot(aes(x = "", y = nb, fill = `Travaillez-vous seul ?`)) +  
-      geom_bar(stat = "identity", width = 1, color = "white", size = 2) +
+mon_graph <- table |> 
+    ggplot(aes(x = "", y = nb, fill = `Travaillez-vous seul ?`,
+               tooltip = paste("Travail seul", `Travaillez-vous seul ?`, ":", nb, "commerces"))) +  
+      geom_bar_interactive(stat = "identity", width = 1, color = "white", size = 2) +
       coord_polar("y") +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
       labs(title = str_wrap("Répartition des commerces répondants selon s'ils travaillent seuls ou avec des salariés / associés", width = 35)) +
@@ -822,25 +832,33 @@ table |>
             plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
             plot.title.position = "plot", 
-            plot.caption.position = "plot") +
+            plot.caption.position = "plot",
+            plot.margin = ggplot2::margin(15, 0, 0, -190)
+            ) +
       guides(fill = guide_legend(reverse = T, title = "Travail seul : ")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), 
                 color = "#333333", size=5, check_overlap = T)
+mon_graph
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html", 
+           selfcontained = TRUE)
 ```
 
 <br>
 
 ```{r}
-data |> 
+mon_graph <- data |> 
+    count(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`) |> 
   mutate(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)` = 
            factor(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`,
                   levels = c("1 à 20", "20 à 50", "50 à 100", "100 et 200", "Plus de 200"))) |> 
   filter(!is.na(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`)) |> 
   ggplot() +
     aes(
-      x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`
+      x = `Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, y = n,
+      tooltip = paste(`Hors période de fêtes, quelle est la fréquentation moyenne de votre commerce par jour ? (en nombre de personnes)`, ":", n, "commerces")
     ) +
-    geom_bar(fill = "#3182BD") +
+    geom_col_interactive(fill = "#3182BD") +
     labs(
       y = "Nombre de commerces", 
       x = "Fréquentation moyenne du commerce par jour",
@@ -848,6 +866,10 @@ data |>
     ) +
     theme_minimal() +
     custom_theme()
+mon_graph
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html", 
+           selfcontained = TRUE)
 ```
 
 # ![](images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT>
@@ -1205,7 +1227,7 @@ graph_comparaison_pop(data = table,
                       subtitle_name = "Répartition des commerces selon leurs discussions privées avec des clients")
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # Graphique factorisé
 graph_comparaison_pop_3frequences <- function(data, title_name, subtitle_name){
   data |> 
@@ -1254,6 +1276,59 @@ graph_comparaison_pop_3frequences(data = table,
                                   title_name = "Les villes moyennes sont plus propices aux discussions privées des commerçants avec leurs clients",
                                   subtitle_name = "Répartition des commerces selon leurs discussions privées avec des clients")
 ```
+
+```{r fig.height=6}
+# Données
+table <- data |>  
+  mutate(categorie_population = str_remove(categorie_population, "population "),
+         Var = str_replace_all(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`, 
+                                 c("Je ne sais pas" = NA_character_, 
+                                   "Très rarement \\(moins d'une fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Rarement \\(1 à 2 fois par mois\\)" = "Moins d'1 fois par semaine",
+                                   "Ponctuellement \\(1 à 2 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Régulièrement \\(3 à 5 fois par semaine\\)" = "1 fois par semaine et plus",
+                                   "Très régulièrement \\(plusieurs fois par jour\\)" = "1 fois par semaine et plus"))) |> 
+  summarise(n = n(), .by = c(Var, categorie_population)) |> 
+  na.omit() |>
+  mutate(percent_freq = n/sum(n), .by = categorie_population) 
+
+# Graphique 
+mon_graph <- table |> 
+    mutate(nb_reponses_freq = sum(n), .by = categorie_population) |> 
+    mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", 
+                                        "1 fois par semaine et plus")),
+           categorie_population = factor(categorie_population, levels = c("moyenne", "élevée", 
+                                                                          "très élevée"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=percent_freq, x=categorie_population, fill = Var, group = Var,
+                             tooltip = paste("Population :", categorie_population,
+                                             "\nFréquence : ", Var,
+                                             "\nPourcentage de commerces :", round(percent_freq*100, 0), "%")),
+             position="stack", stat="identity", width=.6) +
+    geom_text(aes(label = paste(nb_reponses_freq, ifelse(nb_reponses_freq <= 1, "réponse", "réponses")), x=categorie_population, fill = Var, group = Var, y = 0.01), 
+              hjust = 0, color = "white", fontface = "italic", size = 5) +
+    scale_fill_manual(values = c("Jamais" = "#9ECAE1", "Moins d'1 fois par semaine" = "#3182BD", "1 fois par semaine et plus" = "#0C4C8A")) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "Population", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon leurs discussions privées avec des clients par taille de ville", width = 55),
+         title = stringr::str_wrap("Le nombre d'habitants des villes influence peu la fréquence de discussions privées", width = 45)) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          legend.title = ggplot2::element_text(family = font, size = 16, color = "#222222"),
+          legend.text = ggplot2::element_text(family = font, size = 14,color = "#222222"), 
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = guide_legend(title = "Fréquence des \ndiscussions", nrow = 3, reverse = TRUE)) +
+    coord_flip()
+mon_graph
+girafe(print(mon_graph), width_svg = 7)
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/comp-discu-privees-23.html", 
+           selfcontained = TRUE)
+```
+
 
 ```{r eval=FALSE, include=FALSE}
 table <- data |>  
@@ -1357,14 +1432,39 @@ viz_liensocial_frequence_confidence <- function(donnees, title_name){
       filter(!is.na(Var)) |> 
       mutate(percent = n/sum(n)*100)
     
-    # On applique la fonction créée
-    graph_type_commerce_freq_agregee(table, ref_data_freq_agregee, title_name, 
-                         "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "1 fois par semaine et plus", "#3182bd") +
-        theme(plot.caption = element_blank()) +
-        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-                   size = 5, fill = "white", label.size = NA)
+    # On plot
+    table |> 
+        left_join(ref_data_freq_agregee, by = "Var") |> 
+        mutate(n_ref = percent_ref/100 * sum(n),
+               ecart = round((percent - percent_ref), 0),
+               ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+        mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", "1 fois par semaine et plus"))) |> 
+        ggplot() + 
+        geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "1 fois par semaine et plus",
+                                 tooltip = paste(Var, ":", n, "commerces")),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+        scale_alpha_manual(values=c(1, .4)) +
+        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+        labs(x = "", y = "Nombre de commerces", 
+             subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", width = 55),
+             title = stringr::str_wrap(title_name, width = 45)) +
+        geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, 
+                                                                 paste0(round(percent, 0), "%"))),
+                   size = 5, fill = "white", label.size = NA) +
+        theme_classic() +
+        custom_theme() +
+        theme(legend.position = "top",
+              axis.title.x = element_blank(),
+              axis.title.y = element_text(size = 14),
+              plot.subtitle = element_text(margin = margin(b = 30))) +
+        guides(alpha = "none")
 }
-viz_liensocial_frequence_confidence(data, "Près de 7 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
+
+mon_graph <- viz_liensocial_frequence_confidence(data, "Près de 7 commerçants sur 10 ont des discussions privées avec leurs clients au moins une fois par semaine")
+mon_graph
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -1592,9 +1692,39 @@ table <- data |>
          .by = `Quelle est la catégorie de votre commerce ?`) |> 
   mutate(`Quelle est la catégorie de votre commerce ?` = paste0(`Quelle est la catégorie de votre commerce ?`, "\n(", nb_reponses, " commerces)"))
 
-# On applique la fonction créée
-graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", "", "#3182bd")
+# On plot
+mon_graph <- table |> 
+    left_join(ref_data_freq_agregee, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart)), 
+           percent_ref = percent_ref/100,
+           .by = `Quelle est la catégorie de votre commerce ?`) |> 
+    mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", "1 fois par semaine et plus"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=percent, x=Var, alpha = Var != "",
+                             tooltip = paste(Var, ":", round(percent*100, 0), "%")),
+             position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+    geom_bar(aes(y=percent_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+             position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence de leurs discussions privées avec des clients", width = 100),
+         title = stringr::str_wrap("Comparaison en % par catégorie de commerces", width = 100)) +
+    facet_wrap(~`Quelle est la catégorie de votre commerce ?`) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          strip.text = ggplot2::element_text(size = 15)) +
+    guides(alpha = "none")
+mon_graph
+girafe(print(mon_graph), width_svg = 11, height_svg = 9)
+saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/comp-categorie-discu-privees-34.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -1671,12 +1801,35 @@ table <- data |>
   mutate(percent = n/sum(n)*100) |> 
   rename(Var = 1)
 
-# On applique la fonction créée
-graph_questions_freq(table, ref_explications_produits, "Expliquer et détailler ses produits est le quotidien de plus de 7 commerçants sur 10", 
-                     "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", "Très régulièrement (plusieurs fois par jour)", "#3182bd") +
-    theme(plot.caption = element_blank()) +
+# On plot
+mon_graph <- table |> 
+    left_join(ref_explications_produits, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "Très régulièrement (plusieurs fois par jour)",
+                 tooltip = paste(Var, ":", n, "commerces")),
+             position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", width = 55),
+         title = stringr::str_wrap("Expliquer et détailler ses produits est le quotidien de plus de 7 commerçants sur 10", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+mon_graph
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -2068,11 +2221,11 @@ viz_liensocial_associations <- function(donnees, title_name){
     library(ggtext)
     table_collab_treemap |> 
         mutate(var = fct_reorder(var, n)) |> 
-        ggplot( aes(x=var, y=n)) +
-        geom_segment(aes(xend=var, yend=0), 
+        ggplot( aes(x=var, y=n, tooltip = paste(var, ":", n, "commerces"))) +
+        geom_segment_interactive(aes(xend=var, yend=0), 
                      color=ifelse(table_collab_treemap$var == percent_collab_quartier$var, "#3182BD", "grey"), 
                      size=ifelse(table_collab_treemap$var == percent_collab_quartier$var, 1.3, 0.7)) +
-        geom_point(color=ifelse(table_collab_treemap$var == percent_collab_quartier$var, "#3182BD", "grey"), 
+        geom_point_interactive(color=ifelse(table_collab_treemap$var == percent_collab_quartier$var, "#3182BD", "grey"), 
                    size=ifelse(table_collab_treemap$var == percent_collab_quartier$var, 5, 2)) +
         theme_bw() +
         coord_flip() +
@@ -2088,12 +2241,17 @@ viz_liensocial_associations <- function(donnees, title_name){
               panel.grid.major.y = ggplot2::element_blank(),
               plot.title = element_markdown())
 }
-viz_liensocial_associations(data, "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent") +
+mon_graph <- viz_liensocial_associations(data, "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent") +
         ggplot2::annotate("text",
                  x = 5,
                  y = 98.4,
                  label = "29% des collaborations \nse font avec des \nassociations de quartier",
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
+mon_graph
+girafe(print(mon_graph), width_svg = 8)
+saveWidget(girafe(print(mon_graph), width_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/asso-quartier-52.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -2112,8 +2270,9 @@ viz_liensocial_techniquestra <- function(donnees, title_name){
       mutate(Pourcentage = round(n / sum(n) * 100, 0)) |> 
       arrange(desc(n)) |> 
       mutate(ypos = cumsum(n) - .5 * n) |> 
-      ggplot(aes(x="", y=n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) +  
-          geom_bar(stat="identity", width=1, color="white", size = 2) +
+      ggplot(aes(x="", y=n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`,
+                 tooltip = paste("Utilisation", `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`, ":", n, "commerces"))) +  
+          geom_bar_interactive(stat="identity", width=1, color="white", size = 2) +
           coord_polar("y") +
           scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
           labs(title = str_wrap(title_name, width = 35),
@@ -2132,11 +2291,16 @@ viz_liensocial_techniquestra <- function(donnees, title_name){
                 plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                      color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
                 plot.title.position = "plot", 
-                plot.caption.position = "plot") +
+                plot.caption.position = "plot",
+                plot.margin = ggplot2::margin(0, 0, 0, -190)) +
           guides(fill = guide_legend(reverse = F, title = " ")) +
           geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
 }
-viz_liensocial_techniquestra(data, "Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent")
+mon_graph <- viz_liensocial_techniquestra(data, "Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent")
+mon_graph
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -3730,7 +3894,7 @@ viz_viequartier_matrice_collab <- function(donnees, title_name){
         custom_theme() +
         guides(fill = guide_legend(title = "Nombre de commerces"))
 }
-viz_viequartier_matrice_collab(data, "La collaboration avec des associations et \nl'aide aux commerçants voisins vont de \npaire chez les commerces répondants")
+viz_viequartier_matrice_collab(data, "L'entraide entre commerçants et \nl'inscription dans la vie associative \nlocale vont souvent de pair")
 ```
 
 <br>
@@ -3764,7 +3928,7 @@ table |>
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(breaks = c(0, 100, 200), limits = c(0, 280)) +
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = str_wrap("Un quart des commerçants recommandent et adressent des clients à leurs collègues commerçants", width = 40),
+         title = str_wrap("Un quart des commerçants recommande et adresse des clients à des commerces voisins", width = 40),
          subtitle = stringr::str_wrap("Services rendus par les commerces aux commerces voisins", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
@@ -3808,7 +3972,7 @@ table |>
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 170)) +
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = str_wrap("Plus d'un tiers des commerçants réceptionnent des colis pour leurs voisins d'immeuble", width = 45),
+         title = str_wrap("Plus d'un tiers des commerçants réceptionne des colis pour ses voisins d'immeuble", width = 45),
          subtitle = stringr::str_wrap("Services rendus par les commerçants aux habitants de leur immeuble", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
@@ -4810,7 +4974,7 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
         geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                    size = 5, fill = "white", label.size = NA)
 }
-viz_santesecu_frequence_accidents(data, "Ensemble des commerces", "")
+viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
 ```
 
 
@@ -6144,9 +6308,9 @@ table <- data |>
 table |> 
     mutate(a_surligner = case_when(Var == "Jamais" ~ "1", 
                                    .default = "0")) |> 
-    graph_questions_freq(ref_interpellation_mairie, "Plus de la moitié des commerçants ont déjà interpellé les services de la mairie", 
+    graph_questions_freq(ref_interpellation_mairie, "Plus de la moitié des commerçants a déjà interpellé les services de la mairie", 
                      "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
-    labs(title = str_wrap("Plus de la moitié des commerçants ont déjà interpellé les services de la mairie", width = 50)) +
+    labs(title = str_wrap("Plus de la moitié des commerçants a déjà interpellé les services de la mairie", width = 50)) +
     theme(plot.caption = element_blank(),
           plot.title = element_text(size = 19),
           plot.margin = unit(c(0, 1, 0, 0), "cm")) +
@@ -7703,7 +7867,7 @@ rouen <- data |>
 
 La ville de Rouen compte [3.259 commerces](https://www.linternaute.com/ville/rouen/ville-76540/entreprises), pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 28.6 commerces pour 1.000 habitants.
 
-`r nrow(rouen)` réponses ont été collectées à Rouen, Elbeuf, Duclair, Le Trait, soit `r round(nrow(rouen)/nrow(data)*100, 0)`% de l'échantillon des répondants à l'enquête.
+`r nrow(rouen)` réponses ont été collectées à Rouen (47), Elbeuf (10), Duclair (7), Le Trait (11), soit `r round(nrow(rouen)/nrow(data)*100, 0)`% de l'échantillon des répondants à l'enquête.
 
 
 
@@ -7728,7 +7892,7 @@ ggplot(rouen) +
 # Données
 graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
                           nom_geo = "Rouen",
-                          titre = "Statut des commerces rouennais répondants, parmi l'ensemble des répondants",
+                          titre = "Statut des commerces de Métropole Rouen Normandie répondants, parmi l'ensemble des répondants",
                           nom_legende = "Indépendance")
 ```
 
@@ -7736,7 +7900,7 @@ graphique_apercu_portrait(variable = `Êtes-vous indépendant ?`,
 ```{r}
 graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
                           nom_geo = "Rouen",
-                          titre = "Modalité de travail des commerces rouennais répondants, parmi l'ensemble des répondants",
+                          titre = "Modalité de travail des commerces de Métropole Rouen Normandie répondants, parmi l'ensemble des répondants",
                           nom_legende = "Travail seul")
 ```
 
@@ -7746,21 +7910,21 @@ graphique_apercu_portrait(variable = `Travaillez-vous seul ?`,
 #### Lien social
 
 ```{r}
-cc_liensocial(rouen, "     À Rouen :")
+cc_liensocial(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r fig.height=6}
-viz_liensocial_frequence_confidence(rouen, "À Rouen, 6 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
+viz_liensocial_frequence_confidence(rouen, "À la Métropole Rouen Normandie, 6 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
 ```
 
 ```{r}
 viz_liensocial_frequence_expliproduits(rouen, 
-                                       "À Rouen, 9 commerçants sur 10 expliquent leurs produits au moins une fois par semaine", 
+                                       "À la Métropole Rouen Normandie, 9 commerçants sur 10 expliquent leurs produits au moins une fois par semaine", 
                                        "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_liensocial_associations(rouen, "À Rouen, les <span style='color: #3182BD'>associations sociales</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
+viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, les <span style='color: #3182BD'>associations sociales</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50), limits = c(0, 50)) +
     ggplot2::annotate("text",
                       x = 5,
@@ -7770,86 +7934,86 @@ viz_liensocial_associations(rouen, "À Rouen, les <span style='color: #3182BD'>a
 ```
 
 ```{r}
-viz_liensocial_techniquestra(rouen, "À Rouen, 8 commerçants sur 10 utilisent des techniques traditionnelles ou artisanales pour fabriquer leurs produits")
+viz_liensocial_techniquestra(rouen, "À la Métropole Rouen Normandie, 8 commerçants sur 10 utilisent des techniques traditionnelles ou artisanales pour fabriquer leurs produits")
 ```
 
 #### Solidarités
 
 ```{r}
-cc_solidarites(rouen, "     À Rouen :")
+cc_solidarites(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
 viz_solidarites_prepa_wordcloud(rouen)
-viz_solidarites_wordcloud_aides(rouen, "À Rouen, l'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
+viz_solidarites_wordcloud_aides(rouen, "À la Métropole Rouen Normandie, l'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
 ```
 
 ```{r}
 viz_solidarites_frequence_sollicitations(rouen, 
-                                         "À Rouen, 22% des commerçants sont sollicités au moins une fois par semaine par des personnes précaires", 
+                                         "À la Métropole Rouen Normandie, 22% des commerçants sont sollicités au moins une fois par semaine par des personnes précaires", 
                                          "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_solidarites_frequence_nouvelles(rouen, "À Rouen, près de 9 commerçants sur 10 prennent des nouvelles de leurs clients au moins une fois par semaine", "1 fois par semaine et plus")
+viz_solidarites_frequence_nouvelles(rouen, "À la Métropole Rouen Normandie, près de 9 commerçants sur 10 prennent des nouvelles de leurs clients au moins une fois par semaine", "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_solidarites_redirection(rouen, "À Rouen, le <span style='color: #3182BD'>social</span> est le principal type de <br>service vers lequel les commerçants orientent")
+viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, le <span style='color: #3182BD'>social</span> est le principal type de <br>service vers lequel les commerçants orientent")
 ```
 
 ```{r}
-viz_solidarites_frequence_redirection(rouen, "À Rouen, 45% des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
+viz_solidarites_frequence_redirection(rouen, "À la Métropole Rouen Normandie, 45% des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
 ```
 
 #### Vie de quartier
 
 ```{r}
-cc_viequartier(rouen, "     À Rouen :")
+cc_viequartier(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
 viz_viequartier_matrice_collab(rouen, 
-                               "À Rouen, les commerçants qui aident leurs \ncollègues ne collaborent pas \nnécessairement avec des associations")
+                               "À la Métropole Rouen Normandie, les commerçants qui aident leurs \ncollègues ne collaborent pas \nnécessairement avec des associations")
 ```
 
 ```{r fig.width=11}
-viz_viequartier_events(rouen, "À Rouen, 44% des commerçants participent à l'organisation d'évènements dans leur quartier")
+viz_viequartier_events(rouen, "À la Métropole Rouen Normandie, 44% des commerçants participent à l'organisation d'évènements dans leur quartier")
 ```
 
 
 #### Santé et sécurité
 
 ```{r}
-cc_santesecu(rouen, "     À Rouen :")
+cc_santesecu(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
-viz_santesecu_frequence_insecurite(rouen, "À Rouen, près de 4 commerces sur 10 interviennent en cas d'insécurité au moins chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_insecurite(rouen, "À la Métropole Rouen Normandie, près de 4 commerces sur 10 interviennent en cas d'insécurité au moins chaque mois", "1 fois par mois et plus")
 ```
 
 ```{r}
-viz_santesecu_frequence_accidents(rouen, "À Rouen, 22% des commerçants aident en cas d'accidents ou malaise au moins chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_accidents(rouen, "À la Métropole Rouen Normandie, 22% des commerçants aident en cas d'accidents ou malaise au moins chaque mois", "1 fois par mois et plus")
 ```
 
 ```{r}
-viz_santesecu_frequence_vols(rouen, "À Rouen, près de 2 commerçants sur 10 sont confrontés à l'insécurité chaque mois", "1 fois par mois et plus")
+viz_santesecu_frequence_vols(rouen, "À la Métropole Rouen Normandie, près de 2 commerçants sur 10 sont confrontés à l'insécurité chaque mois", "1 fois par mois et plus")
 ```
 
 
 #### Environnement
 
 ```{r}
-cc_environnement(rouen, "     À Rouen :")
+cc_environnement(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
-viz_environnement_conso_eauelec(rouen, "À Rouen, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants", 6.5, 43) +
+viz_environnement_conso_eauelec(rouen, "À la Métropole Rouen Normandie, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants", 6.5, 43) +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
 ```{r}
-viz_environnement_discu_envt(rouen, "À Rouen, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
+viz_environnement_discu_envt(rouen, "À la Métropole Rouen Normandie, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 37))
 ```
 
@@ -7889,7 +8053,7 @@ table |>
                size=ifelse(table$Var == "Piles électriques", 5, 2)) +
     theme_bw() +
     coord_flip() +
-    labs(title = "À Rouen, le recyclage des <span style='color: #3182BD'>piles électriques</span> est <br>une solution adoptée par une majorité de <br>commerçants recyclant",
+    labs(title = "À la Métropole Rouen Normandie, le recyclage des <span style='color: #3182BD'>piles électriques</span> est <br>une solution adoptée par une majorité de <br>commerçants recyclant",
          subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
          y = "Nombre de commerces") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
@@ -7908,35 +8072,35 @@ table |>
 ```
 
 ```{r}
-viz_environnement_fournisseurs(rouen, "À Rouen, 2 commerçants sur 10 recyclent \nleurs déchêts")
+viz_environnement_fournisseurs(rouen, "À la Métropole Rouen Normandie, 2 commerçants sur 10 recyclent \nleurs déchêts")
 ```
 
 
 #### Espace public
 
 ```{r}
-cc_espacepublic(rouen, "     À Rouen :")
+cc_espacepublic(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
-viz_espacepublic_embellissement(rouen, "À Rouen, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
+viz_espacepublic_embellissement(rouen, "À la Métropole Rouen Normandie, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
 ```{r}
-viz_espacepublic_frequence_appelmairie(rouen, "À Rouen, 1 commerçant sur 2 appelle la mairie moins d'une fois par semaine", "Moins d'1 fois par semaine")
+viz_espacepublic_frequence_appelmairie(rouen, "À la Métropole Rouen Normandie, 1 commerçant sur 2 appelle la mairie moins d'une fois par semaine", "Moins d'1 fois par semaine")
 ```
 
 ```{r}
-viz_espacepublic_frequence_nettoyage(rouen, "À Rouen, 6 commerçants sur 10 nettoyent les abords de leur commerce chaque semaine", "1 fois par semaine et plus")
+viz_espacepublic_frequence_nettoyage(rouen, "À la Métropole Rouen Normandie, 6 commerçants sur 10 nettoyent les abords de leur commerce chaque semaine", "1 fois par semaine et plus")
 ```
 
 ```{r}
-viz_espacepublic_patrimoine(rouen, "À Rouen, 28% des commerces intérrogés se situent dans un bâtiment classé")
+viz_espacepublic_patrimoine(rouen, "À la Métropole Rouen Normandie, 28% des commerces intérrogés se situent dans un bâtiment classé")
 ```
 
 ```{r}
-viz_espacepublic_detail_partimoine(rouen, "À Rouen, plus de 6 commerces sur 10 sont situés dans des bâtiments non classés")
+viz_espacepublic_detail_partimoine(rouen, "À la Métropole Rouen Normandie, plus de 6 commerces sur 10 sont situés dans des bâtiments non classés")
 ```
 
 
@@ -7959,7 +8123,7 @@ fonction_stat_commune <- function(table, territoire, Externalité_texte, Indicat
                                      percent > median(percent, na.rm = T) & percent <= quantile(percent, 0.75, na.rm = TRUE) ~ "Élevé",
                                      percent > quantile(percent, 0.75, na.rm = TRUE) ~ "Très élevé")) |> 
         arrange(desc(nb_reponses)) |> 
-        filter(Libelle_acheminement2 == territoire) |> 
+        filter(if (territoire != "") Libelle_acheminement2 == territoire else TRUE) |> 
         select(nb_reponses, percent, Catégorie) |> 
         rename(`Nombre de réponses` = nb_reponses,
                `%` = percent) |> 
@@ -8369,6 +8533,7 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
 }
 
 # Application des fonctions
+#calcul_indicateur_territoire("", "ensemble")
 calcul_indicateur_territoire("PARIS", "paris")
 calcul_indicateur_territoire("ST OUEN SUR SEINE", "stouen")
 calcul_indicateur_territoire("ROUEN", "rouen")
@@ -8378,11 +8543,17 @@ calcul_indicateur_territoire("ROUEN", "rouen")
 #--- Compilation et affichage de la table
 
     # Compilation
+stat_commune_ensemble <- do.call(bind_rows, mget(ls(pattern = "stat_commune_ensemble_")))
 stat_commune_paris <- do.call(bind_rows, mget(ls(pattern = "stat_commune_paris_")))
 stat_commune_stouen <- do.call(bind_rows, mget(ls(pattern = "stat_commune_stouen_")))
 stat_commune_rouen <- do.call(bind_rows, mget(ls(pattern = "stat_commune_rouen_")))
-stat_commune_finale <- bind_cols(stat_commune_paris |> 
-                                     arrange(Externalité, Indicateur), 
+stat_commune_finale <- bind_cols(#stat_commune_ensemble |> 
+                                 #    rename(`Nombre de réponses  ` = `Nombre de réponses`, `%  ` = `%`) |> 
+                                 #    arrange(Externalité, Indicateur),
+                                 stat_commune_paris |> 
+                                     arrange(Externalité, Indicateur) 
+                                     #select(-c(Externalité, Indicateur, Catégorie))
+                                 , 
                                  stat_commune_stouen |> 
                                      # ajout manuel du récap Envnt car est à 0%
                                      add_row(Externalité = "Environnement",
@@ -8423,9 +8594,10 @@ stat_commune_finale |>
     tab_header(title = md("**Comparaison territoriales des externalités positives du commerce**")) |>
     tab_source_note(source_note = md("*Données d'une enquête diffusée d'avril à novembre 2024 auprès de **324 commerces** de France entière.*")) |> 
     # Rassemblement des chiffres par territoires
+    #tab_spanner(label = md("**Ensemble**"), columns = c(`Nombre de réponses  `, `%  `)) |> 
     tab_spanner(label = md("**Paris**"), columns = c(`Nombre de réponses`, `%`)) |> 
     tab_spanner(label = md("**St Ouen**"), columns = c(` Nombre de réponses`, ` %`)) |> 
-    tab_spanner(label = md("**Rouen**"), columns = c(`Nombre de réponses `, `% `)) |> 
+    tab_spanner(label = md("**Métropole Rouen Normandie**"), columns = c(`Nombre de réponses `, `% `)) |> 
     # Style de la table
     tab_style(style = list(cell_text(weight = "lighter")), 
               locations = cells_body(columns = Indicateur)) |>  
