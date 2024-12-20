@@ -84,7 +84,7 @@ showtext_auto()
 
 <br>
 
-*[Télécharger cette étude en PDF](mettre lien)*
+*[Télécharger cette étude en PDF](https://nextcloud.datactivist.coop/s/jxFWmm7CKqPtt5J)*
 
 Les commerces ne sont pas de stricts acteurs économiques, dont la valeur sociale serait équivalente à la valeur marchande. Cette intuition est largement partagée dans les espaces politiques, académiques ou encore économiques.
 Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
@@ -1413,3 +1413,28 @@ réponses collectées à la Métropole Rouen Normandie
 :::
 
 # Notice technique
+
+L’enquête sur les effets du commerce de proximité, en partenariat avec la SEM Paris Commerces, la fondation Urbanis, la fondation Alativa ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 234 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
+L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 164 réponses en plus. 
+
+Les pourcentages sont exprimés en part des commerces répondants pour chacune des questions. Le traitement des données et l'analyse détaillée sont disponibles dans le [rapport d'analyse complète](https://datactivist.coop/excom/Questionnaire_effets_commerce/Questionnaire_effets_commerce.html).
+
+Les données brutes de l’enquête, anonymisées, sont disponibles [**ici**](https://github.com/datactivist/excom/blob/main/Questionnaire_effets_commerce/data/out/reponses_enquete_anonymisees.csv).
+
+Le code source ayant permis la génération de l’ensemble des graphiques et tableaux de l’enquête est disponible [**ici**](https://github.com/datactivist/excom/blob/main/Questionnaire_effets_commerce/Questionnaire_effets_commerce.Rmd).
+
+Le présent rapport, produit par Datactivist, est mis à disposition sous licence Creative Commons CC BY SA 4.0.
+
+<img src="https://nextcloud.datactivist.coop/s/eSRLq6jDjFzedFq/preview" width = "110">
+
+<br>
+
+---
+
+<center>
+
+Réalisé par [Datactivist](https://datactivist.coop/fr/)
+
+<FONT COLOR="#666666">*31/01/2024*</FONT>
+
+</center>
