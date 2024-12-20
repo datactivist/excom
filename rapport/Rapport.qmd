@@ -193,7 +193,7 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/lien_social.png" width = "600">
 </p>
 
 Les commerces locaux offrent des espaces de rencontre, favorisant la santé sociale, la vitalité démocratique et le bien-être individuel. Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, ils constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles. 
@@ -320,7 +320,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-54-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/solidarites.png" width = "600">
 </p>
 
 De nombreux commerçants de proximité sont régulièrement au contact de personnes en situation de précarité et peuvent agir directement auprès d’elles, en leur offrant l’accès à des services de base. Ils peuvent aussi être des points relais pour diverses formes d'aide sociale, particulièrement dans les zones moins denses, où l’accès aux services peut être limité, [comme le souligne l’Avise](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], association de soutien à l’économie sociale et solidaire. De nombreux commerçants ont également déclaré être impliqués dans des actions caritatives, comme la collecte de dons alimentaires ou la participation à des programmes d'aide aux personnes isolées. Ils sont ainsi comme de véritables acteurs de la solidarité, contribuant activement à soutenir les membres les plus vulnérables de leur communauté.
@@ -440,7 +440,7 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-107-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/vie_quartier.png" width = "600">
 </p>
 
 Les commerces de proximité sont des piliers essentiels à la construction d’une communauté locale dynamique et attrayante. Ils jouent un rôle crucial dans le tissu social, économique et culturel d’un quartier. 
@@ -559,7 +559,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-117-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/sante_securite.png" width = "600">
 </p>
 
 Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américaine, a souligné l'importance des commerçants en tant que "yeux sur la rue", autrement dit comme **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
@@ -648,7 +648,7 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-166-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/environnement.png" width = "600">
 </p>
 
 Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble d'actions pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (79% des répondants), réduction de ses consommations (59%), sensibilisation de la clientèle à des pratiques plus durables (32%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
@@ -778,7 +778,7 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-180-1.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/espace_public.png" width = "600">
 </p>
 
 <br>
