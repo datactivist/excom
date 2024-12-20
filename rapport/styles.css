@@ -51,13 +51,13 @@ h1 { /*titre de niveau #1*/
   margin-top: 50px; /*espace avant ligne horizontale*/
 }
 h2 { /*titre de niveau #2*/
-  color: #7AB784; /*couleur titre*/
+  color: #304B95; /*couleur titre*/
   font-size: 1.8em; /*taille*/
   font-family: "Montserrat bold"; /*police*/
   font-weight: bold; /*gras*/
   padding: 0px; /*alinéa*/
   padding-top: 30px; /*espace avant titre*/
-  padding-left: 70px; /*espace avant titre*/
+  padding-left: 0px; /*espace avant titre*/
 }
 h3 { /*titre de niveau #3*/
   color: #304B95; /*couleur titre*/
@@ -66,7 +66,7 @@ h3 { /*titre de niveau #3*/
   font-weight: bold; /*gras*/
   padding: 10px; /*alinéa*/
   padding-top: 30px; /*alinéa*/
-  padding-left: 90px; /*alinéa*/
+  padding-left: 0px; /*alinéa*/
 }
 h4 { /*titre de niveau #4*/
   color: #304B95; /*couleur titre*/
@@ -105,4 +105,5 @@ a:hover { /*souris au-dessus du lien hyper texte*/
 a:visited { /*lien visité*/
     color: #304B95;
 }
+
 

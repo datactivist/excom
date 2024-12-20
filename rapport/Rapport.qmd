@@ -13,9 +13,10 @@ format:
     page-layout: full
     embed-resources: true
     code-fold: false
+    theme: cosmo
     css: styles.css
-    includes:
-      in_header: header.html
+    include-in-header:
+      - header.html
     grid:
       sidebar-width: 300px
       body-width: 1200px
@@ -58,13 +59,13 @@ showtext_auto()
     margin-bottom: 20px;      /* Espacement sous la TOC */
 }
 #toc-title {
-    font-size: 1.5em;         /* Taille du texte */
+    font-size: 1.2em;         /* Taille du texte */
     font-weight: bold;        /* Texte en gras */
     color: #304B95;           /* Couleur du texte */
     text-align: left;       /* Centrer le texte */
-    margin-top: -5px;      /* Espacement sous le titre */
+    margin-top: -2px;      /* Espacement sous le titre */
     margin-bottom: 10px;      /* Espacement sous le titre */
-    margin-left: -65px;      /* Espacement sous le titre */
+    margin-left: 5px;      /* Espacement sous le titre */
 }
 /* Style pour les liens dans la TOC */
 #TOC ul {
@@ -91,7 +92,7 @@ Pourtant, les effets du commerce sont encore mal identifiés, et les quelques tr
 Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
 Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundation, Datactivist.
 
-Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu 324 réponses, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
+Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu **324 réponses**, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
 
 
 # Aperçu des données
@@ -136,6 +137,15 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 Si les produits ou services vendus varient grandement, les commerces interrogés ont en commun d’être très largement **indépendants** (près de 90%), tous **en contact avec des clients** (à l’exception d’un), et d’avoir un lieu de **vente dédié**. 
 :::
 ::::
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">89%</p>
+des commerçants interrogés sont indépendants
+:::
 
 Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces derniers sont représentés dans l’enquête mais constituent une minorité de répondants (12). Car **une partie des micro-commerçants occupe l’espace public différemment des commerçants ayant un pas-de-porte** (ex : via une présence sur des marchés), une étude focalisée sur leur profil permettrait de préciser leurs apports à l’espace public, aux passants et habitants. 
 
@@ -201,6 +211,15 @@ Concrètement, **deux tiers des commerces entretiennent régulièrement des conv
 :::
 ::::
 
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
+des commerçants ont plusieurs discussions d'ordre privé quotidiennement
+:::
+
 Ces interactions sont essentielles pour les personnes isolées, qui ont au cours d'une journée très peu d’autres échanges. Les interactions peuvent également répondre à des besoins plus ponctuels de se sentir écouté face à une situation difficile. 
 
 **L’accessibilité des commerces est cependant très disparate en France.** [En 2018, l’Observatoire des territoires](https://www.observatoire-des-territoires.gouv.fr/kiosque/2021-2022-rapport-cahier-1-demo-chap-03-07-lisolement-des-personnes-agees-des-enjeux)[^1] montrait qu’en zones de très faibles densités (espaces ruraux notamment), 40,5% des personnes de plus de 75 ans résident à plus de 10 minutes en voiture des commerces et services les plus proches, contre 1% dans les zones denses. Face à cette problématique, la mise en place de commerces itinérants, avec le soutien des collectivités territoriales, est parfois vue comme une solution. Leur développement est par exemple [encouragé par les Intercommunalités de France](https://www.intercommunalites.fr/actualite/le-commerce-itinerant-une-reponse-a-lisolement-des-personnes-agees-dans-les-zones-rurales/)[^2]. 
@@ -243,12 +262,21 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 <iframe width="550" height="401" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
 :::
 ::: {.column width="40%"}
-<iframe width="550" height="431" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::::
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
+des commerçants prennent le temps plusieurs fois par jour d’échanger longuement avec leurs clients sur les produits vendus
+:::
 
 <br>
 
@@ -329,6 +357,15 @@ Cependant, nous observons une sur-sollicitation des cafés-restaurants par rappo
 :::
 ::::
 
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">23%</p>
+des commerçants sont interpellés au moins une fois par semaine par des personnes dans le besoin
+:::
+
 <center>
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-72-1.png){width=600px}
 </center>
@@ -408,6 +445,13 @@ Les commerces de proximité sont des piliers essentiels à la construction d’u
 
 Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximité**. La quasi totalité (96%) des personnes interrogées déclare ainsi rendre des services aux autres commerçants des alentours. On observe par ailleurs que l’intégration dans le tissu associatif local va souvent de paire avec un réseau d’entraide commerciale. 
 
+::: {.column-margin}
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">96%</p>
+des commerçants rendent des services aux autres commerçants des alentours
+:::
+
+<br>
+
 :::: {.columns}
 ::: {.column width="47%"}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-109-1.png)
@@ -454,7 +498,18 @@ Des relations de proximité sont également développées entre les commerçants
 :::
 ::::
 
+::: {.column-margin}
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">70%</p>
+des commerçants rendent des services aux habitants de l’immeuble dans lequel se situe leur local
+:::
+
+<br>
+
 Une [enquête réalisée par Clara Hercule pour *Sur-Mesure*](https://www.revuesurmesure.fr/contributions/l-ancrage-local-une-ressource-pour-les-commerces-dans-les-quartiers)[^5] a montré les liens particulièrement fort entre les commerçants et les habitants d’un quartier prioritaire de la politique de la ville (QPV), pour lesquels les lieux de vente répondent à des besoins particuliers, notamment en termes de sociabilité. À travers des portraits d’entrepreneurs, l’autrice montre **leur insertion dans des réseaux sociaux locaux et les formes de soutiens réciproques entre riverains à commerçants** (pour lesquels l’ancrage territorial peut par ailleurs être un avantage concurrentiel). Elle écrit : “*Multiplier les relations non-marchandes avec la population locale peut être un moyen de prouver son engagement dans la vie du quartier. Il s’agit d’échanger un service contre un autre de manière tacite et différée dans le temps. Cela génère de l’inter-reconnaissance et un intérêt pour les habitants à défendre le commerçant en cas de conflit.*”
+
+
 
 [^5]: <ins>Source</ins> : *"L'ancrage local, une ressource pour les commerces dans les quartiers ?"* 
     
@@ -507,6 +562,13 @@ Les commerces de proximité jouent un rôle crucial dans la santé et la sécuri
 
 En plus de générer du passage et d’avoir une activité ouverte sur la rue, les commerçants peuvent intervenir directement lorsqu’une situation problématique se présente (malaise, accident ou, plus rarement, altercation), ou transmettre l’information immédiatement aux services compétents. 
 Les situations d’insécurité sont relativement rares. 39% des commerçants n’en ont jamais rencontré. Et parmi ceux qui y ont fait face, 78% indiquent intervenir moins de deux fois par an. Mais lorsqu’elles se produisent, les commerçants sont souvent en première ligne. **En plus d’intervenir, quand la situation ne les met pas en danger, ils peuvent alerter rapidement**.  
+
+::: {.column-margin}
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">39%</p>
+des commerçants n’ont jamais rencontré de situations d’insécurité
+:::
 
 
 :::: {.columns}
@@ -622,11 +684,20 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 :::
 ::: {.column width="40%"}
 <br>
-<br>
-<br>
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-172-1.png)
 :::
 ::::
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
+des commerçants ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
+:::
+
+<br>
 
 :::: {.columns}
 ::: {.column width="40%"}
@@ -636,6 +707,7 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 <!-- empty column to create gap -->
 :::
 ::: {.column width="55%"}
+<br>
 <br>
 <br>
 Enfin, la meilleure gestion des déchets est un sujet important pour les commerçants, mais sur lequel nous observons une marge d’amélioration. Si une large majorité d’entre eux (79%) est attachée à la réduction des déchets, moins de la moitié (44%) utilise des solutions de recyclage. 
@@ -722,6 +794,8 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 :::: {.columns}
 ::: {.column width="50%"}
 <br>
+<br>
+<br>
 “Yeux sur la rue”, pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
 :::
 ::: {.column width="5%"}
@@ -731,6 +805,17 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-183-1.png) 
 :::
 ::::
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
+des commerçants interpellent les services de leur mairie au moins une fois par mois
+:::
 
 L’existence d’applications dans certaines collectivités facilite peut-être le dialogue entre usagers de l’espace (dont les commerçants) et service de la mairie. Nous n’avons cependant pas de données dans suffisamment de territoires pour comparer la fréquence d’échange avec les pouvoirs publics selon l’existence ou non d’outils numériques.  
 
@@ -755,6 +840,8 @@ En plus de contribuer à **l’embellissement de la ville, les commerçants assu
     ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-213-1.png){width=600px}
 </center>
 
+<br>
+
 :::: {.columns}
 ::: {.column width="50%"}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-216-1.png)
@@ -763,10 +850,18 @@ En plus de contribuer à **l’embellissement de la ville, les commerçants assu
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
+<br>
 Nous avons également mesuré les **apports des commerces à la préservation du patrimoine architectural**. L'enquête révèle que 29% d’entre eux apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés. Ceux qui occupent des bâtiments historiques (classés ou non) contribuent en effet à leur entretien, voire à leur réhabilitation. 
 :::
 ::::
 
+::: {.column-margin}
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">29%</p>
+des commerçants apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés
+:::
 
 <br>
 
@@ -775,5 +870,533 @@ Nous avons également mesuré les **apports des commerces à la préservation du
 </div>
 
 <br>
+
+# Portraits de territoire
+
+Le nombre de résultats collectés sur ces différents territoires a permis d’en tirer des focus. Ils concernent la Métropole Rouen Normandie et les villes de Paris et Saint-Ouen. 
+
+Le tableau comparatif met en lumière des similarités entre les différents territoires, autrement dit montre tendances de fond sur la production d’effets sociaux et environnementaux par les commerçants. Ce comparatif confirme qu’indépendamment de leur territoire d’implantation, les commerces ont des effets concrets sur le quartier, ses habitants, ses passants et les autres commerçants. Les commerces qui (co)produisent du lien social, des solidarités ou encore impactent positivement l’espace public ne sont pas des accidents statistiques mais existent partout.
+
+Notre enquête s’est cependant essentiellement concentrée sur des villes. Or la littérature académique et de nombreux rapports montrent que le lien des habitants aux commerces varie souvent selon la densité de population. Afin de rendre compte des dynamiques propres aux territoires ruraux et peu denses, sur lesquels les commerces sont susceptibles de produire des effets légèrement différenciés, il serait nécessaire de collecter plus de données. 
+
+<br>
+
+::: {.panel-tabset}
+
+## **Paris**
+
+<br>
+
+En 2023, la commune de Paris compte près de [61.000 commerces et services commerciaux](https://presse.paris.fr/pages/20995), pour plus de [2.1 millions d'habitants](https://www.insee.fr/fr/statistiques/serie/001760155), soit environ 29 commerces pour 1.000 habitants.
+
+139 réponses ont été collectées à Paris, soit 43% de l'échantillon des répondants à l'enquête.
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">139</p>
+réponses collectées à Paris
+:::
+
+<br>
+
+::: {.panel-tabset}
+
+### <font style="margin-right: 10px;">Aperçu</font>
+
+<center>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-217-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-218-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-219-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-221-1.png){width=450px}
+
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-222-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-223-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-224-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-225-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-226-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#004654">**Solidarités**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-227-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-228-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-229-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-230-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-231-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-232-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-233-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-234-1.png){width=350px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-235-1.png){width=550px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-236-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-237-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-238-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-239-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#E1B441">**Environnement**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-240-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-241-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-242-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-243-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-244-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#FF5757">**Espace public**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-245-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-246-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-247-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-248-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-249-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-250-1.png){width=450px}
+</center>
+
+:::
+
+
+## **Saint-Ouen-sur-Seine**
+
+
+<br>
+
+La commune de Saint-Ouen-sur-Seine compte [1.561 commerces et entreprises de services](https://www.linternaute.com/ville/saint-ouen-sur-seine/ville-93070/entreprises), pour un peu plus de [53.200 habitants](https://www.insee.fr/fr/statistiques/2011101?geo=COM-93070), soit environ 29 commerces pour 1.000 habitants.
+
+11 réponses ont été collectées à St Ouen, soit 3% de l’échantillon des répondants à l’enquête.
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">11</p>
+réponses collectées à St Ouen
+:::
+
+<br>
+
+::: {.panel-tabset}
+
+### <font style="margin-right: 10px;">Aperçu</font>
+
+<center>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-252-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-253-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-254-1.png){width=450px}
+
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-255-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-256-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-257-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-258-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-259-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#004654">**Solidarités**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-260-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-261-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-262-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-263-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-264-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-265-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-266-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-267-1.png){width=350px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-268-1.png){width=550px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-269-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-270-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-271-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-272-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#E1B441">**Environnement**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-273-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-274-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-275-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-276-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-277-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#FF5757">**Espace public**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-278-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-279-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-280-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-281-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-282-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-283-1.png){width=450px}
+</center>
+
+:::
+
+
+## **Métropole Rouen Normandie**
+
+
+<br>
+
+La ville de Rouen compte [3.259 commerces](https://www.linternaute.com/ville/rouen/ville-76540/entreprises), pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 28.6 commerces pour 1.000 habitants.
+
+75 réponses ont été collectées à Rouen (47), Elbeuf (10), Duclair (7), Le Trait (11), soit 23% de l'échantillon des répondants à l'enquête.
+
+::: {.column-margin}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">75</p>
+réponses collectées à la Métropole Rouen Normandie
+:::
+
+<br>
+
+::: {.panel-tabset}
+
+### <font style="margin-right: 10px;">Aperçu</font>
+
+<center>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-285-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-286-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-287-1.png){width=450px}
+
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-288-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-289-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-290-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-291-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-292-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#004654">**Solidarités**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-293-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-294-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-295-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-296-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-297-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-298-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-299-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-300-1.png){width=350px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-301-1.png){width=550px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-302-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-303-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-304-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-305-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#E1B441">**Environnement**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-306-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-307-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-308-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-309-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-310-1.png){width=450px}
+</center>
+
+### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
+
+<center>
+<FONT COLOR="#FF5757">**Espace public**</FONT>
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-311-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-312-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-313-1.png){width=450px}
+
+<br>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-314-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-315-1.png){width=450px}
+
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-316-1.png){width=450px}
+</center>
+
+:::
+
+## **Comparaison**
+
+<iframe frameborder="0" width="1050" height="1500" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html"></iframe>
+
+:::
 
 # Notice technique

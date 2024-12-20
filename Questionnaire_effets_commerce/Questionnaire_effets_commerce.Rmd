@@ -350,7 +350,7 @@ table <- data |>
     summarise(`Nombre de réponses` = n(), .by = Nom_de_la_commune) |> 
     arrange(desc(`Nombre de réponses`)) |> 
     rename(Commune = Nom_de_la_commune)
-datatable(table)
+gt(table)
 ```
 
 ### Détail Paris
@@ -363,7 +363,7 @@ table <- data |>
     summarise(`Nombre de réponses` = n(), .by = Nom_de_la_commune) |> 
     arrange(Nom_de_la_commune) |> 
     rename(Commune = Nom_de_la_commune)
-datatable(table)
+gt(table)
 
 table <- data |> 
     filter(code_departement_partenaires == 75) |> 
@@ -387,7 +387,7 @@ table <- data |>
   rename(Département = nom_departement) |> 
   na.omit()
 # Affichage des données
-datatable(table, options = list(pageLength = 10))
+gt(table)
 ```
 
 ## Traitement des données
@@ -619,7 +619,7 @@ mon_graph <- table |>
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)),
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            plot.margin = ggplot2::margin(5, 0, 0, -170)) +
+            plot.margin = ggplot2::margin(5, 0, 0, -100)) +
       guides(fill = guide_legend(reverse = T, title = " ")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
 mon_graph
@@ -1394,7 +1394,7 @@ graph_type_commerce_freq_agregee <- function(data, ref_data, title_name, subtitl
         labs(x = "", y = "Nombre de commerces", linetype = "",
              subtitle = stringr::str_wrap(subtitle_name, width = 55),
              caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
-             title = stringr::str_wrap(title_name, width = 45)) +
+             title = stringr::str_wrap(title_name, width = 42)) +
         geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
                    size = 5, fill = "white", label.size = NA) +
         theme_classic() +
@@ -2248,7 +2248,6 @@ mon_graph <- viz_liensocial_associations(data, "Les <span style='color: #3182BD'
                  label = "29% des collaborations \nse font avec des \nassociations de quartier",
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 mon_graph
-girafe(print(mon_graph), width_svg = 8)
 saveWidget(girafe(print(mon_graph), width_svg = 8), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/asso-quartier-52.html", 
            selfcontained = TRUE)
@@ -5860,7 +5859,7 @@ viz_environnement_discu_envt <- function(donnees, title_name){
                  position="dodge", stat="identity", width=.6) +
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
         labs(x = "", y = "Nombre de commerces", linetype = "",
-             title = str_wrap(title_name, width = 50),
+             title = str_wrap(title_name, width = 45),
              subtitle = stringr::str_wrap("Propositions des commerçants à leurs clients pour limiter l'impact environnemental de leur consommation", width = 55)) +
         geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                    size = 5, fill = "white", label.size = NA) +
@@ -7109,7 +7108,7 @@ viz_espacepublic_patrimoine <- function(donnees, title_name){
           geom_bar(stat="identity", width=1, color="white", size = 2) +
           coord_polar("y") +
           scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-          labs(title = str_wrap(title_name, width = 35),
+          labs(title = str_wrap(title_name, width = 33),
                subtitle = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 42)) +
           theme_classic() + 
           theme(legend.position = "top",
@@ -7335,7 +7334,7 @@ graphique_apercu_portrait <- function(variable, nom_geo, titre, nom_legende){
       geom_bar(stat = "summary", fun = "sum") +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
       scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
-      labs(title = str_wrap(titre, width = 45),
+      labs(title = str_wrap(titre, width = 42),
            fill = nom_legende,
            y = "Pourcentage des commerces") +
       theme_minimal() +
@@ -7372,7 +7371,7 @@ cc_liensocial(paris, "     À Paris :")
 ```
 
 ```{r fig.height=6}
-viz_liensocial_frequence_confidence(paris, "À Paris, près de 7 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
+viz_liensocial_frequence_confidence(paris, "À Paris, près de 7 commerces sur 10 ont des discussions privées avec leurs clients au moins une fois par semaine")
 ```
 
 ```{r}
@@ -7421,7 +7420,7 @@ viz_solidarites_redirection(paris, "À Paris, le <span style='color: #3182BD'>so
 ```
 
 ```{r}
-viz_solidarites_frequence_redirection(paris, "À Paris, plus d'un quart des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
+viz_solidarites_frequence_redirection(paris, "À Paris, plus d'un quart des commerçants dirige des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
 ```
 
 #### Vie de quartier
@@ -7432,7 +7431,7 @@ cc_viequartier(paris, "     À Paris :")
 
 ```{r}
 viz_viequartier_matrice_collab(paris, 
-                               "À Paris, les commerçants qui aident leurs \ncollègues ne collaborent pas \nnécessairement avec des associations")
+                               "À Paris, l'entraide entre commerçants et \nl'inscription dans la vie associative \nlocale ne vont pas nécessairement de pair")
 ```
 
 ```{r fig.width=11}
@@ -7571,7 +7570,7 @@ cc_liensocial(stouen, "     À Saint Ouen :")
 ```
 
 ```{r fig.height=6}
-viz_liensocial_frequence_confidence(stouen, "À St Ouen, près de 2 commerçants sur 3 sont confidents de leurs clients hebdomadairement ou plus")
+viz_liensocial_frequence_confidence(stouen, "À St Ouen, près de 2 commerçants sur 3 ont des discussions privées avec leurs clients au moins une fois par semaine")
 ```
 
 ```{r}
@@ -7713,7 +7712,7 @@ table_redirection_treemap |>
 ```
 
 ```{r}
-viz_solidarites_frequence_redirection(stouen, "À St Ouen, 2/3 des commerçants dirigent des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
+viz_solidarites_frequence_redirection(stouen, "À St Ouen, 2/3 des commerçants dirige des clients vers des aides extérieures chaque semaine", "1 fois par semaine et plus")
 ```
 
 #### Vie de quartier
@@ -7724,7 +7723,7 @@ cc_viequartier(stouen, "     À Saint Ouen :")
 
 ```{r}
 viz_viequartier_matrice_collab(stouen, 
-                               "À St Ouen, la collaboration avec des \nassociations et l'aide aux commerçants \nvoisins vont de paire chez les commerces \nrépondants")
+                               "À St Ouen, l'entraide entre commerçants \net l'inscription dans la vie associative \nlocale vont souvent de pair")
 ```
 
 ```{r fig.width=11}
@@ -7855,7 +7854,7 @@ viz_espacepublic_detail_partimoine(stouen, "À St Ouen, plus de 7 commerces sur 
 
 
 
-## Rouen Métropole
+## Métropole Rouen Normandie (MRN)
 
 ```{r}
 rouen <- data |> 
@@ -7878,7 +7877,7 @@ ggplot(rouen) +
                      function(x)+length(x))) +
   geom_bar(fill = "#3182BD") +
   labs(y = "Nombre de commerces",
-       title = "Catégorie des commerces rouennais répondants") +
+       title = "Catégorie des commerces de la Métropole \nRouen Normandie répondants") +
   coord_flip() +
   theme_minimal() +
   custom_theme() +
@@ -7914,7 +7913,7 @@ cc_liensocial(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r fig.height=6}
-viz_liensocial_frequence_confidence(rouen, "À la Métropole Rouen Normandie, 6 commerces sur 10 sont confidents de leurs clients hebdomadairement ou plus")
+viz_liensocial_frequence_confidence(rouen, "À la Métropole Rouen Normandie, 6 commerces sur 10 ont des discussions privées avec leurs clients au moins une fois par semaine")
 ```
 
 ```{r}
@@ -7924,7 +7923,7 @@ viz_liensocial_frequence_expliproduits(rouen,
 ```
 
 ```{r}
-viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, les <span style='color: #3182BD'>associations sociales</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
+viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, les <br><span style='color: #3182BD'>associations sociales</span> sont les principales <br>associations avec lesquelles les <br>commerçants s'associent") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50), limits = c(0, 50)) +
     ggplot2::annotate("text",
                       x = 5,
@@ -7959,7 +7958,7 @@ viz_solidarites_frequence_nouvelles(rouen, "À la Métropole Rouen Normandie, pr
 ```
 
 ```{r}
-viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, le <span style='color: #3182BD'>social</span> est le principal type de <br>service vers lequel les commerçants orientent")
+viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, le <span style='color: #3182BD'>social</span> est <br>le principal type de service vers lequel les <br>commerçants orientent")
 ```
 
 ```{r}
@@ -7974,7 +7973,7 @@ cc_viequartier(rouen, "     À la Métropole Rouen Normandie :")
 
 ```{r}
 viz_viequartier_matrice_collab(rouen, 
-                               "À la Métropole Rouen Normandie, les commerçants qui aident leurs \ncollègues ne collaborent pas \nnécessairement avec des associations")
+                               "À la Métropole Rouen Normandie, l'entraide \nentre commerçants et l'inscription dans \nla vie associative locale ne vont pas \nnécessairement de pair")
 ```
 
 ```{r fig.width=11}
@@ -8008,7 +8007,7 @@ cc_environnement(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
-viz_environnement_conso_eauelec(rouen, "À la Métropole Rouen Normandie, la réduction des factures d'<span style='color: #3182BD'>électricité</span> <br>est la priorité des commerçants", 6.5, 43) +
+viz_environnement_conso_eauelec(rouen, "À la Métropole Rouen Normandie, la réduction <br>des factures d'<span style='color: #3182BD'>électricité</span> est la priorité des <br>commerçants", 6.5, 43) +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
@@ -8053,7 +8052,7 @@ table |>
                size=ifelse(table$Var == "Piles électriques", 5, 2)) +
     theme_bw() +
     coord_flip() +
-    labs(title = "À la Métropole Rouen Normandie, le recyclage des <span style='color: #3182BD'>piles électriques</span> est <br>une solution adoptée par une majorité de <br>commerçants recyclant",
+    labs(title = "À la Métropole Rouen Normandie, le recyclage <br>des <span style='color: #3182BD'>piles électriques</span> est une solution adoptée <br>par une majorité de commerçants recyclant",
          subtitle = "Solutions de recycalge ou récupération proposées par \nles commerçants",
          y = "Nombre de commerces") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
@@ -8072,7 +8071,7 @@ table |>
 ```
 
 ```{r}
-viz_environnement_fournisseurs(rouen, "À la Métropole Rouen Normandie, 2 commerçants sur 10 recyclent \nleurs déchêts")
+viz_environnement_fournisseurs(rouen, "À la Métropole Rouen Normandie, 2 \ncommerçants sur 10 recyclent leurs déchêts")
 ```
 
 
@@ -8083,7 +8082,7 @@ cc_espacepublic(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}
-viz_espacepublic_embellissement(rouen, "À la Métropole Rouen Normandie, les commerçants accordent une <br>attention particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
+viz_espacepublic_embellissement(rouen, "À la Métropole Rouen Normandie, les <br>commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.5, 50) +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 80))
 ```
 
@@ -8571,7 +8570,7 @@ stat_commune_finale <- bind_cols(#stat_commune_ensemble |>
                                      select(-c(Externalité, Indicateur, Catégorie))) 
 
     # Affichage
-stat_commune_finale |> 
+gt_comparaison <- stat_commune_finale |> 
     select(-Catégorie) |> 
     # Transformation de la colonne externalité pour mettre le picto
     mutate(` ` = case_match(Externalité,
@@ -8597,7 +8596,7 @@ stat_commune_finale |>
     #tab_spanner(label = md("**Ensemble**"), columns = c(`Nombre de réponses  `, `%  `)) |> 
     tab_spanner(label = md("**Paris**"), columns = c(`Nombre de réponses`, `%`)) |> 
     tab_spanner(label = md("**St Ouen**"), columns = c(` Nombre de réponses`, ` %`)) |> 
-    tab_spanner(label = md("**Métropole Rouen Normandie**"), columns = c(`Nombre de réponses `, `% `)) |> 
+    tab_spanner(label = md("**M.R.N**"), columns = c(`Nombre de réponses `, `% `)) |> 
     # Style de la table
     tab_style(style = list(cell_text(weight = "lighter")), 
               locations = cells_body(columns = Indicateur)) |>  
@@ -8661,6 +8660,8 @@ stat_commune_finale |>
         background-color: #ffffff; /* Couleur de fond pour l'en-tête */
         z-index: 1;               /* Met les noms de colonnes devant les lignes */
       }")
+gt_comparaison
+gtsave(gt_comparaison, "Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html")
 ```
 
 
