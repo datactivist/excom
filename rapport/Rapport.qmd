@@ -178,18 +178,19 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 # ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT> {-}
 #### <FONT COLOR="#B4B1B1">Les commerces au cœur des interactions quotidiennes</FONT>
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“Ayant beaucoup de personnes âgées dans mon quartier qui viennent bavarder dans ma boutique quand elles font leurs courses, certaines donnent mon numéro de téléphone à leurs enfants qui peuvent m'appeler s'ils n'arrivent pas à se joindre, j'ai même des clefs pour aller chez leurs parents.”*
 
-*-- Fleuriste, Paris --*
+<div style="text-align: right">*-- Fleuriste, Paris --*</div>
 </FONT>
 :::
 ::::
-</center>
 
 <p align="center">
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
@@ -424,18 +425,19 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 #### <FONT COLOR="#0097B2">Entre services rendus et organisation d’évènements, l’entretien du sentiment de vivre ensemble</FONT>
 
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“La vie de quartier chez nous, c’est accueillir les nouveaux arrivants lors de nos dégustations de vins tous les jeudis soir. Mes clients sont vite devenus amis entre eux.”*
 
-*-- Caviste, Saint Ouen --*
+<div style="text-align: right">*-- Caviste, Saint Ouen --*</div>
 </FONT>
 :::
 ::::
-</center>
 
 <p align="center">
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-107-1.png" width = "600">
@@ -494,6 +496,7 @@ Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidari
 :::
 ::: {.column width="40%"}
 <br>
+<br>
 Des relations de proximité sont également développées entre les commerçants et les habitants du quartier. Plus de deux tiers des commerçants (70%) rendent ainsi service aux habitants de l’immeuble dans lequel se situe leur local (réception d’un colis, réductions…). 
 :::
 ::::
@@ -541,18 +544,19 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 # ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT> {-}
 #### <FONT COLOR="#00A589">Une présence dans la rue permettant des réponses immédiates</FONT>
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“Le commerce est devenu un pour de ralliement pour les habitants du quartier qui n’hésitent pas à venir demander de l’aide, comme mon voisin en situation de handicap qui s’est retrouvé coincé en dehors de chez lui. Grâce à un autre commerçant serrurier il a réussi à rentrer chez lui sans frais, car il n’avait pas les moyens.”*
 
-*-- Librairie, Paris --*
+<div style="text-align: right">*-- Librairie, Paris --*</div>
 </FONT>
 :::
 ::::
-</center>
 
 <p align="center">
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-117-1.png" width = "600">
@@ -625,22 +629,23 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 
 
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“Quand les clients me demandent une carte de visite, je leur réponds : pour moins de Flyers et plus de fleurs, je vous propose de flasher le QR CODE du site internet.”*
 
-*-- Fleuriste, Saint-Ouen --*
+<div style="text-align: right">*-- Fleuriste, Saint-Ouen --*</div>
 
 > *“Notre épicerie était avant tout écologique, mais on s’est rendu compte avec le temps qu’on a un ÉNORME impact social. Les magasins de proximité c’est la vie ! Et c’est la paix. Sans ça il n’y a plus de lien et chacun commande sur internet, on meurt de solitude ou on finit par détester tout et tout le monde, c’est la guerre.”*
 
-*-- Épicerie, Paris --*
+<div style="text-align: right">*-- Épicerie, Paris --*</div>
 </FONT>
 :::
 ::::
-</center>
 
 <p align="center">
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-166-1.png" width = "600">
@@ -651,6 +656,8 @@ Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer
 
 :::: {.columns}
 ::: {.column width="45%"}
+<br>
+<br>
 Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 22% des commerces.  
 :::
 ::: {.column width="5%"}
@@ -670,6 +677,7 @@ Une majorité de commerçants interrogés a par exemple investi pour réduire sa
 <!-- empty column to create gap -->
 :::
 ::: {.column width="50%"}
+<br>
 <br>
 D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipement, sont également mentionnées par les commerçants : arrêter l’éclairage la nuit, débrancher des appareils, réduire le chauffage, etc.  
 :::
@@ -751,26 +759,29 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 # ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT> {-}
 #### <FONT COLOR="#FF5757">Des apports concrets au cadre de vie</FONT>
 
-<center>
 :::: {.columns}
+::: {.column width="15%"}
+<!-- empty column to create gap -->
+:::
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
 > *“Les gens aiment bien les vitrines, ça leur fait un petit moment de poésie.”*
 
-*-- Bijouterie, Paris --*
+<div style="text-align: right">*-- Bijouterie, Paris --*</div>
 
 > *“Depuis 10 ans, nous réclamions, avec les autres commerçants de la rue, des jardinières pour verdir cette rue et aussi lutter contre le stationnement sauvage. Depuis février 2024, des jardinières ont été installées. Nos clients apprécient énormément et nous aussi.”*
 
-*-- Épicerie, Rouen --*
+<div style="text-align: right">*-- Épicerie, Rouen --*</div>
 </FONT>
 :::
 ::::
-</center>
 
 <p align="center">
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-180-1.png" width = "600">
 </p>
+
+<br>
 
 Les commerçants contribuent de plusieurs manières à la propreté de la rue et à l'amélioration de l'espace public : **nettoyage des trottoirs, signalement des problèmes, décorations saisonnales, participation à des projets d’aménagement (y compris informels)...** Ces initiatives contribuent à la perception positive d’espaces piétons rendus plus agréables et sont un complément direct aux projets menés par les services municipaux.  
 
@@ -790,6 +801,8 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 [^9]: <ins>Source</ins> : *"REVITALISATION COMMERCIALE DES CŒURS DE VILLES DE L’HÉRAULT"* 
     
     **DDTM 34 - Direction départementale des territoires et de la mer**, 2024
+
+<br>
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -819,10 +832,10 @@ des commerçants interpellent les services de leur mairie au moins une fois par 
 
 L’existence d’applications dans certaines collectivités facilite peut-être le dialogue entre usagers de l’espace (dont les commerçants) et service de la mairie. Nous n’avons cependant pas de données dans suffisamment de territoires pour comparer la fréquence d’échange avec les pouvoirs publics selon l’existence ou non d’outils numériques.  
 
+<br>
+
 :::: {.columns}
 ::: {.column width="40%"}
-<br>
-<br>
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-199-1.png)
 :::
 ::: {.column width="5%"}

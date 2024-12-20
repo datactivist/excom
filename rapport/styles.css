@@ -32,7 +32,7 @@ h3[data-number]::before {
 /* Custom les titres et body */
 h1.title { /*titre général du document*/
   color: #304B95; /*couleur titre*/
-  font-size: 2.3em; /*taille*/
+  font-size: 2.1em; /*taille*/
   font-family: "Montserrat bold"; /*police*/
   font-weight: bold; /*gras*/
   border-top: 0px; /*pas de ligne horizontale avant*/
@@ -42,7 +42,7 @@ h1.title { /*titre général du document*/
 }
 h1 { /*titre de niveau #1*/
   color: #304B95; /*couleur titre*/
-  font-size: 2em; /*taille*/
+  font-size: 1.8em; /*taille*/
   font-family: "Montserrat bold"; /*police*/
   font-weight: bold; /*gras*/
   padding-left: 0px; /*alinéa, espace à gauche du titre*/
@@ -70,7 +70,7 @@ h3 { /*titre de niveau #3*/
 }
 h4 { /*titre de niveau #4*/
   color: #304B95; /*couleur titre*/
-  font-size: 2em; /*taille*/
+  font-size: 1.6em; /*taille*/
   font-family: "Montserrat bold"; /*police*/
   font-weight: bold; /*gras*/
   padding-left: 0px; /*alinéa, espace à gauche du titre*/
@@ -86,7 +86,7 @@ h5 { /*titre de niveau #5*/
 }
 body { /*corps de texte*/
   text-align: justify; /*texte justifié*/
-  font-size: 1.3em; /*taille*/
+  font-size: 1.2em; /*taille*/
   font-family: "Open sans"; /*police*/
   letter-spacing: 0px; /*pas d'espace entre les lettres*/
   list-style: disc inside; /*listes en bullet-points*/
