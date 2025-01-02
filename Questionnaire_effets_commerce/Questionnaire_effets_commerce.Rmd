@@ -2513,7 +2513,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-table |> 
+mon_graph <- table |> 
     mutate(a_surligner = case_when(Var %in% c("Très régulièrement (plusieurs fois par jour)", 
                                               "Régulièrement (3 à 5 fois par semaine)", 
                                               "Ponctuellement (1 à 2 fois par semaine)") ~ "1", 
@@ -2523,13 +2523,19 @@ table |>
                      "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 
                      "", 
                      "#3182bd") +
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                             tooltip = paste(Var, ":", n, "commerces")),
                  position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     guides(fill = "none") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/sollic_freq-58.html", 
+           selfcontained = TRUE)
 ```
 
 
