@@ -2842,11 +2842,44 @@ table <- data |>
   mutate(nb_reponses = sum(n),
          percent = n/sum(n),
          .by = `Quelle est la catégorie de votre commerce ?`) |> 
-  mutate(`Quelle est la catégorie de votre commerce ?` = paste0(`Quelle est la catégorie de votre commerce ?`, "\n(", nb_reponses, " commerces)"))
+  mutate(`Quelle est la catégorie de votre commerce ?2` = paste0(`Quelle est la catégorie de votre commerce ?`, "\n(", nb_reponses, " commerces)"))
 
-# On applique la fonction créée
-graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", "", "#3182bd")
+# On plot
+#graph_type_commerce_comparaison <- function(data, ref_data, title_name, subtitle_name, valeur_ressortir, col_barres){
+mon_graph <- table |> 
+    left_join(ref_data_freq_agregee, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart)), 
+           percent_ref = percent_ref/100,
+           .by = `Quelle est la catégorie de votre commerce ?`) |> 
+    mutate(Var = factor(Var, levels = c("Jamais", "Moins d'1 fois par semaine", "1 fois par semaine et plus"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=percent, x=Var, alpha = Var != "",
+                             tooltip = paste("Fréquence :", Var, 
+                                             "\nCatégorie :", `Quelle est la catégorie de votre commerce ?`,
+                                             "\nPourcentage :", round(percent*100, 0), "%")),
+             position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+    geom_bar(aes(y=percent_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+             position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) + #axis-text trop longs sur plusieurs lignes
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
+    labs(x = "", y = "Pourcentage des commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les sollicitations par des personnes en situation de précarité", width = 100),
+         title = stringr::str_wrap("Comparaison en % par catégorie de commerces", width = 100)) +
+    facet_wrap(~`Quelle est la catégorie de votre commerce ?`) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          strip.text = ggplot2::element_text(size = 15)) +
+    guides(alpha = "none")
+mon_graph
+girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-72.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -3409,10 +3442,12 @@ viz_solidarites_redirection <- function(donnees, title_name){
     table_redirection_treemap |> 
         mutate(var = fct_reorder(var, n)) |> 
         ggplot( aes(x=var, y=n)) +
-        geom_segment(aes(xend=var, yend=0), 
+        geom_segment_interactive(aes(xend=var, yend=0,
+                                     tooltip = paste(var, ":", n, "commerces")), 
                      color=ifelse(table_redirection_treemap$var == "Services sociaux / assistante sociale", "#3182BD", "grey"), 
                      size=ifelse(table_redirection_treemap$var == "Services sociaux / assistante sociale", 1.3, 0.7)) +
-        geom_point(color=ifelse(table_redirection_treemap$var == "Services sociaux / assistante sociale", "#3182BD", "grey"), 
+        geom_point_interactive(aes(tooltip = paste(var, ":", n, "commerces")),
+                               color=ifelse(table_redirection_treemap$var == "Services sociaux / assistante sociale", "#3182BD", "grey"), 
                    size=ifelse(table_redirection_treemap$var == "Services sociaux / assistante sociale", 5, 2)) +
         theme_bw() +
         coord_flip() +
@@ -3432,7 +3467,12 @@ viz_solidarites_redirection <- function(donnees, title_name){
                  label = paste0(round(percent_collab_quartier$percent, 0), "% des orientations \nse font vers des \nservices sociaux"),
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_solidarites_redirection(data, "Le <span style='color: #3182BD'>social</span> est le principal type de service <br>vers lequel les commerçants orientent")
+mon_graph <- viz_solidarites_redirection(data, "Le <span style='color: #3182BD'>social</span> est le principal type de service <br>vers lequel les commerçants orientent")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/lollipop_social-91.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -3505,9 +3545,39 @@ table <- data |>
   mutate(percent = n/sum(n)*100) |> 
   rename(Var = 1)
 
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de moins de 10.000 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures",  "", "#9ECAE1")
+# On plot
+mon_graph <- table |> 
+    left_join(ref_redirections_aides_ext, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "", tooltip = paste(Var, ":", n, "commerces")),
+             position="dodge", stat="identity", width=.6, fill = "#9ECAE1") +
+    geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+             position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les redirections des clients vers des aides extérieures", width = 55),
+         caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+         title = stringr::str_wrap("Communes de moins de 10.000 habitants", width = 45)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), height_svg = 7, width_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html", 
+           selfcontained = TRUE)
 ```
 
 #### Population élevée
@@ -3521,9 +3591,40 @@ table <- data |>
   mutate(percent = n/sum(n)*100) |> 
   rename(Var = 1)
 
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 10.000 à 99.999 habitants", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#3182BD")
+# On plot
+mon_graph <- table |> 
+    left_join(ref_redirections_aides_ext, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "", tooltip = paste(Var, ":", n, "commerces")),
+             position="dodge", stat="identity", width=.6, fill = "#3182BD") +
+    geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+             position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les redirections des clients vers des aides extérieures", width = 55),
+         caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+         title = stringr::str_wrap("Communes de 10.000 à 99.999 habitants", width = 45)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), height_svg = 7, width_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -3538,9 +3639,40 @@ table <- data |>
   mutate(percent = n/sum(n)*100) |> 
   rename(Var = 1)
 
-# On applique la fonction créée
-graph_questions_freq(table, ref_redirections_aides_ext, "Communes de 100.000 habitants et plus", 
-                     "Répartition des commerces selon les redirections des clients vers des aides extérieures", "", "#0C4C8A")
+# On plot
+mon_graph <- table |> 
+    left_join(ref_redirections_aides_ext, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "", tooltip = paste(Var, ":", n, "commerces")),
+             position="dodge", stat="identity", width=.6, fill = "#0C4C8A") +
+    geom_bar(aes(y=n_ref, x=Var, linetype = "proportions de l'échantillon global"), 
+             position="dodge", stat="identity", width=.6, size = 1, fill = NA, color = "#666666") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les redirections des clients vers des aides extérieures", width = 55),
+         caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+         title = stringr::str_wrap("Communes de 100.000 habitants et plus", width = 45)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(ecart), NA, ecart)),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), height_svg = 7, width_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html", 
+           selfcontained = TRUE)
 ```
 
 #### Comparaison
@@ -3885,8 +4017,11 @@ viz_viequartier_matrice_collab <- function(donnees, title_name){
     donnees |> 
       summarise(n= n(), .by = c(collab_asso, aide_commercants)) |> 
       mutate(percent = paste0(round(n/sum(n)* 100, 0), "%"), .by = aide_commercants) |> 
-      ggplot(aes(x=collab_asso, y=aide_commercants, fill=n)) + 
-        geom_tile() +
+      ggplot(aes(x=collab_asso, y=aide_commercants, fill=n,
+                 tooltip = paste0("Collaboration avec une association : ", collab_asso,
+                                 "\nAide aux autres commerçants : ", aide_commercants,
+                                 "\n", n, " commerces"))) + 
+        geom_tile_interactive() +
         geom_text(aes(label = n)) +
         theme_classic() +
         scale_fill_gradient(low = "#c7d9e8", high = "steelblue") +
@@ -3899,7 +4034,12 @@ viz_viequartier_matrice_collab <- function(donnees, title_name){
         custom_theme() +
         guides(fill = guide_legend(title = "Nombre de commerces"))
 }
-viz_viequartier_matrice_collab(data, "L'entraide entre commerçants et \nl'inscription dans la vie associative \nlocale vont souvent de pair")
+mon_graph <- viz_viequartier_matrice_collab(data, "L'entraide entre commerçants et \nl'inscription dans la vie associative \nlocale vont souvent de pair")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph)), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/matrice_collab-109.html", 
+           selfcontained = TRUE)
 ```
 
 <br>
@@ -3923,12 +4063,13 @@ table <- data |>
                                         "Je réceptionne des colis pour d'autres commerçants de la rue" = "Réception de colis")))
 
 # Graphique
-table |> 
+mon_graph <- table |> 
   mutate(Var = fct_reorder(Var, n),
          a_surligner = case_when(Var == "Recommander / adresser des clients" ~ "1", 
                                .default = "0")) |> 
   ggplot() + 
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                             tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(breaks = c(0, 100, 200), limits = c(0, 280)) +
@@ -3946,6 +4087,11 @@ table |>
     guides(alpha = "none") +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     coord_flip()
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/aides_commerçants_110.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -4047,13 +4193,16 @@ table <- data |>
   mutate(`Quelle est la catégorie de votre commerce ?` = fct_reorder(`Quelle est la catégorie de votre commerce ?`, n))
 
 # Graph
-ggplot(table) +
+mon_graph <- ggplot(table) +
   aes(
     x = `Quelle est la catégorie de votre commerce ?`,
     y = n,
-    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`
+    fill = `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`,
+    tooltip = paste0("Collaboration : ", `Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?`,
+                     "\nCatégorie : ", `Quelle est la catégorie de votre commerce ?`,
+                     "\n", n, " commerces (", percent, "%)")
   ) +
-  geom_col() +
+  geom_col_interactive() +
   scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
   labs(
     y = "Nombre de commerces",
@@ -4068,6 +4217,11 @@ ggplot(table) +
       panel.grid.major.y = ggplot2::element_blank(),
       axis.title.y = element_blank()) + 
   guides(fill = guide_legend(reverse = TRUE))
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/collab_asso_113.html", 
+           selfcontained = TRUE)
 ```
 
 <br>

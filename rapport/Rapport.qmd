@@ -90,7 +90,7 @@ Les commerces ne sont pas de stricts acteurs économiques, dont la valeur social
 Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
 Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux académiques ou produits par des experts se concentrent quasi exclusivement sur leur rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur rôle dans les processus de gentrification). En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
 Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
-Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundation, Datactivist.
+Il s’inscrit au croisement des questionnements de six partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Urbanis aménagement, Altavia Foundation, Datactivist.
 
 Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu **324 réponses**, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
 
@@ -345,16 +345,17 @@ Face à la précarité, **le premier réflexe des commerçants est d’offrir un
 
 :::: {.columns}
 ::: {.column width="45%"}
+<br>
 Les sollicitations sont cependant relativement rares. Seuls 23% des commerçants sont interpellés au moins une fois par semaine. 
 
 Il n’y a pas de variation marquée selon la taille de la ville. 
 Cependant, nous observons une sur-sollicitation des cafés-restaurants par rapport à l’ensemble des commerces. Plus de la moitié d’entre eux sont interpellés au moins une fois par semaine, soit 27 points de pourcentage de plus que l’échantillon général. Cela s’explique par la facilité d’accès à des services de base qu’ils proposent. 
 :::
-::: {.column width="5%"}
+::: {.column width="0%"}
 <!-- empty column to create gap -->
 :::
-::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-58-1.png) 
+::: {.column width="55%"}
+<iframe width="650" height="530" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/sollic_freq-58.html"></iframe>
 :::
 ::::
 
@@ -368,13 +369,12 @@ des commerçants sont interpellés au moins une fois par semaine par des personn
 :::
 
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-72-1.png){width=600px}
+<iframe width="650" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-72.html"></iframe>
 </center>
 
-<br>
 
 <center>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-91-1.png){width=600px}
+<iframe width="650" height="515" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/lollipop_social-91.html"></iframe>
 </center>
 
 
@@ -394,19 +394,13 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 
 :::: {.columns}
 ::: {.column width="30%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-94-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+<iframe width="370" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html"></iframe>
 :::
 ::: {.column width="30%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-95-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+<iframe width="370" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html"></iframe>
 :::
 ::: {.column width="30%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-96-1.png)
+<iframe width="410" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html"></iframe>
 :::
 ::::
 
@@ -455,29 +449,24 @@ des commerçants rendent des services aux autres commerçants des alentours
 <br>
 
 :::: {.columns}
-::: {.column width="47%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-109-1.png)
+::: {.column width="44%"}
+<iframe width="515" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrice_collab-109.html"></iframe>
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="48%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-110-1.png)
+::: {.column width="56%"}
+<iframe width="590" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/aides_commerçants_110.html"></iframe>
 :::
 ::::
 
-<br>
 
 :::: {.columns}
 ::: {.column width="47%"}
+<br>
+<br>
 Cette entraide prend des formes variées : recommander un commerce voisin à des clients, réceptionner un colis, ou encore veiller sur la boutique en cas d’absence. Cela peut également prendre la forme de collaborations directes, notamment des micro-commerçants qui n’auraient pas de pas-de-porte. 
 Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidarités professionnelles à l’échelle de la rue.
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="48%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-113-1.png)
+::: {.column width="53%"}
+<iframe width="590" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/collab_asso_113.html"></iframe>
 :::
 ::::
 
