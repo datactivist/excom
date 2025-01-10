@@ -4113,12 +4113,13 @@ table <- data |>
                                         "Je réceptionne des colis pour les habitants de mon immeuble" = "Réception de colis")))
 
 # Graphique
-table |> 
+mon_graph <- table |> 
   mutate(Var = fct_reorder(Var, n),
          a_surligner = case_when(Var == "Réception de colis" ~ "1", 
                                .default = "0")) |> 
   ggplot() + 
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                             tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 170)) +
@@ -4136,6 +4137,11 @@ table |>
     guides(alpha = "none") +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     coord_flip()
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/reception_colis_111.html", 
+           selfcontained = TRUE)
 ```
 
 ## <FONT COLOR="#0097B2">Animer la rue</FONT>
@@ -4317,8 +4323,9 @@ viz_viequartier_events <- function(donnees, title_name){
                a_surligner = case_when(var_cat %in% c("1 évènement", "Entre 2 et 4 évènements", "5 évènements et plus") ~ "1", 
                                    .default = "0")) |> 
         ggplot() +
-            aes(x = var_cat, y = n, fill = a_surligner) +
-            geom_col() +
+            aes(x = var_cat, y = n, fill = a_surligner,
+                tooltip = paste(var_cat, ":", n, "commerces")) +
+            geom_col_interactive() +
             scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
             labs(y = "Nombre de commerces", 
                  subtitle = str_wrap("Nombre d'évènements organisés chaque année par les commerçants dynamisant la vie du quartier", width = 80),
@@ -4329,7 +4336,12 @@ viz_viequartier_events <- function(donnees, title_name){
             theme(axis.title.x = element_blank()) +
             guides(fill = "none")
 }
-viz_viequartier_events(data, "4 commerçants sur 10 participent à l'organisation d'évènements dans leur quartier")
+mon_graph <- viz_viequartier_events(data, "4 commerçants sur 10 participent à l'organisation d'évènements dans leur quartier")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 11), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/orga_events_116.html", 
+           selfcontained = TRUE)
 ```
 
 # ![](images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT>
@@ -4987,20 +4999,26 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-table |> 
+mon_graph <- table |> 
     mutate(a_surligner = case_when(Var %in% c("Très régulièrement (plusieurs fois par semaine)", 
                                               "Régulièrement (3 à 5 fois par mois)", 
                                               "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
                                    .default = "0")) |> 
     graph_questions_freq2(ref_aide_personnes, "Près de 2 commerçants sur 10 aident en cas de malaise ou accident au moins une fois par mois", 
                      "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd") +
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                             tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     guides(fill = "none") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -5129,11 +5147,19 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
     # On applique la fonction créée
     graph_type_commerce_freq_agregee2(table, ref_data_freq_agregee, title_name, 
                          "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", valeur_ressortir, "#3182bd") +
+        geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "",
+                                 tooltip = paste(Var, ":", n, "commerces")),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd")
         theme(plot.caption = element_blank()) +
         geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                    size = 5, fill = "white", label.size = NA)
 }
-viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
+mon_graph <- viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -5408,20 +5434,26 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-table |> 
+mon_graph <- table |> 
     mutate(a_surligner = case_when(Var %in% c("Très régulièrement (plusieurs fois par semaine)", 
                                               "Régulièrement (3 à 5 fois par mois)", 
                                               "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
                                    .default = "0")) |> 
     graph_questions_freq2(ref_insecurite_citoyens, "Plus d'un commerçant sur 10 est confronté à l'insécurité au moins chaque mois", 
                      "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd") +
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner, 
+                             tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     guides(fill = "none") +
     theme(plot.caption = element_blank()) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html", 
+           selfcontained = TRUE)
 ```
 
 

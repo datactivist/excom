@@ -1,0 +1,46 @@
+---
+title: "Test simulateur"
+output: html_document
+runtime: shiny_prerendered
+---
+
+# Simulation interactive
+
+```{r echo=FALSE}
+numericInput(
+  inputId = 'nb_habitants',
+  label = "Nombre d'habitants",
+  value = 5000,
+  step = 50
+)
+
+numericInput(
+  inputId = 'temps_discu',
+  label = "Temps passé à discuter (en heures)",
+  value = 0.5,
+  step = 0.1
+)
+
+numericInput(
+  inputId = 'part_actifs',
+  label = "Part des commerçants très actifs (en %)",
+  value = 0.2,
+  step = 0.01
+)
+
+numericInput(
+  inputId = 'smic_horaire',
+  label = "SMIC horaire (en €)",
+  value = 60
+)
+
+textOutput("resultat")
+```
+
+
+```{r}
+output$resultat <- renderText({
+  paste("Résultat : ", input$nb_habitants, "€")
+})
+```
+

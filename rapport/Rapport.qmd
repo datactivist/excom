@@ -392,17 +392,29 @@ de tous les commerçants ont déjà renvoyé au moins un client vers une aide ex
 <br>
 Il existe une différence marquée selon la taille de ville. **Les commerçants des villes de moins de 100 000 habitants sont moins concernés par cette réorientation. Cela s’explique par le fait que, dans les zones moins denses, ils deviennent plus facilement des intermédiaires entre des usagers et des services publics plus éloignés.** Par ailleurs, nous pouvons faire l’hypothèse que dans les villes plus petites, les commerçants connaissent mieux le tissu local et sont plus à même de renvoyer une personne dans le besoin vers un interlocuteur adapté. 
 
-:::: {.columns}
-::: {.column width="30%"}
-<iframe width="370" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html"></iframe>
+::: panel-tabset
+
+#### Population moyenne
+
+<center>
+<iframe width="650" height="540" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html"></iframe>
+</center>
+
+#### Population élevée
+
+<center>
+<iframe width="650" height="540" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html"></iframe>
+</center>
+
+#### Population très élevée
+
+<center>
+<iframe width="650" height="540" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html"></iframe>
+</center>
+
 :::
-::: {.column width="30%"}
-<iframe width="370" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html"></iframe>
-:::
-::: {.column width="30%"}
-<iframe width="410" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html"></iframe>
-:::
-::::
+
+<br>
 
 **Dans les zones rurales et peu denses, les commerces de proximité sont souvent les seuls points de services essentiels pour les habitants**. [59% des communes rurales n'ont plus aucun commerce de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], ce qui rend les commerces existants d'autant plus cruciaux. 
 
@@ -471,19 +483,21 @@ Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidari
 ::::
 
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-114-1.png){width=500px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-114-1.png){width=500px}
 </center>
 
 <br>
 
 :::: {.columns}
 ::: {.column width="55%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-111-1.png)
+<iframe width="650" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/reception_colis_111.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
 :::
 ::: {.column width="40%"}
+<br>
+<br>
 <br>
 <br>
 Des relations de proximité sont également développées entre les commerçants et les habitants du quartier. Plus de deux tiers des commerçants (70%) rendent ainsi service aux habitants de l’immeuble dans lequel se situe leur local (réception d’un colis, réductions…). 
@@ -511,18 +525,15 @@ Une [enquête réalisée par Clara Hercule pour *Sur-Mesure*](https://www.revues
 
 :::: {.columns}
 ::: {.column width="45%"}
+<br>
+<br>
 Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’échelle du quartier, les commerçants contribuent à l’animer** par l’organisation, parfois dans le cadre d’associations de commerçants, d’évènements. 43% des répondants en organisent ainsi au moins un par an (et plus d’un tiers au moins deux). Ces actions parfois collectives participent à la vitalité et l’attractivité du quartier.  
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="50%"}
-<br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-116-1.png)
+::: {.column width="55%"}
+<iframe width="650" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/orga_events_116.html"></iframe>
 :::
 ::::
 
-<br>
 
 <div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
 **En résumé** : les commerces de proximité sont des acteurs clés de la vie de quartier, tissant des réseaux d’entraide professionnelle et sociale entre commerçants et habitants. Ils soutiennent les dynamiques locales par des services réciproques, des liens de sociabilité, et l’organisation d’événements.
@@ -565,23 +576,20 @@ des commerçants n’ont jamais rencontré de situations d’insécurité
 
 
 :::: {.columns}
-::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-151-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+::: {.column width="50%"}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html"></iframe>
 :::
 ::: {.column width="50%"}
 <br>
 <br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-141-1.png)
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html"></iframe>
 :::
 ::::
 
 
 :::: {.columns}
 ::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-135-1.png)
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
