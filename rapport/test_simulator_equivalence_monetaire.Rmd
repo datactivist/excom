@@ -1,12 +1,12 @@
 ---
 title: "Test simulateur"
 output: cleanrmd::html_document_clean
-runtime: shiny_prerendered    
+runtime: shiny
 ---
 
 # Lien social
 
-```{r context="render", echo=FALSE}
+```{r echo=FALSE}
 library(shiny)
 numericInput(
       inputId = 'nb_habitants',    # Identifiant unique
@@ -35,7 +35,7 @@ numericInput(
 
 ## Résultat
 
-```{r context = "server", echo=FALSE}
+```{r echo=FALSE}
 output$nb_habitants <- renderText({
   paste(input$nb_habitants, "habitants")
 })

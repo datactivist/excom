@@ -5149,7 +5149,7 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
                          "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", valeur_ressortir, "#3182bd") +
         geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "",
                                  tooltip = paste(Var, ":", n, "commerces")),
-                 position="dodge", stat="identity", width=.6, fill = "#3182bd")
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd") +
         theme(plot.caption = element_blank()) +
         geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                    size = 5, fill = "white", label.size = NA)
@@ -5157,7 +5157,7 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
 mon_graph <- viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
 mon_graph
 #girafe(print(mon_graph))
-saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 8), 
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html", 
            selfcontained = TRUE)
 ```
@@ -5909,11 +5909,12 @@ viz_environnement_conso_eauelec <- function(donnees, title_name, x_pos_text, y_p
     # Lolipop chart
     table |> 
         mutate(var = fct_reorder(var, n)) |> 
-        ggplot( aes(x=var, y=n)) +
-        geom_segment(aes(xend=var, yend=0), 
+        ggplot(aes(x=var, y=n,
+                   tooltip = paste(var, ":", n, "commerces"))) +
+        geom_segment_interactive(aes(xend=var, yend=0), 
                      color=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", "#3182BD", "grey"), 
                      size=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", 1.3, 0.7)) +
-        geom_point(color=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", "#3182BD", "grey"), 
+        geom_point_interactive(color=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", "#3182BD", "grey"), 
                    size=ifelse(table$var == "Equipements visant à réduire la consommation d'électricité", 5, 2)) +
         theme_bw() +
         coord_flip() +
@@ -5934,7 +5935,12 @@ viz_environnement_conso_eauelec <- function(donnees, title_name, x_pos_text, y_p
                  label = paste0(round(percent_reduc_conso$percent, 0), "% des équipements \ninstallés sont axés \nsur l'électricité"),
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_environnement_conso_eauelec(data, "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants", 6.5, 135)
+mon_graph <- viz_environnement_conso_eauelec(data, "La réduction des factures d'<span style='color: #3182BD'>électricité</span> est la <br>priorité des commerçants", 6.5, 135)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 8), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/factures_168.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -6047,7 +6053,8 @@ viz_environnement_discu_envt <- function(donnees, title_name){
              a_surligner = case_when(Var == "Discussions informelles" ~ "1", 
                                    .default = "0")) |> 
       ggplot() + 
-        geom_bar(aes(y=n, x=Var, fill = a_surligner),
+        geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                                 tooltip = paste(Var, ":", n, "commerces")),
                  position="dodge", stat="identity", width=.6) +
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
         labs(x = "", y = "Nombre de commerces", linetype = "",
@@ -6066,8 +6073,13 @@ viz_environnement_discu_envt <- function(donnees, title_name){
         scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
         coord_flip()
 }
-viz_environnement_discu_envt(data, "Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement") +
+mon_graph <- viz_environnement_discu_envt(data, "Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement") +
         scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 140))
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/discu_envt_172.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -6157,11 +6169,12 @@ viz_environnement_recyclage <- function(donnees, title_name,x_pos_text, y_pos_te
     # Lolipop chart
     table |> 
         mutate(Var = fct_reorder(Var, n)) |> 
-        ggplot( aes(x=Var, y=n)) +
-        geom_segment(aes(xend=Var, yend=0), 
+        ggplot( aes(x=Var, y=n,
+                    tooltip = paste(Var, ":", n, "commerces"))) +
+        geom_segment_interactive(aes(xend=Var, yend=0), 
                      color=ifelse(table$Var == "Cartons et tout venant", "#3182BD", "grey"), 
                      size=ifelse(table$Var == "Cartons et tout venant", 1.3, 0.7)) +
-        geom_point(color=ifelse(table$Var == "Cartons et tout venant", "#3182BD", "grey"), 
+        geom_point_interactive(color=ifelse(table$Var == "Cartons et tout venant", "#3182BD", "grey"), 
                    size=ifelse(table$Var == "Cartons et tout venant", 5, 2)) +
         theme_bw() +
         coord_flip() +
@@ -6182,7 +6195,12 @@ viz_environnement_recyclage <- function(donnees, title_name,x_pos_text, y_pos_te
                           label = paste0(round(percent_solut_recy$percent, 0), "% des solutions \nportent sur le \ncarton"),
                           color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_environnement_recyclage(data, "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant", 8, 49.6)
+mon_graph <- viz_environnement_recyclage(data, "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant", 8, 49.6)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/cartons_174.html", 
+           selfcontained = TRUE)
 ```
 
 ```{r include=FALSE}
@@ -6453,11 +6471,12 @@ viz_espacepublic_embellissement <- function(donnees, title_name, x_pos_text, y_p
     # Lolipop chart
     table_embellissement |> 
         mutate(Var = fct_reorder(Var, n)) |> 
-        ggplot( aes(x=Var, y=n)) +
-        geom_segment(aes(xend=Var, yend=0), 
+        ggplot( aes(x=Var, y=n,
+                    tooltip = paste(Var, ":", n, "commerces"))) +
+        geom_segment_interactive(aes(xend=Var, yend=0), 
                      color=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", "#3182BD", "grey"), 
                      size=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", 1.3, 0.7)) +
-        geom_point(color=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", "#3182BD", "grey"), 
+        geom_point_interactive(color=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", "#3182BD", "grey"), 
                    size=ifelse(table_embellissement$Var == "Embellissement et soin de la vitrine", 5, 2)) +
         theme_bw() +
         coord_flip() +
@@ -6478,7 +6497,12 @@ viz_espacepublic_embellissement <- function(donnees, title_name, x_pos_text, y_p
                           label = paste0(round(percent_embel$percent, 0), "% des initiatives \nportent sur le \nsoin de la vitrine"),
                           color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-viz_espacepublic_embellissement(data, "Les commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.8, 167)
+mon_graph <- viz_espacepublic_embellissement(data, "Les commerçants accordent une attention <br>particulière au <span style='color: #3182BD'>soin de leur vitrine</span>", 5.8, 167)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7.3), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_182.html", 
+           selfcontained = TRUE)
 ```
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
@@ -6496,7 +6520,7 @@ table <- data |>
   rename(Var = 1)
 
 # On applique la fonction créée
-table |> 
+mon_graph <- table |> 
     mutate(a_surligner = case_when(Var == "Jamais" ~ "1", 
                                    .default = "0")) |> 
     graph_questions_freq(ref_interpellation_mairie, "Plus de la moitié des commerçants a déjà interpellé les services de la mairie", 
@@ -6504,13 +6528,19 @@ table |>
     labs(title = str_wrap("Plus de la moitié des commerçants a déjà interpellé les services de la mairie", width = 50)) +
     theme(plot.caption = element_blank(),
           plot.title = element_text(size = 19),
-          plot.margin = unit(c(0, 1, 0, 0), "cm")) +
-    geom_bar(aes(y=n, x=Var, fill = a_surligner),
+          plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                             tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#ACCDE4", "0" = "#3182bd")) +
     guides(fill = "none") +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA)
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html", 
+           selfcontained = TRUE)
 ```
 
 
@@ -6921,6 +6951,40 @@ graph_questions_freq(table, ref_nettoyage_abords, "15% des commerçants nettoien
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA) +
     scale_y_continuous(breaks = c(0, 25, 50, 75, 100, 150, 200), limits = c(0, 110))
+
+
+mon_graph <- table |> 
+    left_join(ref_nettoyage_abords, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, alpha = Var != "Très régulièrement (plusieurs fois par jour)",
+                 tooltip = paste(Var, ":", n, "commerces")),
+             position="dodge", stat="identity", width=.6, fill = "#3182bd") +
+    scale_linetype_manual(values = c("proportions de l'échantillon global" = "dashed")) +
+    scale_alpha_manual(values=c(1, .4)) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon leur soin à nettoyer les abords extérieurs", width = 55),
+         caption = "Les écarts de proportion avec l'échantillon global sont\nexprimés en points de pourcentage",
+         title = stringr::str_wrap("15% des commerçants nettoient les abords de leur commerce plusieurs fois par jour", width = 45)) +
+    geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          plot.caption = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(alpha = "none") +
+    coord_flip()
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_199.html", 
+           selfcontained = TRUE)
 ```
 
 #### IDF
@@ -7230,8 +7294,16 @@ table <- data |>
   mutate(`Quelle est la catégorie de votre commerce ?` = paste0(`Quelle est la catégorie de votre commerce ?`, "\n(", nb_reponses, " commerces)"))
 
 # On applique la fonction créée
-graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
-                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd")
+mon_graph <- graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % par catégorie de commerces", 
+                     "Répartition des commerces selon leur soin à nettoyer les abords extérieurs", "", "#3182bd") +
+    geom_bar_interactive(aes(y=percent, x=Var, alpha = Var != "",
+                             tooltip = paste(Var, ":", n, "commerces")),
+                 position="dodge", stat="identity", width=.6, fill = "#3182bd")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_213.html", 
+           selfcontained = TRUE)
 ```
 
 ## <FONT COLOR="#FF5757">Préserver le patrimoine architectural</FONT>
@@ -7349,9 +7421,11 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name){
       mutate(Var = fct_reorder(Var, n),
              a_surligner = ifelse(Var %in% c("Classé, soin particulier apporté", "Non classé mais ancien, efforts faits pour préserver l'aspect original"), "1", "0")) |> 
       ggplot() + 
-        geom_bar(aes(y=n, x=Var, fill = a_surligner),
+        geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+                                 tooltip = paste(Var, ":", n, "commerces")),
                  position="dodge", stat="identity", width=.6) +
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) + #axis-text trop longs sur plusieurs lignes
+        scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 260)) + 
         labs(x = "", y = "Nombre de commerces", linetype = "",
              title = stringr::str_wrap(title_name, width = 45),
              subtitle = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 55)) +
@@ -7367,7 +7441,12 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name){
         coord_flip() +
         guides(fill = "none")
 }
-viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade")
+mon_graph <- viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade")
+mon_graph
+#girafe(print(mon_graph))
+saveWidget(girafe(print(mon_graph), width_svg = 7), 
+           "Questionnaire_effets_commerce_files/figure-ggiraph/patrimoine_216.html", 
+           selfcontained = TRUE)
 ```
 
 <br>

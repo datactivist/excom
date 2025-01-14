@@ -11,7 +11,7 @@ format:
     toc-location: left
     number-sections: false
     page-layout: full
-    embed-resources: true
+    embed-resources: false
     code-fold: false
     theme: cosmo
     css: styles.css
@@ -127,10 +127,10 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 ::: {.column width="35%"}
 <iframe width="550" height="405" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
 :::
-::: {.column width="5%"}
+::: {.column width="12%"}
 <!-- empty column to create gap -->
 :::
-::: {.column width="60%"}
+::: {.column width="52%"}
 <br>
 <br>
 <br>
@@ -202,10 +202,10 @@ Les commerces locaux offrent des espaces de rencontre, favorisant la santé soci
 ::: {.column width="50%"}
 <iframe width="550" height="405" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html"></iframe>
 :::
-::: {.column width="5%"}
+::: {.column width="8%"}
 <!-- empty column to create gap -->
 :::
-::: {.column width="45%"}
+::: {.column width="42%"}
 <br>
 <br>
 Concrètement, **deux tiers des commerces entretiennent régulièrement des conversations privées avec leurs clients**, en particulier les habitués. 20% ont même plusieurs discussions d’ordre privé quotidiennement. 
@@ -339,12 +339,15 @@ De nombreux commerçants de proximité sont régulièrement au contact de person
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
+<br>
+<br>
 Face à la précarité, **le premier réflexe des commerçants est d’offrir une aide “d’urgence” aux personnes qui les sollicitent**. Cela prend souvent la forme d’un verre d’eau ou de don de nourriture (24% des 63% ayant déjà été sollicités), d’un thé ou d’un café (14%) ou encore d’accès aux toilettes (24%). 
 :::
 ::::
 
 :::: {.columns}
 ::: {.column width="45%"}
+<br>
 <br>
 Les sollicitations sont cependant relativement rares. Seuls 23% des commerçants sont interpellés au moins une fois par semaine. 
 
@@ -551,7 +554,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
-> *“Le commerce est devenu un pour de ralliement pour les habitants du quartier qui n’hésitent pas à venir demander de l’aide, comme mon voisin en situation de handicap qui s’est retrouvé coincé en dehors de chez lui. Grâce à un autre commerçant serrurier il a réussi à rentrer chez lui sans frais, car il n’avait pas les moyens.”*
+> *“Le commerce est devenu un point de ralliement pour les habitants du quartier qui n’hésitent pas à venir demander de l’aide, comme mon voisin en situation de handicap qui s’est retrouvé coincé en dehors de chez lui. Grâce à un autre commerçant serrurier il a réussi à rentrer chez lui sans frais, car il n’avait pas les moyens.”*
 
 <div style="text-align: right">*-- Librairie, Paris --*</div>
 </FONT>
@@ -577,19 +580,17 @@ des commerçants n’ont jamais rencontré de situations d’insécurité
 
 :::: {.columns}
 ::: {.column width="50%"}
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html"></iframe>
+<iframe width="550" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html"></iframe>
 :::
 ::: {.column width="50%"}
-<br>
-<br>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html"></iframe>
+<iframe width="550" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html"></iframe>
 :::
 ::::
 
 
 :::: {.columns}
 ::: {.column width="45%"}
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html"></iframe>
+<iframe width="550" height="520" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -652,17 +653,13 @@ Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer
 
 
 :::: {.columns}
-::: {.column width="45%"}
+::: {.column width="40%"}
 <br>
 <br>
 Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 22% des commerces.  
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="50%"}
-<br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-168-1.png) 
+::: {.column width="60%"}
+<iframe width="650" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_168.html"></iframe>
 :::
 ::::
 
@@ -682,14 +679,11 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 
 :::: {.columns}
 ::: {.column width="55%"}
+<br>
 72% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 32% ont régulièrement des discussions informelles sur le sujet, 22% proposent des conseils. Une petite minorité (4%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent parfois emmener leur propre contenant (bien que certains commerçants déclarent ne pas souhaiter prendre de risque sanitaire en autorisant les emballages extérieurs). 
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="40%"}
-<br>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-172-1.png)
+::: {.column width="45%"}
+<iframe width="550" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_envt_172.html"></iframe>
 :::
 ::::
 
@@ -702,16 +696,14 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 des commerçants ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
 :::
 
-<br>
 
 :::: {.columns}
-::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-174-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
 ::: {.column width="55%"}
+<iframe width="550" height="550" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_174.html"></iframe>
+:::
+::: {.column width="45%"}
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -728,6 +720,8 @@ Environ 20% des répondants ont déclaré mettre en place des actions “autres�
 <br>
 
 Concernant la réduction des déchets, de nombreux commerçants s’inscrivent dans une chaîne de production plus responsable : ils sollicitent des fournisseurs ayant des pratiques plus durables et proposent à leurs clients de consommer moins d’emballages. Ce dernier point s’inscrit par ailleurs dans le cadre d’un encouragement légal, les sacs en plastique à usage unique gratuits étant interdits depuis plusieurs années. 
+
+<br>
 
 :::: {.columns}
 ::: {.column width="45%"}
@@ -783,7 +777,7 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 Les commerçants contribuent de plusieurs manières à la propreté de la rue et à l'amélioration de l'espace public : **nettoyage des trottoirs, signalement des problèmes, décorations saisonnales, participation à des projets d’aménagement (y compris informels)...** Ces initiatives contribuent à la perception positive d’espaces piétons rendus plus agréables et sont un complément direct aux projets menés par les services municipaux.  
 
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-182-1.png){width=600px}
+<iframe width="600" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_182.html"></iframe>
 </center>
 
 Mettre en place des actions venant prendre soin de sa vitrine est la façon la plus évidente de contribuer à l’embellissement de la rue. La moitié des répondants indique s’impliquer particulièrement. Ils peuvent d’ailleurs être reconnus par des prix ou des concours organisés par les municipalités, les associations de commerçants, ou des acteurs nationaux (c’est par exemple le cas de [Petits Commerces, qui distingue la plus belle vitrine de Noël](https://www.petitscommerces.fr/laplusbellevitrinedenoel/)[^8]), qui encouragent l'émulation et valorisent les meilleures pratiques en matière de décoration et d'animation commerciale. 
@@ -806,13 +800,12 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 <br>
 <br>
 <br>
+<br>
+<br>
 “Yeux sur la rue”, pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
 :::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="45%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-183-1.png) 
+::: {.column width="50%"}
+<iframe width="550" height="530" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html"></iframe>
 :::
 ::::
 
@@ -832,13 +825,11 @@ L’existence d’applications dans certaines collectivités facilite peut-être
 <br>
 
 :::: {.columns}
-::: {.column width="40%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-199-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+::: {.column width="45%"}
+<iframe width="480" height="430" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_199.html"></iframe>
 :::
 ::: {.column width="55%"}
+<br>
 En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (café, restaurants, alimentaire…) ont tendance à le faire un peu plus fréquemment que les autres. Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend compte de ce travail peu visible. 
 :::
 ::::
@@ -846,20 +837,20 @@ En plus de contribuer à **l’embellissement de la ville, les commerçants assu
  
 
 
+
 <center>
-    ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-213-1.png){width=600px}
+<iframe width="650" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_213.html"></iframe>
 </center>
 
 <br>
 
 :::: {.columns}
-::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-216-1.png)
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+::: {.column width="55%"}
+<iframe width="600" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/patrimoine_216.html"></iframe>
 :::
 ::: {.column width="45%"}
+<br>
+<br>
 <br>
 Nous avons également mesuré les **apports des commerces à la préservation du patrimoine architectural**. L'enquête révèle que 29% d’entre eux apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés. Ceux qui occupent des bâtiments historiques (classés ou non) contribuent en effet à leur entretien, voire à leur réhabilitation. 
 :::
@@ -873,7 +864,6 @@ Nous avons également mesuré les **apports des commerces à la préservation du
 des commerçants apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés
 :::
 
-<br>
 
 <div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
 **En résumé** : les commerces de proximité jouent un rôle important dans l’embellissement et la propreté des espaces publics, qu’il s’agisse de nettoyer les abords, décorer les vitrines, ou contribuer au verdissement et à l’entretien de leur environnement. Ils participent également en partie à préserver le patrimoine architectural et signalent les problèmes dans l’espace public.
@@ -1408,6 +1398,12 @@ réponses collectées à la Métropole Rouen Normandie
 <iframe frameborder="0" width="1050" height="1500" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html"></iframe>
 
 :::
+
+# Simulateur
+
+[Accéder au simulateur en ligne](https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/)
+
+<iframe width="1000" height="1100" src="https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/"></iframe>
 
 # Notice technique
 
