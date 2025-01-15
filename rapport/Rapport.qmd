@@ -144,7 +144,7 @@ Si les produits ou services vendus varient grandement, les commerces interrogés
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">89%</p>
-des commerçants interrogés sont indépendants
+des commerçants participant à l'enquête sont indépendants
 :::
 
 Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces derniers sont représentés dans l’enquête mais constituent une minorité de répondants (12). Car **une partie des micro-commerçants occupe l’espace public différemment des commerçants ayant un pas-de-porte** (ex : via une présence sur des marchés), une étude focalisée sur leur profil permettrait de préciser leurs apports à l’espace public, aux passants et habitants. 
@@ -218,7 +218,7 @@ Concrètement, **deux tiers des commerces entretiennent régulièrement des conv
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
-des commerçants ont plusieurs discussions d'ordre privé quotidiennement
+des commerçants participant à l'enquête ont plusieurs discussions d'ordre privé quotidiennement
 :::
 
 Ces interactions sont essentielles pour les personnes isolées, qui ont au cours d'une journée très peu d’autres échanges. Les interactions peuvent également répondre à des besoins plus ponctuels de se sentir écouté face à une situation difficile. 
@@ -276,7 +276,7 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
-des commerçants prennent le temps plusieurs fois par jour d’échanger longuement avec leurs clients sur les produits vendus
+des commerçants participant à l'enquête prennent le temps plusieurs fois par jour d’échanger longuement avec leurs clients sur les produits vendus
 :::
 
 <br>
@@ -368,7 +368,7 @@ Cependant, nous observons une sur-sollicitation des cafés-restaurants par rappo
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">23%</p>
-des commerçants sont interpellés au moins une fois par semaine par des personnes dans le besoin
+des commerçants participant à l'enquête sont interpellés au moins une fois par semaine par des personnes dans le besoin
 :::
 
 <center>
@@ -389,7 +389,7 @@ des commerçants sont interpellés au moins une fois par semaine par des personn
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">45%</p>
-de tous les commerçants ont déjà renvoyé au moins un client vers une aide extérieure (services sociaux, de santé ou forces de l’ordre).
+de tous les commerçants participant à l'enquête ont déjà renvoyé au moins un client vers une aide extérieure (services sociaux, de santé ou forces de l’ordre).
 :::
 
 <br>
@@ -458,7 +458,7 @@ Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximit
 
 ::: {.column-margin}
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">96%</p>
-des commerçants rendent des services aux autres commerçants des alentours
+des commerçants participant à l'enquête rendent des services aux autres commerçants des alentours
 :::
 
 <br>
@@ -511,7 +511,7 @@ Des relations de proximité sont également développées entre les commerçants
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">70%</p>
-des commerçants rendent des services aux habitants de l’immeuble dans lequel se situe leur local
+des commerçants participant à l'enquête rendent des services aux habitants de l’immeuble dans lequel se situe leur local
 :::
 
 <br>
@@ -574,7 +574,7 @@ Les situations d’insécurité sont relativement rares. 39% des commerçants n�
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">39%</p>
-des commerçants n’ont jamais rencontré de situations d’insécurité
+des commerçants participant à l'enquête n’ont jamais rencontré de situations d’insécurité
 :::
 
 
@@ -693,7 +693,7 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
-des commerçants ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
+des commerçants participant à l'enquête ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
 :::
 
 
@@ -817,7 +817,7 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
-des commerçants interpellent les services de leur mairie au moins une fois par mois
+des commerçants participant à l'enquête interpellent les services de leur mairie au moins une fois par mois
 :::
 
 L’existence d’applications dans certaines collectivités facilite peut-être le dialogue entre usagers de l’espace (dont les commerçants) et service de la mairie. Nous n’avons cependant pas de données dans suffisamment de territoires pour comparer la fréquence d’échange avec les pouvoirs publics selon l’existence ou non d’outils numériques.  
@@ -861,7 +861,7 @@ Nous avons également mesuré les **apports des commerces à la préservation du
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">29%</p>
-des commerçants apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés
+des commerçants participant à l'enquête apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés
 :::
 
 
@@ -911,14 +911,22 @@ réponses collectées à Paris
 <center>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-217-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-218-1.png){width=450px}
+<iframe width="500" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_217.html"></iframe>
+<iframe width="520" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_218.html"></iframe>
 
-<br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-219-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-221-1.png){width=450px}
+<iframe width="400" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="400" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
 
+<iframe width="380" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="380" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
+
+<iframe width="390" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="390" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
+
+
+<iframe width="370" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="370" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
@@ -932,14 +940,14 @@ réponses collectées à Paris
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-223-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-224-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_223.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_224.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-225-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-226-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_225.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_226.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
@@ -954,16 +962,16 @@ réponses collectées à Paris
 <br>
 
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-228-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-229-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_229.html"></iframe>
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-230-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-231-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_230.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html"></iframe>
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-232-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_232.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
@@ -978,8 +986,8 @@ réponses collectées à Paris
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-234-1.png){width=350px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-235-1.png){width=550px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_234.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_235.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
@@ -994,13 +1002,13 @@ réponses collectées à Paris
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-237-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-238-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_237.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_238.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-239-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_239.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
@@ -1015,13 +1023,13 @@ réponses collectées à Paris
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-241-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-242-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_241.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_242.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-243-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_243.html"></iframe>
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-244-1.png){width=450px}
 </center>
 
@@ -1037,18 +1045,18 @@ réponses collectées à Paris
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-246-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-247-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-248-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-249-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_248.html"></iframe>
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-250-1.png){width=450px}
+<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_250.html"></iframe>
 </center>
 
 :::
