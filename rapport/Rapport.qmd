@@ -124,13 +124,11 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 
 
 :::: {.columns}
-::: {.column width="35%"}
-<iframe width="550" height="405" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
-:::
-::: {.column width="12%"}
-<!-- empty column to create gap -->
+::: {.column width="48%"}
+<iframe width="750" height="465" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
 :::
 ::: {.column width="52%"}
+<br>
 <br>
 <br>
 <br>
@@ -152,21 +150,21 @@ Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces d
 <br>
 
 :::: {.columns}
-::: {.column width="60%"}
+::: {.column width="55%"}
+<br>
+<br>
 <br>
 <br>
 Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou sont composés de deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces.** 
 :::
-::: {.column width="0%"}
-<!-- empty column to create gap -->
-:::
-::: {.column width="40%"}
-<iframe width="585" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
+::: {.column width="45%"}
+<iframe width="1000" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
 :::
 ::::
 
-<iframe width="650" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html"></iframe>
-
+<center>
+<iframe width="610" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html"></iframe>
+</center>
 
 Le rapport est divisé en 6 parties, afin de rendre compte des apports des commerces dans autant de grandes catégories d’effets sociaux et environnementaux : lien social, solidarités, vie de quartier, santé et sécurité, environnement, espace public. 
 Les citations qui introduisent chaque partie sont tirées d’une réponse libre du questionnaire (*“Avez-vous une anecdote à nous raconter pour illustrer l'impact de votre commerce sur le quartier ?”*). 
@@ -290,13 +288,10 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 
 :::: {.columns}
 ::: {.column width="55%"}
-<iframe width="950" height="465" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
+<iframe width="950" height="530" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
 :::
-::: {.column width="40%"}
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
-:::
-::: {.column width="5%"}
-<!-- empty column to create gap -->
+::: {.column width="45%"}
+<iframe width="670" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
 :::
 ::::
 
@@ -1630,12 +1625,11 @@ réponses collectées à la Métropole Rouen Normandie
 
 [Accéder au simulateur en ligne](https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/)
 
-
 <iframe 
     width="2000" 
     height="640" 
     src="https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/" 
-    style="position: relative; left: -50px; margin: 0; padding: 0; border: none; display: block;">
+    style="position: relative; left: -10px; margin: 0; padding: 0; border: none; display: block;">
 </iframe>
 
 # Notice technique

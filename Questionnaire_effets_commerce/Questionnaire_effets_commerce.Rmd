@@ -422,10 +422,14 @@ Les tranches de population sont les suivantes :
 <br>
 
 ```{r custom_theme}
+# Police du graphique
+library(showtext)
+font_add("Open Sans", regular = "fonts/OpenSans-VariableFont_wdth,wght.ttf")
+showtext_auto()
+
 # Thème pour les graphs
 font <- "Open Sans"
 custom_theme <- function(){
-    font <- "Open Sans"
     ggplot2::theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"), 
         plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
         plot.caption = ggplot2::element_text(family = font,size = 18, margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -613,13 +617,13 @@ mon_graph <- table |>
             axis.line = element_blank(),
             axis.text = element_blank(),
             legend.text = ggplot2::element_text(size = 18,color = "#222222"),
-            text = element_text(family = "Montserrat", size = 12),
+            text = element_text(family = "Open Sans", size = 12),
             plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"),
             plot.caption = ggplot2::element_text(face = "italic", size = 18,
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)),
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            plot.margin = ggplot2::margin(5, 0, 0, -100)) +
+            plot.margin = ggplot2::margin(5, 0, 0, -170)) +
       guides(fill = guide_legend(reverse = T, title = " ")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
 mon_graph
@@ -827,7 +831,7 @@ mon_graph <- table |>
             axis.text = element_blank(),
             legend.text = ggplot2::element_text(size = 18, color = "#222222"), 
             legend.title = ggplot2::element_text(size = 18, color = "#222222"), 
-            text = element_text(family = "Montserrat", size = 12),
+            text = element_text(family = "Open Sans", size = 12),
             plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
             plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -835,7 +839,7 @@ mon_graph <- table |>
             plot.caption.position = "plot",
             plot.margin = ggplot2::margin(15, 0, 0, -190)
             ) +
-      guides(fill = guide_legend(reverse = T, title = "Travail seul : ")) +
+      guides(fill = guide_legend(reverse = T, title = "   Travail seul :")) +
       geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), 
                 color = "#333333", size=5, check_overlap = T)
 mon_graph
@@ -2304,7 +2308,7 @@ viz_liensocial_techniquestra <- function(donnees, title_name){
                 axis.line = element_blank(),
                 axis.text = element_blank(),
                 legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Montserrat", size = 12),
+                text = element_text(family = "Open Sans", size = 12),
                 plot.title = ggplot2::element_text(size = 15, face = "bold", color = "#222222"), 
                 plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                      color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -7564,14 +7568,14 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name, coef_label){
         count(Var) |> 
         na.omit() |> 
         mutate(percent = n/sum(n)*100,
-               Var = str_replace_all(Var, c("Non la façade ou l'immeuble n'est pas classé patrimoine historique mais est ancien. Je fais des efforts pour préserver l'aspect original" = "Non classé mais ancien, efforts faits pour préserver l'aspect original",
-                                            "Non mon commerce ne se situe pas dans un bâtiment classé" = "Non classé",
-                                            "Oui la façade ou l'immeuble est classé patrimoine historique et j'y apporte un soin particulier" = "Classé, soin particulier apporté",
-                                            "Oui la façade ou l'immeuble est classé patrimoine historique mais cela est une contrainte" = "Classé, perçu comme une contrainte")))
+               Var = str_replace_all(Var, c("Non la façade ou l'immeuble n'est pas classé patrimoine historique mais est ancien. Je fais des efforts pour préserver l'aspect original" = "Bâtiment non classé mais ancien, efforts faits pour préserver l'aspect original",
+                                            "Non mon commerce ne se situe pas dans un bâtiment classé" = "Bâtiment non classé au patrimoine",
+                                            "Oui la façade ou l'immeuble est classé patrimoine historique et j'y apporte un soin particulier" = "Bâtiment classé, soin particulier apporté",
+                                            "Oui la façade ou l'immeuble est classé patrimoine historique mais cela est une contrainte" = "Bâtiment classé, perçu comme une contrainte")))
     # Graphique
     table_patrimoine |> 
       mutate(Var = fct_reorder(Var, n),
-             a_surligner = ifelse(Var %in% c("Classé, soin particulier apporté", "Non classé mais ancien, efforts faits pour préserver l'aspect original"), "1", "0")) |> 
+             a_surligner = ifelse(Var %in% c("Bâtiment classé, soin particulier apporté", "Bâtiment non classé mais ancien, efforts faits pour préserver l'aspect original"), "1", "0")) |> 
       ggplot() + 
         geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
                                  tooltip = paste(Var, ":", n, "commerces")),
@@ -9430,20 +9434,26 @@ table <- data |>
     #filter(Var != "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce") |> 
 
 table |> 
-    mutate(percent = n/sum(n)*100, .by = `Quelle est la catégorie de votre commerce ?`) |> 
+    mutate(percent = n/sum(n), .by = `Quelle est la catégorie de votre commerce ?`) |> 
     ggplot() +
-  aes(
-    x = `Quelle est la catégorie de votre commerce ?`,
-    y = percent,
-    fill = Var
-  ) +
-  geom_col() +
-  labs(title = "Services rendus aux habitants de l'immeuble selon  la catégorie de commerce") +
-  scale_fill_hue(direction = 1) +
-  theme_minimal() +
+    aes(
+        x = `Quelle est la catégorie de votre commerce ?`,
+        y = percent,
+        fill = Var
+    ) +
+    geom_col() +
+    scale_fill_brewer("Blues") +
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    labs(title = "Services rendus aux habitants de l'immeuble selon la \ncatégorie de commerce",
+         x = "Catégorie des commerces", y = "") +
+    #scale_fill_hue(direction = 1) +
+    custom_theme() +
     theme(legend.position = "top",
-          axis.text.x = element_text(angle = 45, hjust = 1)) +
-    guides(fill = guide_legend(nrow = 2))
+          axis.text.x = element_text(angle = 45, hjust = 1),
+          axis.text = element_text(size = 10),
+          axis.title = element_text(size = 12),
+          axis.title.y = element_blank()) +
+    guides(fill = guide_legend(nrow = 2, title = "")) 
 
 table |> 
     mutate(percent = n/sum(n)*100, .by = Var) |> 
@@ -9512,7 +9522,13 @@ table <- data |>
                                         "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce" = "Pas de voisins d'immeuble",
                                         "Je ne connais pas vraiment les habitants de mon immeuble" = "A des voisins mais ne les connait pas",
                                         "Je réceptionne des colis pour les habitants de mon immeuble" = "Services rendus",
-                                        "Autres" = "Services rendus"))) |> 
+                                        "Autres" = "Services rendus")),
+           `Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?` = str_replace_all(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`,
+                                                  c("Je n'interviens que si la situation est grave" = "N'intervient que si c'est grave",
+                                                    "Je n'interviens jamais dans ce genre de situation" = "N'intervient jamais",
+                                                    "J'ai rarement ou jamais affaire à ce genre de situation" = "Rarement ou jamais affaire à ces situations",
+                                                    "J'agis dès que je vois quelque chose d'inhabituel. J'interviens directement ou j'appelle les forces de l'ordre" = "Agit immédiatement (intervient ou appelle les forces de l'ordre)"
+                                                    ))) |> 
     summarise(n=n(), .by = c(Var, `Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`)) |> 
     na.omit()
 
@@ -9525,9 +9541,41 @@ table |>
     geom_text(aes(Var, `Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`,
                   label = paste0(round(percent, 0), "%"))) +
     labs(x = "Services", y = "Intervention en situations d'insécurité",
-         title = "Services rendus aux habitants de l'immeuble selon \nl'intervention des commerces dans l'insécurité") +
+         title = "Services rendus aux habitants de l'immeuble selon \nl'intervention des commerces dans l'insécurité",
+         subtitle = "Les pourcentages sont exprimés par intervention en cas d'insécurité",
+         caption = "Lecture : 70% des commerçants qui agissent immédiatement en cas d'insécurité,\n rendent des services aux habitants de leur immeuble") +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) +
-    scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 40))
+    scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 40)) +
+    custom_theme() +
+    theme(legend.position = "none",
+          axis.text = element_text(size = 9),
+          axis.title = element_text(size = 10),
+          plot.caption = element_text(color = "#757373", size = 13))
 
+
+table |> 
+    mutate(percent = n/sum(n), .by = `Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`) |> 
+    ggplot() +
+    aes(
+        x = `Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`,
+        y = percent,
+        fill = Var
+    ) +
+    geom_col() +
+    labs(x = "Intervention en situations d'insécurité", y = "Pourcentage",
+         title = "Services rendus aux habitants de l'immeuble selon \nl'intervention des commerçants en cas d'insécurité",
+         subtitle = "Les pourcentages sont exprimés par intervention en cas d'insécurité",
+         caption = "Lecture : 70% des commerçants qui agissent immédiatement en cas d'insécurité,\n rendent des services aux habitants de leur immeuble") +
+    coord_flip() +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) +
+    scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+    scale_fill_brewer("Blues") +
+    custom_theme() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.caption = element_text(color = "#757373", size = 16)) +
+    guides(fill = guide_legend(nrow = 2, title = "", reverse = TRUE))
 ```
 
