@@ -5257,7 +5257,7 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
 mon_graph <- viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
 mon_graph
 #girafe(print(mon_graph))
-saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6.4), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html", 
            selfcontained = TRUE)
 ```

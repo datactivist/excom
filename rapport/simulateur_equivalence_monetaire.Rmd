@@ -1,0 +1,104 @@
+---
+output: 
+    html_document:
+        self_contained: true
+        css: styles_simulateur.css
+runtime: shiny
+---
+
+# Simulateur d'équivalences monétaires {.tabset}
+
+## <FONT COLOR="#B4B1B1">Lien social</FONT>
+
+```{r, echo=FALSE}
+library(shiny)
+
+fluidPage(
+  fluidRow(
+    # Colonne gauche (Paramètres)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Paramètres"),
+      br(),
+      numericInput(
+        inputId = 'temps_discu',
+        label = "Temps passé par semaine (en heures)",
+        value = 2.5,
+        step = 0.1
+      ),
+      numericInput(
+        inputId = 'nb_semaines',
+        label = "Nombre de semaines travaillées",
+        value = 47,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'taux_horaire',
+        label = "Taux horaire d'un salaire chargé",
+        value = 53,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'nb_commerces',
+        label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
+        value = 3259,
+        step = 100
+      ),
+      numericInput(
+        inputId = 'super_co',
+        label = 'Taux de "super commerçant·es"',
+        value = 0.2,
+        step = 0.1
+      )
+    ),
+    
+    # Colonne droite (Calculs)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Calcul"),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé</i> * <i>Nombre de semaines travaillées</i> * <i>taux horaire</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_commerce")),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>nombre total de commerces</i> * <i>taux de 'super commerçant·es'</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_quartier"))
+    )
+  )
+)
+```
+
+```{r, echo=FALSE}
+# Serveur Shiny pour calculer les bénéfices
+output$benefice_commerce <- renderText({
+  result <- input$temps_discu * input$nb_semaines * input$taux_horaire
+  paste(
+    input$temps_discu, "*", input$nb_semaines, "*", input$taux_horaire,
+    "=", format(as.integer(result), nsmall = 1, big.mark = " "), "€"
+  )
+})
+
+output$benefice_quartier <- renderText({
+  result_commerce <- input$temps_discu * input$nb_semaines * input$taux_horaire
+  result_quartier <- result_commerce * input$nb_commerces * input$super_co
+  paste(
+    as.integer(result_commerce), "*", input$nb_commerces, "*", input$super_co,
+    "=", format(as.integer(result_quartier), nsmall = 1, big.mark = " "), "€"
+  )
+})
+```
+
+## <FONT COLOR="#004654">Solidarités</FONT>
+
+Contenu pour la section "Solidarités".
+
+## <FONT COLOR="#0097B2">Vie de quartier</FONT>
+
+Contenu pour la section "Vie de quartier".
