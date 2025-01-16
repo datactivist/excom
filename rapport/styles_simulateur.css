@@ -42,13 +42,14 @@ h1.title { /*titre général du document*/
 }
 h1 { /*titre de niveau #1*/
   color: #304B95; /*couleur titre*/
-  font-size: 4em; /*taille*/
+  font-size: 1em; /*taille*/
   font-family: "Montserrat bold"; /*police*/
   font-weight: bold; /*gras*/
   padding-left: 0px; /*alinéa, espace à gauche du titre*/
   padding-top: 20px; /*espace avant titre*/
   padding-bottom: 20px; /*espace après titre*/
   margin-top: 20px; /*espace avant ligne horizontale*/
+  display: none;
 }
 h2 { /*titre de niveau #2*/
   color: #304B95; /*couleur titre*/

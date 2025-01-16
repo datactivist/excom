@@ -6,7 +6,10 @@ output:
 runtime: shiny
 ---
 
+
 # Simulateur d'équivalences monétaires {.tabset}
+
+<br>
 
 ## <FONT COLOR="#B4B1B1">Lien social</FONT>
 
@@ -63,6 +66,8 @@ fluidPage(
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_commerce")),
+      br(),
+      br(),
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",

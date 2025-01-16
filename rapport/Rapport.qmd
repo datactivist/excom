@@ -1630,7 +1630,13 @@ réponses collectées à la Métropole Rouen Normandie
 
 [Accéder au simulateur en ligne](https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/)
 
-<iframe width="1000" height="1100" src="https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/"></iframe>
+
+<iframe 
+    width="2000" 
+    height="640" 
+    src="https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/" 
+    style="position: relative; left: -50px; margin: 0; padding: 0; border: none; display: block;">
+</iframe>
 
 # Notice technique
 
