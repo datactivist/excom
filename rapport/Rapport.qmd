@@ -90,7 +90,7 @@ showtext_auto()
 Les commerces ne sont pas de stricts acteurs économiques, dont la valeur sociale serait équivalente à la valeur marchande. Cette intuition est largement partagée dans les espaces politiques, académiques ou encore économiques.
 Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
 Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux académiques ou produits par des experts se concentrent quasi exclusivement sur leur rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur rôle dans les processus de gentrification). En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
-Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.
+**Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.**
 Il s’inscrit au croisement des questionnements de six partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Urbanis aménagement, Altavia Foundation, Datactivist.
 
 Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu **324 réponses**, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
@@ -1298,12 +1298,13 @@ réponses collectées à St Ouen
 
 <center>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-252-1.png){width=400px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-253-1.png){width=450px}
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_252.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_253.html"></iframe>
+
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-254-1.png){width=450px}
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_254.html"></iframe>
 
 </center>
 
@@ -1318,15 +1319,16 @@ réponses collectées à St Ouen
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-256-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-257-1.png){width=450px}
+<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_256.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_257.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-258-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-259-1.png){width=450px}
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_cultu_258.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_259.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
 
@@ -1339,17 +1341,18 @@ réponses collectées à St Ouen
 
 <br>
 
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_263.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_264.html"></iframe>
+
+<br>
+
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_265.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_262.html"></iframe>
+
+<br>
+
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-261-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-262-1.png){width=450px}
 
-<br>
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-263-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-264-1.png){width=450px}
-
-<br>
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-265-1.png){width=450px}
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
@@ -1363,10 +1366,10 @@ réponses collectées à St Ouen
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-267-1.png){width=350px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-268-1.png){width=550px}
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_267.html"></iframe>
+<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_268.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
 
@@ -1379,15 +1382,15 @@ réponses collectées à St Ouen
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-270-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-271-1.png){width=450px}
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_270.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_271.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-272-1.png){width=450px}
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_272.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
 
@@ -1400,15 +1403,17 @@ réponses collectées à St Ouen
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-274-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-275-1.png){width=450px}
+<iframe width="400" height="340" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_274.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_276.html"></iframe>
 
 <br>
 
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_275.html"></iframe>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-276-1.png){width=450px}
+<br>
+
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-277-1.png){width=450px}
+
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
@@ -1422,20 +1427,20 @@ réponses collectées à St Ouen
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-279-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-280-1.png){width=450px}
-
-<br>
-
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-281-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-282-1.png){width=450px}
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-283-1.png){width=450px}
+
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_281.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_283.html"></iframe>
+
+<br>
+
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_282.html"></iframe>
 </center>
+
 
 :::
 
@@ -1468,12 +1473,14 @@ réponses collectées à la Métropole Rouen Normandie
 
 <center>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-285-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-286-1.png){width=450px}
+<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_285.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_286.html"></iframe>
+
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-287-1.png){width=450px}
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_287.html"></iframe>
+
 
 </center>
 
@@ -1488,15 +1495,16 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-289-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-290-1.png){width=450px}
+<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_289.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_290.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-291-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-292-1.png){width=450px}
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_291.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_292.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
 
@@ -1509,17 +1517,17 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_296.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_297.html"></iframe>
+
+<br>
+
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_298.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_295.html"></iframe>
+
+<br>
+
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-294-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-295-1.png){width=450px}
-
-<br>
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-296-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-297-1.png){width=450px}
-
-<br>
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-298-1.png){width=450px}
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
@@ -1534,9 +1542,10 @@ réponses collectées à la Métropole Rouen Normandie
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-300-1.png){width=350px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-301-1.png){width=550px}
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_300.html"></iframe>
+<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_301.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
 
@@ -1549,15 +1558,15 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-303-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-304-1.png){width=450px}
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_303.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_304.html"></iframe>
 
 <br>
 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-305-1.png){width=450px}
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_305.html"></iframe>
 </center>
+
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
 
@@ -1570,14 +1579,15 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-307-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-308-1.png){width=450px}
+<iframe width="400" height="410" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_307.html"></iframe>
+<iframe width="400" height="410" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_309.html"></iframe>
 
 <br>
 
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_308.html"></iframe>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-309-1.png){width=450px}
+<br>
+
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-310-1.png){width=450px}
 </center>
 
@@ -1592,19 +1602,18 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-312-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-313-1.png){width=450px}
-
-<br>
-
-
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-314-1.png){width=450px}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-315-1.png){width=450px}
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_312.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_313.html"></iframe>
 
 <br>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-316-1.png){width=450px}
+
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_314.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_316.html"></iframe>
+
+<br>
+
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_315.html"></iframe>
 </center>
 
 :::
