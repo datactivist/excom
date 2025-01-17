@@ -655,7 +655,7 @@ table |>
             axis.line = element_blank(),
             axis.text = element_blank(),
             legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-            text = element_text(family = "Montserrat", size = 12),
+            text = element_text(family = "Open Sans", size = 12),
             plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
             plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -695,7 +695,7 @@ ggVennDiagram(table, label_alpha = 0) +
         axis.line = element_blank(),
         axis.text = element_blank(),
         legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-        text = element_text(family = "Montserrat", size = 12),
+        text = element_text(family = "Open Sans", size = 12),
         plot.title = ggplot2::element_text(size = 17, face = "bold", color = "#222222"), 
         plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                              color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -886,7 +886,7 @@ infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, 
         value = c(valeur1, valeur2, valeur3),
         info = c(texte1, texte2, texte3),
         icon = c(emojifont::fontawesome(icone1), emojifont::fontawesome(icone2), emojifont::fontawesome(icone3)),
-        font_family = c(rep("fontawesome-webfont", 3)),
+        font_family = c(rep("FontAwesome", 3)),
         color = factor(1:3))
     
     # Graph
@@ -2537,21 +2537,30 @@ mon_graph <- table |>
                                               "Régulièrement (3 à 5 fois par semaine)", 
                                               "Ponctuellement (1 à 2 fois par semaine)") ~ "1", 
                                    .default = "0")) |> 
-    graph_questions_freq(ref_sollicitations_precaires, 
-                     "2 commerces sur 10 sont sollicités chaque semaine par des personnes dans le besoin", 
-                     "Répartition des commerces selon les sollicitations par des personnes en situation de précarité", 
-                     "", 
-                     "#3182bd") +
+    left_join(ref_sollicitations_precaires, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
     geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
                              tooltip = paste(Var, ":", n, "commerces")),
                  position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
-    guides(fill = "none") +
-    theme(plot.caption = element_blank()) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les sollicitations par des personnes en situation de précarité", width = 55),
+         title = stringr::str_wrap("2 commerces sur 10 sont sollicités chaque semaine par des personnes dans le besoin", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = "none") +
+    coord_flip()
 mon_graph
-#girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/sollic_freq-58.html", 
            selfcontained = TRUE)
@@ -5090,18 +5099,30 @@ mon_graph <- table |>
                                               "Régulièrement (3 à 5 fois par mois)", 
                                               "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
                                    .default = "0")) |> 
-    graph_questions_freq2(ref_aide_personnes, "Près de 2 commerçants sur 10 aident en cas de malaise ou accident au moins une fois par mois", 
-                     "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", "", "#3182bd") +
-    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
+    left_join(ref_aide_personnes, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)"))) |> 
+    ggplot() + 
+    geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner, 
                              tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
-    guides(fill = "none") +
-    theme(plot.caption = element_blank()) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes", width = 55),
+         title = stringr::str_wrap("Près de 2 commerçants sur 10 aident en cas de malaise ou accident au moins une fois par mois", width = 50)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = "none") +
+    coord_flip()
 mon_graph
-#girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 8), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html", 
            selfcontained = TRUE)
@@ -5539,18 +5560,30 @@ mon_graph <- table |>
                                               "Régulièrement (3 à 5 fois par mois)", 
                                               "Ponctuellement (1 à 2 fois par mois)") ~ "1", 
                                    .default = "0")) |> 
-    graph_questions_freq2(ref_insecurite_citoyens, "Plus d'un commerçant sur 10 est confronté à l'insécurité au moins chaque mois", 
-                     "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd") +
+    left_join(ref_insecurite_citoyens, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par an)", "Rarement (1 à 2 fois par an)", "Ponctuellement (1 à 2 fois par mois)", "Régulièrement (3 à 5 fois par mois)", "Très régulièrement (plusieurs fois par semaine)"))) |> 
+    ggplot() + 
     geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner, 
                              tooltip = paste(Var, ":", n, "commerces")),
              position="dodge", stat="identity", width=.6) +
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
-    guides(fill = "none") +
-    theme(plot.caption = element_blank()) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon la confrontation à des situations d'insécurité", width = 55),
+         title = stringr::str_wrap("Plus d'un commerçant sur 10 est confronté à l'insécurité au moins chaque mois", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank()) +
+    guides(fill = "none") +
+    coord_flip()
 mon_graph
-#girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html", 
            selfcontained = TRUE)
@@ -6640,22 +6673,33 @@ table <- data |>
 mon_graph <- table |> 
     mutate(a_surligner = case_when(Var == "Jamais" ~ "1", 
                                    .default = "0")) |> 
-    graph_questions_freq(ref_interpellation_mairie, "Plus de la moitié des commerçants a déjà interpellé les services de la mairie", 
-                     "Répartition des commerces selon les interpellations des services de la mairie", "", "#3182bd") +
-    labs(title = str_wrap("Plus de la moitié des commerçants a déjà interpellé les services de la mairie", width = 50)) +
-    theme(plot.caption = element_blank(),
-          plot.title = element_text(size = 19),
-          plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+    left_join(ref_interpellation_mairie, by = "Var") |> 
+    mutate(n_ref = percent_ref/100 * sum(n),
+           ecart = round((percent - percent_ref), 0),
+           ecart = case_when(ecart >= 0 ~ paste0("+", ecart), .default = as.character(ecart))) |> 
+    mutate(Var = factor(Var, levels = c("Je ne sais pas", "Jamais", "Très rarement (moins d'une fois par mois)", "Rarement (1 à 2 fois par mois)", "Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"))) |> 
+    ggplot() + 
     geom_bar_interactive(aes(y=n, x=Var, fill = a_surligner,
                              tooltip = paste(Var, ":", n, "commerces")),
-             position="dodge", stat="identity", width=.6) +
-    scale_fill_manual(values = c("1" = "#ACCDE4", "0" = "#3182bd")) +
-    guides(fill = "none") +
+                 position="dodge", stat="identity", width=.6) +
+    scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
+    labs(x = "", y = "Nombre de commerces", linetype = "",
+         subtitle = stringr::str_wrap("Répartition des commerces selon les interpellations des services de la mairie", width = 55),
+         title = stringr::str_wrap("Plus de la moitié des commerçants a déjà interpellé les services de la mairie", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
-               size = 5, fill = "white", label.size = NA)
+               size = 5, fill = "white", label.size = NA) +
+    theme_classic() +
+    custom_theme() +
+    theme(legend.position = "top",
+          panel.grid.major.x = ggplot2::element_line(color = "#cbcbcb"),
+          panel.grid.major.y = ggplot2::element_blank(),
+          plot.title = element_text(size = 19),
+          plot.margin = unit(c(0, 1, 0, 0), "cm")) +
+    guides(fill = "none") +
+    coord_flip()
 mon_graph
-#girafe(print(mon_graph))
-saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html", 
            selfcontained = TRUE)
 ```
@@ -7536,7 +7580,7 @@ viz_espacepublic_patrimoine <- function(donnees, title_name){
                 axis.text = element_blank(),
                 legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
                 legend.title = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Montserrat", size = 12),
+                text = element_text(family = "Open Sans", size = 12),
                 plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
                 plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                      color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -7552,7 +7596,7 @@ viz_espacepublic_patrimoine(data, "2 commerces sur 10 se situent dans un bâtime
 
 <br>
 
-```{r}
+```{r fig.width=7}
 # Fonction pour générer le graph
 viz_espacepublic_detail_partimoine <- function(donnees, title_name, coef_label){
     # Données
@@ -7579,7 +7623,7 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name, coef_label){
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) + #axis-text trop longs sur plusieurs lignes
         scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 260)) + 
         labs(x = "", y = "Nombre de commerces", linetype = "",
-             title = stringr::str_wrap(title_name, width = 45),
+             title = stringr::str_wrap(title_name, width = 50),
              subtitle = stringr::str_wrap("Perception et soin apporté au commerce, selon si la façade ou l'immeuble est classé patrimoine historique", width = 55)) +
         geom_label(aes(x = Var, y = n+coef_label*max(n), label = paste0(round(percent, 0), "%")),
                    size = 5, fill = "white", label.size = NA) +
@@ -7593,7 +7637,7 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name, coef_label){
         coord_flip() +
         guides(fill = "none")
 }
-mon_graph <- viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade", 0.1)
+mon_graph <- viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade", 0.15)
 mon_graph
 #girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph), width_svg = 7), 

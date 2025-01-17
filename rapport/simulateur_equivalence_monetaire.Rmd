@@ -13,6 +13,10 @@ runtime: shiny
 
 ## <FONT COLOR="#B4B1B1">Lien social</FONT>
 
+<br>
+
+*Le temps passé correspond au temps que prennent les commerçants pour échanger avec leurs clients sur des sujets privés.*
+
 ```{r, echo=FALSE}
 library(shiny)
 
@@ -31,13 +35,13 @@ fluidPage(
       ),
       numericInput(
         inputId = 'nb_semaines',
-        label = "Nombre de semaines travaillées",
+        label = "Nombre de semaines travaillées (par an)",
         value = 47,
         step = 1
       ),
       numericInput(
         inputId = 'taux_horaire',
-        label = "Taux horaire d'un salaire chargé",
+        label = "Taux horaire d'un salaire chargé (en €)",
         value = 53,
         step = 1
       ),
@@ -62,7 +66,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé</i> * <i>Nombre de semaines travaillées</i> * <i>taux horaire</i>")
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé par semaine (en heures)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Taux horaire d'un salaire chargé (en €)</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_commerce")),
@@ -71,7 +75,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>nombre total de commerces</i> * <i>taux de 'super commerçant·es'</i>")
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>Nombre total de commerces à l'échelle souhaitée</i> * <i>Taux de 'super commerçant·es'</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_quartier"))
@@ -103,6 +107,10 @@ output$benefice_quartier <- renderText({
 ## <FONT COLOR="#004654">Solidarités</FONT>
 
 
+<br>
+
+*Le temps passé correspond au temps que prennent les commerçants pour venir en aide aux personnes dans le besoin.*
+
 ```{r, echo=FALSE}
 fluidPage(
   fluidRow(
@@ -119,19 +127,19 @@ fluidPage(
       ),
       numericInput(
         inputId = 'nb_semaines2',
-        label = "Nombre de semaines travaillées",
+        label = "Nombre de semaines travaillées (par an)",
         value = 47,
         step = 1
       ),
       numericInput(
         inputId = 'taux_horaire2',
-        label = "Taux horaire d'un salaire chargé",
+        label = "Taux horaire d'un salaire chargé (en €)",
         value = 53,
         step = 1
       ),
       numericInput(
         inputId = 'dons',
-        label = "Nombre de dons par semaine",
+        label = "Nombre de dons (par semaine)",
         value = 2,
         step = 1
       ),
@@ -162,7 +170,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>(temps passé par semaine (en heures)</i> * <i>nombre de semaines travaillées par an</i> * <i>coût horaire)</i> + <i>(nombre de dons</i> * <i>nombre de semaines travaillées par an</i> * <i>coût du don)</i>")
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé par semaine (en heures)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Taux horaire d'un salaire chargé (en €)</i> + <i>Nombre de dons (par semaine)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Coût du don</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_commerce2")),
@@ -171,7 +179,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>nombre total de commerces</i> * <i>taux de 'super commerçant·es'</i>")
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>Nombre total de commerces à l'échelle souhaitée</i> * <i>Taux de 'super commerçant·es'</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_quartier2"))
@@ -185,8 +193,8 @@ fluidPage(
 output$benefice_commerce2 <- renderText({
   result2 <- (input$temps_discu2 * input$nb_semaines2 * input$taux_horaire2) + (input$dons * input$cout_don * input$nb_semaines2)
   paste(
-    "(", input$temps_discu2, "*", input$nb_semaines2, "*", input$taux_horaire2, ") + (",
-    input$dons, "*", input$cout_don, "*", input$nb_semaines2, ")",
+    input$temps_discu2, "*", input$nb_semaines2, "*", input$taux_horaire2, "+",
+    input$dons, "*", input$cout_don, "*", input$nb_semaines2,
     "=", format(as.integer(result2), nsmall = 1, big.mark = " "), "€"
   )
 })
@@ -203,6 +211,10 @@ output$benefice_quartier2 <- renderText({
 
 ## <FONT COLOR="#0097B2">Vie de quartier</FONT>
 
+<br>
+
+*Le temps passé correspond au temps que prennent les commerçants pour organiser un (des) évènement(s) de quartier.*
+
 ```{r, echo=FALSE}
 fluidPage(
   fluidRow(
@@ -212,28 +224,28 @@ fluidPage(
       h3("Paramètres"),
       br(),
       numericInput(
-        inputId = 'freq_activites',
-        label = "Fréquence des activités (par semaine)",
-        value = 3,
-        step = 1
+        inputId = 'temps_discu3',
+        label = "Temps passé par semaine (en heures)",
+        value = 0.5,
+        step = 0.1
       ),
       numericInput(
         inputId = 'nb_semaines3',
-        label = "Nombre de semaines travaillées",
+        label = "Nombre de semaines travaillées (par an)",
         value = 47,
         step = 1
       ),
       numericInput(
-        inputId = 'cout_materiel',
-        label = "Coût par activité (en €)",
-        value = 15,
+        inputId = 'taux_horaire3',
+        label = "Taux horaire d'un salaire chargé (en €)",
+        value = 53,
         step = 1
       ),
       numericInput(
-        inputId = 'nb_participants',
-        label = "Nombre moyen de participants par activité",
-        value = 10,
-        step = 1
+        inputId = 'dons3',
+        label = "Montant des dons (par an)",
+        value = 200,
+        step = 10
       ),
       numericInput(
         inputId = 'nb_commerces3',
@@ -256,7 +268,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>(fréquence des activités</i> * <i>nombre de semaines travaillées</i> * <i>coût par activité</i> * <i>nombre moyen de participants)</i>")
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé par semaine (en heures)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Taux horaire d'un salaire chargé (en €)</i> + <i>Montant des dons (par an)</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_commerce3")),
@@ -265,7 +277,7 @@ fluidPage(
       br(),
       div(
         style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
-        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>nombre total de commerces</i> * <i>taux de 'super commerçant·es'</i>")
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>Nombre total de commerces à l'échelle souhaitée</i> * <i>Taux de 'super commerçant·es'</i>")
       ),
       div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
           textOutput("benefice_quartier3"))
@@ -277,19 +289,203 @@ fluidPage(
 ```{r, echo=FALSE}
 # Serveur Shiny pour calculer les bénéfices
 output$benefice_commerce3 <- renderText({
-  result3 <- input$freq_activites * input$nb_semaines3 * input$cout_materiel * input$nb_participants
+  result3 <- input$temps_discu3 * input$nb_semaines3 * input$taux_horaire3 + input$dons3
   paste(
-    "(", input$freq_activites, "*", input$nb_semaines3, "*", input$cout_materiel, "*", input$nb_participants, ")",
+    input$temps_discu3, "*", input$nb_semaines3, "*", input$taux_horaire3, "+", input$dons3,
     "=", format(as.integer(result3), nsmall = 1, big.mark = " "), "€"
   )
 })
 
 output$benefice_quartier3 <- renderText({
-  result_commerce3 <- input$freq_activites * input$nb_semaines3 * input$cout_materiel * input$nb_participants
+  result_commerce3 <- input$temps_discu3 * input$nb_semaines3 * input$taux_horaire3 + input$dons3
   result_quartier3 <- result_commerce3 * input$nb_commerces3 * input$super_co3
   paste(
     as.integer(result_commerce3), "*", input$nb_commerces3, "*", input$super_co3,
     "=", format(as.integer(result_quartier3), nsmall = 1, big.mark = " "), "€"
+  )
+})
+```
+
+
+## <FONT COLOR="#00A589">Santé et sécurité</FONT>
+
+<br>
+
+*Le temps passé correspond au temps que prennent les commerçants pour intervenir en cas d'incidents dans le domaine public.*
+
+```{r, echo=FALSE}
+fluidPage(
+  fluidRow(
+    # Colonne gauche (Paramètres)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Paramètres"),
+      br(),
+      numericInput(
+        inputId = 'temps_discu4',
+        label = "Temps passé par semaine (en heures)",
+        value = 0.83,
+        step = 0.1
+      ),
+      numericInput(
+        inputId = 'nb_semaines4',
+        label = "Nombre de semaines travaillées (par an)",
+        value = 47,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'taux_horaire4',
+        label = "Taux horaire d'un salaire chargé (en €)",
+        value = 53,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'nb_commerces4',
+        label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
+        value = 3259,
+        step = 100
+      ),
+      numericInput(
+        inputId = 'super_co4',
+        label = 'Taux de "super commerçant·es"',
+        value = 0.2,
+        step = 0.1
+      )
+    ),
+    
+    # Colonne droite (Calculs)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Calcul"),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé par semaine (en heures)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Taux horaire d'un salaire chargé (en €)</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_commerce4")),
+      br(),
+      br(),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>Nombre total de commerces à l'échelle souhaitée</i> * <i>Taux de 'super commerçant·es'</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_quartier4"))
+    )
+  )
+)
+```
+
+```{r, echo=FALSE}
+# Serveur Shiny pour calculer les bénéfices
+output$benefice_commerce4 <- renderText({
+  result4 <- input$temps_discu4 * input$nb_semaines4 * input$taux_horaire4 
+  paste(
+    input$temps_discu4, "*", input$nb_semaines4, "*", input$taux_horaire4,
+    "=", format(as.integer(result4), nsmall = 1, big.mark = " "), "€"
+  )
+})
+
+output$benefice_quartier4 <- renderText({
+  result_commerce4 <- input$temps_discu4 * input$nb_semaines4 * input$taux_horaire4
+  result_quartier4 <- result_commerce4 * input$nb_commerces4 * input$super_co4
+  paste(
+    as.integer(result_commerce4), "*", input$nb_commerces4, "*", input$super_co4,
+    "=", format(as.integer(result_quartier4), nsmall = 1, big.mark = " "), "€"
+  )
+})
+```
+
+
+## <FONT COLOR="#FF5757">Espace public</FONT>
+
+<br>
+
+*Le temps passé correspond au temps que prennent les commerçants pour nettoyer les abords de leur magasin et entretenir leur devanture.*
+
+```{r, echo=FALSE}
+fluidPage(
+  fluidRow(
+    # Colonne gauche (Paramètres)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Paramètres"),
+      br(),
+      numericInput(
+        inputId = 'temps_discu6',
+        label = "Temps passé par semaine (en heures)",
+        value = 1.25,
+        step = 0.1
+      ),
+      numericInput(
+        inputId = 'nb_semaines6',
+        label = "Nombre de semaines travaillées (par an)",
+        value = 47,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'taux_horaire6',
+        label = "Taux horaire d'un salaire chargé (en €)",
+        value = 53,
+        step = 1
+      ),
+      numericInput(
+        inputId = 'nb_commerces6',
+        label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
+        value = 3259,
+        step = 100
+      ),
+      numericInput(
+        inputId = 'super_co6',
+        label = 'Taux de "super commerçant·es"',
+        value = 0.15,
+        step = 0.1
+      )
+    ),
+    
+    # Colonne droite (Calculs)
+    column(
+      width = 6,  # 50% de largeur
+      h3("Calcul"),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice d'un commerce</b><br><i>Temps passé par semaine (en heures)</i> * <i>Nombre de semaines travaillées (par an)</i> * <i>Taux horaire d'un salaire chargé (en €)</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_commerce6")),
+      br(),
+      br(),
+      br(),
+      div(
+        style = "border: 0px; padding: 20px; border-radius: 15px; background-color: #e8e8e8;",
+        HTML("🔎 <b>Bénéfice à l'échelle d'une rue/d'un quartier</b><br><i>Bénéfice d'un commerce</i> * <i>Nombre total de commerces à l'échelle souhaitée</i> * <i>Taux de 'super commerçant·es'</i>")
+      ),
+      div(style = "border-left: 4px solid #ccc; padding-left: 10px; margin-top: 10px;",
+          textOutput("benefice_quartier6"))
+    )
+  )
+)
+```
+
+```{r, echo=FALSE}
+# Serveur Shiny pour calculer les bénéfices
+output$benefice_commerce6 <- renderText({
+  result6 <- input$temps_discu6 * input$nb_semaines6 * input$taux_horaire6 
+  paste(
+    input$temps_discu6, "*", input$nb_semaines6, "*", input$taux_horaire6,
+    "=", format(as.integer(result6), nsmall = 1, big.mark = " "), "€"
+  )
+})
+
+output$benefice_quartier6 <- renderText({
+  result_commerce6 <- input$temps_discu6 * input$nb_semaines6 * input$taux_horaire6
+  result_quartier6 <- result_commerce6 * input$nb_commerces6 * input$super_co6
+  paste(
+    as.integer(result_commerce6), "*", input$nb_commerces6, "*", input$super_co6,
+    "=", format(as.integer(result_quartier6), nsmall = 1, big.mark = " "), "€"
   )
 })
 ```

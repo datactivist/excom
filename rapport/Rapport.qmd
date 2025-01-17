@@ -57,6 +57,7 @@ showtext_auto()
     padding: 15px;            /* Espacement interne */
     border-radius: 5px;       /* Coins arrondis */
     margin-bottom: 20px;      /* Espacement sous la TOC */
+    text-align: left;       /* Centrer le texte */
 }
 #toc-title {
     font-size: 1.2em;         /* Taille du texte */
@@ -978,10 +979,10 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 <br>
 <br>
 <br>
-“Yeux sur la rue”, pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
+"Yeux sur la rue", pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
 :::
 ::: {.column width="50%"}
-<iframe width="550" height="555" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html"></iframe>
+<iframe width="550" height="545" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html"></iframe>
 :::
 ::::
 
@@ -1123,22 +1124,13 @@ réponses collectées à Paris
 <center>
 
 
-<iframe width="500" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_217.html"></iframe>
-<iframe width="500" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_218.html"></iframe>
+<iframe width="440" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_217.html"></iframe>
+<iframe width="360" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_218.html"></iframe>
 
 
-<iframe width="400" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
-<iframe width="400" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
 
-
-<iframe width="410" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
-<iframe width="410" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
-
-<iframe width="420" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
-<iframe width="420" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
-
-<iframe width="405" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
-<iframe width="405" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
 
 </center>
 
@@ -1153,14 +1145,14 @@ réponses collectées à Paris
 
 <br>
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_223.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_224.html"></iframe>
+<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_223.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_224.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_225.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_226.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_225.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_226.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
@@ -1174,17 +1166,19 @@ réponses collectées à Paris
 
 <br>
 
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_230.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html"></iframe>
+
+<br>
+
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_232.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_229.html"></iframe>
+
+<br>
+
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-228-1.png){width=450px}
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_229.html"></iframe>
 
-<br>
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_230.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html"></iframe>
-
-<br>
-
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_232.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
@@ -1199,8 +1193,8 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_234.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_235.html"></iframe>
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_234.html"></iframe>
+<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_235.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
@@ -1215,13 +1209,13 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_237.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_238.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_237.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_238.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_239.html"></iframe>
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_239.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
@@ -1236,14 +1230,16 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_241.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_242.html"></iframe>
+<iframe width="400" height="340" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_241.html"></iframe>
+<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_243.html"></iframe>
 
 <br>
 
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_242.html"></iframe>
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_243.html"></iframe>
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-244-1.png){width=450px}
+<br>
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-244-1.png){width=400px}
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
@@ -1258,18 +1254,18 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_248.html"></iframe>
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_248.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_250.html"></iframe>
 
 <br>
 
-<iframe width="550" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_250.html"></iframe>
+<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
 </center>
 
 :::
@@ -1303,7 +1299,7 @@ réponses collectées à St Ouen
 
 <center>
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-252-1.png){width=450px}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-252-1.png){width=400px}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-253-1.png){width=450px}
 
 <br>
@@ -1626,7 +1622,7 @@ réponses collectées à la Métropole Rouen Normandie
 
 <iframe 
     width="2000" 
-    height="640" 
+    height="850" 
     src="https://dianethy.shinyapps.io/simulateur_equivalence_monetaire/" 
     style="position: relative; left: -10px; margin: 0; padding: 0; border: none; display: block;">
 </iframe>
