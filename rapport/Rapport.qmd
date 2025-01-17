@@ -102,7 +102,7 @@ Ce rapport présente les résultats d’une enquête par questionnaire diffusée
 <iframe frameborder="0" width="750" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/cartographie_repondants.html"></iframe>
 </center>
 
-
+<br>
 
 En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen, Marseille et Rouen, qui sont donc les territoires les plus représentés dans l’échantillon. 
 
@@ -1008,7 +1008,6 @@ L’existence d’applications dans certaines collectivités facilite peut-être
 ::: {.column width="55%"}
 <br>
 <br>
-<br>
 En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (café, restaurants, alimentaire…) ont tendance à le faire un peu plus fréquemment que les autres. Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend compte de ce travail peu visible. 
 :::
 ::::
@@ -1629,8 +1628,8 @@ réponses collectées à la Métropole Rouen Normandie
 
 # Notice technique
 
-L’enquête sur les effets du commerce de proximité, en partenariat avec la SEM Paris Commerces, la fondation Urbanis, la fondation Alativa ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 234 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
-L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 164 réponses en plus. 
+L’enquête sur les effets du commerce de proximité, en partenariat avec la SEM Paris Commerces, la fondation Urbanis, la fondation Alativa ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
+L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 160 des 324 réponses. 
 
 Les pourcentages sont exprimés en part des commerces répondants pour chacune des questions. Le traitement des données et l'analyse détaillée sont disponibles dans le [rapport d'analyse complète](https://datactivist.coop/excom/Questionnaire_effets_commerce/Questionnaire_effets_commerce.html).
 

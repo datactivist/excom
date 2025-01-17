@@ -5,9 +5,16 @@
 }
 
 @font-face {
-  font-family: "Open Sans Regular";
+  font-family: "Open Sans";
   src: url("fonts/OpenSans-VariableFont_wdth,wght.ttf");
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+svg text {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
 
 h1.title { /*titre général du document*/
   color: #00F193; /*couleur titre*/
@@ -32,7 +39,7 @@ h4.author { /*auteur*/
   color: #173541; /*couleur*/
   padding: 1px; /*espace autour texte*/
   font-size: 1.5em; /*taille*/
-  font-family: "Open Sans Regular"; /*police*/
+  font-family: "Open Sans"; /*police*/
   font-weight: normal; /*pas en gras*/
 }
 h4.date { /*date*/
@@ -40,7 +47,7 @@ h4.date { /*date*/
   padding: 1px; /*espace autour texte*/
   padding-bottom: 10px;
   font-size: 1em; /*taille*/
-  font-family: "Open Sans Regular"; /*police*/
+  font-family: "Open Sans"; /*police*/
   font-weight: normal; /*pas en gras*/
 }
 h1 { /*titre de niveau #1*/
@@ -88,7 +95,7 @@ h5 { /*titre de niveau #5*/
 }
 body { /*corps de texte*/
   text-align: justify; /*texte justifié*/
-  font-family: "Open Sans Regular"; /*police*/
+  font-family: "Open Sans"; /*police*/
   letter-spacing: 0px; /*pas d'espace entre les lettres*/
   list-style: disc inside; /*listes en bullet-points*/
 }
@@ -102,9 +109,4 @@ a:visited { /*lien visité*/
     color: #0000FF;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
-
-svg text {
-  font-family: 'Open Sans', sans-serif !important;
-}
 
