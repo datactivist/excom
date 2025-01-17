@@ -422,11 +422,6 @@ Les tranches de population sont les suivantes :
 <br>
 
 ```{r custom_theme}
-# Police du graphique
-library(showtext)
-font_add("Open Sans", regular = "fonts/OpenSans-VariableFont_wdth,wght.ttf")
-showtext_auto()
-
 # Thème pour les graphs
 font <- "Open Sans"
 custom_theme <- function(){
@@ -451,7 +446,8 @@ custom_theme <- function(){
         panel.grid.major.x = ggplot2::element_blank(), 
         panel.background = ggplot2::element_blank(),
         strip.background = ggplot2::element_rect(fill = "white"),
-        strip.text = ggplot2::element_text(size = 22, hjust = 0, face = "bold"))
+        strip.text = ggplot2::element_text(size = 22, hjust = 0, face = "bold"),
+        base_family = font)
 }
 ```
 

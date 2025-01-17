@@ -15,6 +15,13 @@
   src: url("fonts/Montserrat-Bold.ttf");
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+svg text {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+
 /* Code pour avoir les numérotations automatiques de la même couleur que le titre */
 h1[data-number]::before, 
 h2[data-number]::before,
