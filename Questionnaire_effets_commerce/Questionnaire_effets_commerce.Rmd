@@ -6319,7 +6319,7 @@ viz_environnement_recyclage <- function(donnees, title_name,x_pos_text, y_pos_te
 mon_graph <- viz_environnement_recyclage(data, "Le recyclage des <span style='color: #3182BD'>cartons et tout-venant</span> est une <br>solution adoptée par une majorité de <br>commerçants recyclant", 8, 49.6)
 mon_graph
 #girafe(print(mon_graph))
-saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 8, height_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/cartons_174.html", 
            selfcontained = TRUE)
 ```
