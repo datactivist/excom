@@ -91,9 +91,12 @@ Les commerces ne sont pas de stricts acteurs économiques, dont la valeur social
 Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
 Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux académiques ou produits par des experts se concentrent quasi exclusivement sur leur rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur rôle dans les processus de gentrification). En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
 **Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.**
-Il s’inscrit au croisement des questionnements de six partenaires : la SEM Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Urbanis aménagement, Altavia Foundation, Datactivist.
+Il s’inscrit au croisement des questionnements de six partenaires : Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Urbanis aménagement, Altavia Foundation, Datactivist.
 
-Ce rapport présente les résultats d’une enquête par questionnaire diffusée d'avril à novembre 2024 et ayant reçu **324 réponses**, visant à objectiver les apports concrets des commerçants au territoire et à ses habitants.
+
+Lancé fin 2022 par Paris Commerces et Datactivist, le projet avait pour objectif de **rendre visible les effets sociaux et environnementaux du commerce de proximité** et de proposer de les objectiver, afin de réinventer la valeur du commerce. Une première phase a été menée d'août 2023 à avril 2024 pour **objectiver les externalités du commerce de proximité**. Celle-ci a permis d’aboutir à 18 externalités, classées en 6 catégories (lien social, environnement, espace public, santé et sécurité, solidarité, vie de quartier) grâce à un **travail sur le terrain** où plus de 200 commerçants, micro-commerçants et artisans ont été interrogés.
+
+Ce rapport présente les résultats des deuxième et troisième phases du projet EXCOM, ayant pour objectif de **mesurer les 18 externalités identifiées** et les **mettre en équivalence**, c'est-à-dire les transformer en valeur monétaire et/ou en « objectif de politique publique ». Pour cela, une **enquête par questionnaire** a été diffusée d’avril à novembre 2024 auprès de commerçants partout en France, et a reçu 324 réponses.
 
 
 # Aperçu des données
@@ -1637,7 +1640,7 @@ réponses collectées à la Métropole Rouen Normandie
 
 # Notice technique
 
-L’enquête sur les effets du commerce de proximité, en partenariat avec la SEM Paris Commerces, la fondation Urbanis, la fondation Alativa ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
+L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, la fondation Alativa ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
 L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 160 des 324 réponses. 
 
 Les pourcentages sont exprimés en part des commerces répondants pour chacune des questions. Le traitement des données et l'analyse détaillée sont disponibles dans le [rapport d'analyse complète](https://datactivist.coop/excom/Questionnaire_effets_commerce/Questionnaire_effets_commerce.html).
