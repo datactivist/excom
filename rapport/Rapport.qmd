@@ -200,7 +200,7 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 - Dans l’optique d’une estimation monétaire mesurée, **nous calculons le temps passé sur la base du coût employeur d’un salaire minimum** (dans l’hypothèse où le temps passé par le commerçant “décharge” la collectivité d’un coût). 
 - **En pratique, si un service d’utilité sociale n’est pas rendu par le commerçant, il est parfois fait par des bénévoles**, généralement dans un cadre associatif. 
 - Enfin, sauf exception des dons de produits ou d’argent (cf. catégorie Solidarités), les commerçants interagissent avec des personnes qui consomment un minimum. **Le temps passé à tisser du lien, ou à entretenir la rue, dépasse les attendus minimaux du travail commercial mais ne constitue pas en soi du travail gratuit/bénévole**. 
-Nous n’avons par ailleurs par la matière empirique pour mesurer les externalités négatives du commerce (ex : dégradation du lien social en cas de commerçant particulièrement antipathique)
+Nous n’avons par ailleurs pas la matière empirique pour mesurer les externalités négatives du commerce (ex : dégradation du lien social en cas de commerçant particulièrement antipathique)
 
 </div>
 
@@ -349,7 +349,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 > 6228 * 3259 * 0,2 = 4 059 084€
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 4 million d’euros dans le domaine du lien social.
+À l’échelle de la ville, les commerces permettent une économie théorique d’environ 4 millions d’euros dans le domaine du lien social.
 
 
 </div>
@@ -412,7 +412,7 @@ Face à la précarité, **le premier réflexe des commerçants est d’offrir un
 Les sollicitations sont cependant relativement rares. Seuls 23% des commerçants sont interpellés au moins une fois par semaine. 
 
 Il n’y a pas de variation marquée selon la taille de la ville. 
-Cependant, nous observons une sur-sollicitation des cafés-restaurants par rapport à l’ensemble des commerces. Plus de la moitié d’entre eux sont interpellés au moins une fois par semaine, soit 27 points de pourcentage de plus que l’échantillon général. Cela s’explique par la facilité d’accès à des services de base qu’ils proposent. 
+Cependant, nous observons une sursollicitation des cafés-restaurants par rapport à l’ensemble des commerces. Plus de la moitié d’entre eux sont interpellés au moins une fois par semaine, soit 27 points de pourcentage de plus que l’échantillon général. Cela s’explique par la facilité d’accès à des services de base qu’ils proposent. 
 :::
 ::: {.column width="0%"}
 <!-- empty column to create gap -->
@@ -546,7 +546,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 Les commerces de proximité sont des piliers essentiels à la construction d’une communauté locale dynamique et attrayante. Ils jouent un rôle crucial dans le tissu social, économique et culturel d’un quartier. 
 
-Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximité**. La quasi totalité (96%) des personnes interrogées déclare ainsi rendre des services aux autres commerçants des alentours. On observe par ailleurs que l’intégration dans le tissu associatif local va souvent de paire avec un réseau d’entraide commerciale. 
+Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximité**. La quasi-totalité (96%) des personnes interrogées déclare ainsi rendre des services aux autres commerçants des alentours. On observe par ailleurs que l’intégration dans le tissu associatif local va souvent de pair avec un réseau d’entraide commerciale. 
 
 ::: {.column-margin}
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">96%</p>
@@ -691,7 +691,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
  <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/sante_securite.png" width = "600">
 </p>
 
-Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américaine, a souligné l'importance des commerçants en tant que "yeux sur la rue", autrement dit comme **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
+Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américaine, a souligné l'importance des commerçants en tant qu'"yeux sur la rue", autrement dit comme **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
 
 En plus de générer du passage et d’avoir une activité ouverte sur la rue, les commerçants peuvent intervenir directement lorsqu’une situation problématique se présente (malaise, accident ou, plus rarement, altercation), ou transmettre l’information immédiatement aux services compétents. 
 Les situations d’insécurité sont relativement rares. 39% des commerçants n’en ont jamais rencontré. Et parmi ceux qui y ont fait face, 78% indiquent intervenir moins de deux fois par an. Mais lorsqu’elles se produisent, les commerçants sont souvent en première ligne. **En plus d’intervenir, quand la situation ne les met pas en danger, ils peuvent alerter rapidement**.  
@@ -915,9 +915,9 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 <div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
 ⚖️     <font size="5">**Mise en équivalence** </font>
 
-20% des commerçants donnent des conseils pratiques à leurs clients pour mettre en œuvre des pratiques de consommation plus responsable. Cela permet notamment d’éviter que certains déchets, par exemples d’emballages à usages uniques, soient produits. 
+20% des commerçants donnent des conseils pratiques à leurs clients pour mettre en œuvre des pratiques de consommation plus responsable. Cela permet notamment d’éviter que certains déchets, par exemple d’emballages à usages uniques, soient produits. 
 
-**Le travail d’un ou une “super” commerçante équivaut à un campagne de sensibilisation (ex : d’une agence public, ou d’une association type Zéro Waste France).**
+**Le travail d’un ou une “super” commerçante équivaut à une campagne de sensibilisation (ex : d’une agence publique, ou d’une association type Zéro Waste France).**
 
 Les données à disposition ne nous permettent pas de proposer une équivalence monétaire.
 
@@ -1011,7 +1011,7 @@ L’existence d’applications dans certaines collectivités facilite peut-être
 ::: {.column width="55%"}
 <br>
 <br>
-En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (café, restaurants, alimentaire…) ont tendance à le faire un peu plus fréquemment que les autres. Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend compte de ce travail peu visible. 
+En plus de contribuer à **l’embellissement de la ville, les commerçants assurent sa propreté**, en complément de services d’entretien fournis par les collectivités. 70% des commerces nettoient au moins une fois par semaine leurs abords, et 15% le font plusieurs fois par jour. Tous les types de commerces sont concernés, bien que ceux qui génèrent beaucoup de passage (cafés, restaurants, alimentaires…) ont tendance à le faire un peu plus fréquemment que les autres. Si l’entretien de la rue ne se remarque pas toujours, tant il semble acquis, c’est généralement quand les commerces cessent de l’assurer qu’on se rend compte de ce travail peu visible. 
 :::
 ::::
 
@@ -1280,7 +1280,7 @@ réponses collectées à Paris
 
 La commune de Saint-Ouen-sur-Seine compte [1.561 commerces et entreprises de services](https://www.linternaute.com/ville/saint-ouen-sur-seine/ville-93070/entreprises), pour un peu plus de [53.200 habitants](https://www.insee.fr/fr/statistiques/2011101?geo=COM-93070), soit environ 29 commerces pour 1.000 habitants.
 
-11 réponses ont été collectées à St Ouen, soit 3% de l’échantillon des répondants à l’enquête.
+11 réponses ont été collectées à Saint-Ouen, soit 3% de l’échantillon des répondants à l’enquête.
 
 ::: {.column-margin}
 <br>
@@ -1290,7 +1290,7 @@ La commune de Saint-Ouen-sur-Seine compte [1.561 commerces et entreprises de ser
 <br>
 <br>
 <p style="font-size: 50px; color: #304B95; font-weight: bold;">11</p>
-réponses collectées à St Ouen
+réponses collectées à Saint-Ouen
 :::
 
 <br>
