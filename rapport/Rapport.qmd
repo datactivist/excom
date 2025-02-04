@@ -2,7 +2,7 @@
 title: "Mise en équivalence <br>des externalités positives <br>du commerce de proximité"
 subtitle: "Projet de recherche-action EXCOM"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Allyson Pallisser <br>Samuel Goëta
-date: 01/31/2025
+date: 02/28/2025
 format: 
   html:
     toc: true
@@ -107,7 +107,7 @@ Ce rapport présente les résultats des deuxième et troisième phases du projet
 
 <br>
 
-En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen, Marseille et Rouen, qui sont donc les territoires les plus représentés dans l’échantillon. 
+En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen-sur-Seine, Marseille ainsi que la Métropole de Rouen (dans les villes de Rouen, Elbeuf-Sur-Seine, Le Trait et Duclair), qui sont donc les territoires les plus représentés dans l’échantillon. 
 
 <br>
 
@@ -374,7 +374,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 > *“Nous sommes une boutique solidaire et nous sommes identifiés comme un lieu bienveillant par la population. On crée du lien et de l’écoute avec l'équipe de bénévoles mais aussi entre les clients.”*
 
-<div style="text-align: right">*-- Recyclerie, Elbeuf*</div>
+<div style="text-align: right">*-- Recyclerie, Elbeuf-Sur-Seine*</div>
 </FONT>
 :::
 ::::
@@ -1455,7 +1455,7 @@ réponses collectées à Saint-Ouen
 
 La ville de Rouen compte [3.259 commerces](https://www.linternaute.com/ville/rouen/ville-76540/entreprises), pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 28.6 commerces pour 1.000 habitants.
 
-75 réponses ont été collectées à Rouen (47), Elbeuf (10), Duclair (7), Le Trait (11), soit 23% de l'échantillon des répondants à l'enquête.
+Le portrait de territoire de la **Métropole Rouen Normandie** porte sur les 4 villes suivantes : Rouen, Elbeuf-Sur-Seine, Duclair et Le Trait. 75 réponses ont été collectées dans ces 4 territoires ; 47 à Rouen, 10 à Elbeuf-Sur-Seine, 7 à Duclair et 11 à Le Trait, soit 23% de l'échantillon des répondants à l'enquête.
 
 ::: {.column-margin}
 <br>
