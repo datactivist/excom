@@ -424,8 +424,11 @@ Les tranches de population sont les suivantes :
 <br>
 
 ```{r custom_theme}
+library(sysfonts)
+font_add_google("Open sans", "Open sans")
+
 # Thème pour les graphs
-font <- "Open Sans"
+font <- "Open sans"
 custom_theme <- function(){
     ggplot2::theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"), 
         plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
@@ -600,30 +603,20 @@ table <- data |>
 
 # Dataviz
 mon_graph <- table |> 
-    ggplot(aes(x="", y=nb, fill=`Êtes-vous indépendant ?`, 
-               tooltip = paste("Indépendance", `Êtes-vous indépendant ?`, ":", nb, "commerces"))) +  
-      geom_bar_interactive(stat="identity", width=1, color="white", size = 2) +
-      coord_polar("y") +
+    ggplot() +
+      aes(x = `Êtes-vous indépendant ?`, y = nb, fill=`Êtes-vous indépendant ?`,
+          tooltip = paste(nb, "commerces")) +
+      geom_col_interactive() +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-      labs(title = str_wrap("Répartition des commerces répondants selon s'ils sont indépendants ou non", width = 35)) +
-      theme_classic() + 
-      theme(legend.position = "top",
-            strip.text.x = element_text(size = 12, face = "bold"),
-            strip.background = element_blank(),
-            axis.title = element_blank(),
-            axis.ticks = element_blank(),
-            axis.line = element_blank(),
-            axis.text = element_blank(),
-            legend.text = ggplot2::element_text(size = 18,color = "#222222"),
-            text = element_text(family = "Open Sans", size = 12),
-            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"),
-            plot.caption = ggplot2::element_text(face = "italic", size = 18,
-                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)),
-            plot.title.position = "plot",
-            plot.caption.position = "plot",
-            plot.margin = ggplot2::margin(5, 0, 0, -170)) +
-      guides(fill = guide_legend(reverse = T, title = " ")) +
-      geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
+      labs(x = "Indépendant",
+           y = "Nombre de commerces",
+           title = "Répartition des commerces selon leur statut") +
+      geom_label(aes(x = `Êtes-vous indépendant ?`, y = nb+15, 
+                    label = paste(round(Pourcentage,0), "%", sep="")), 
+                color = "#333333", size=5, check_overlap = T, fill = "white", label.size = NA) +
+      theme_minimal() +
+      custom_theme() +
+      theme(legend.position = "none")
 mon_graph
 saveWidget(girafe(print(mon_graph)), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html", 
@@ -657,7 +650,7 @@ table |>
             axis.line = element_blank(),
             axis.text = element_blank(),
             legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-            text = element_text(family = "Open Sans", size = 12),
+            text = element_text(family = "Open sans", size = 12),
             plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
             plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                  color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -697,7 +690,7 @@ ggVennDiagram(table, label_alpha = 0) +
         axis.line = element_blank(),
         axis.text = element_blank(),
         legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-        text = element_text(family = "Open Sans", size = 12),
+        text = element_text(family = "Open sans", size = 12),
         plot.title = ggplot2::element_text(size = 17, face = "bold", color = "#222222"), 
         plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                              color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -813,33 +806,20 @@ table <- data |>
 
 # Dataviz
 mon_graph <- table |> 
-    ggplot(aes(x = "", y = nb, fill = `Travaillez-vous seul ?`,
-               tooltip = paste("Travail seul", `Travaillez-vous seul ?`, ":", nb, "commerces"))) +  
-      geom_bar_interactive(stat = "identity", width = 1, color = "white", size = 2) +
-      coord_polar("y") +
+    ggplot() +
+      aes(x = `Travaillez-vous seul ?`, y = nb, fill=`Travaillez-vous seul ?`,
+          tooltip = paste(nb, "commerces")) +
+      geom_col_interactive() +
       scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-      labs(title = str_wrap("Répartition des commerces répondants selon s'ils travaillent seuls ou avec des salariés / associés", width = 35)) +
-      theme_classic() + 
-      theme(legend.position = "top",
-            strip.text.x = element_text(size = 12, face = "bold"),
-            strip.background = element_blank(),
-            axis.title = element_blank(),
-            axis.ticks = element_blank(),
-            axis.line = element_blank(),
-            axis.text = element_blank(),
-            legend.text = ggplot2::element_text(size = 18, color = "#222222"), 
-            legend.title = ggplot2::element_text(size = 18, color = "#222222"), 
-            text = element_text(family = "Open Sans", size = 12),
-            plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
-            plot.caption = ggplot2::element_text(face = "italic", size = 18, 
-                                                 color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
-            plot.title.position = "plot", 
-            plot.caption.position = "plot",
-            plot.margin = ggplot2::margin(15, 0, 0, -190)
-            ) +
-      guides(fill = guide_legend(reverse = T, title = "   Travail seul :")) +
-      geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), 
-                color = "#333333", size=5, check_overlap = T)
+      labs(x = "Travail seul",
+           y = "Nombre de commerces",
+           title = "Pourcentage de commerçants travaillant seuls") +
+      geom_label(aes(x = `Travaillez-vous seul ?`, y = nb+15, 
+                    label = paste(round(Pourcentage,0), "%", sep="")), 
+                color = "#333333", size=5, check_overlap = T, fill = "white", label.size = NA) +
+      theme_minimal() +
+      custom_theme() +
+      theme(legend.position = "none")
 mon_graph
 saveWidget(girafe(print(mon_graph)), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html", 
@@ -2306,7 +2286,7 @@ viz_liensocial_techniquestra <- function(donnees, title_name){
                 axis.line = element_blank(),
                 axis.text = element_blank(),
                 legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Open Sans", size = 12),
+                text = element_text(family = "Open sans", size = 12),
                 plot.title = ggplot2::element_text(size = 15, face = "bold", color = "#222222"), 
                 plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                      color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
@@ -7582,7 +7562,7 @@ viz_espacepublic_patrimoine <- function(donnees, title_name){
                 axis.text = element_blank(),
                 legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
                 legend.title = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Open Sans", size = 12),
+                text = element_text(family = "Open sans", size = 12),
                 plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
                 plot.caption = ggplot2::element_text(face = "italic", size = 18, 
                                                      color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
