@@ -42,6 +42,8 @@ font_add("Montserrat",
 font_add("Open sans", regular = "../Questionnaire_effets_commerce/fonts/OpenSans-VariableFont_wdth,wght.ttf")
 showtext_auto()
 
+library(sysfonts)
+font_add_google("Open sans", "Open sans")
 # {-} après les headers 3 et 4 pour enlever le numérotage automatique
 ```
 
