@@ -92,12 +92,14 @@ deleted_questions_fillout <- fromJSON(txt = "data/in/export_fillout_deleted_ques
 repartition_theorique <- read_excel("data/in/Repartition_theorique_repondants.xlsx")
   # identifiant des départements
 departements_dg <- read_csv("https://www.data.gouv.fr/fr/datasets/r/67432189-8426-42e6-9ddb-8d21631df9c5")
+#rio::export(departements_dg, "data/in/departements_dg.csv") #sauvegarde
   # OFGL - données de population
 communes_pop <- read_delim("https://data.ofgl.fr/api/explore/v2.1/catalog/datasets/ofgl-base-communes-consolidee/exports/csv?lang=fr&refine=exer%3A%222023%22&refine=agregat%3A%22Achats%20et%20charges%20externes%22&facet=facet(name%3D%22agregat%22%2C%20disjunctive%3Dtrue)&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B", ";") |> 
   rename(cog_commune = `Code Insee 2023 Commune`,
          nom_commune = `Nom 2023 Commune`,
          population = `Population totale`) |> 
   select(cog_commune, nom_commune, population)
+#rio::export(communes_pop, "data/in/communes_pop.csv") #sauvegarde
   # Datagouv - codes postaux : https://www.data.gouv.fr/fr/datasets/base-officielle-des-codes-postaux/
 codes_postaux_dg <- read_csv("data/in/codes_postaux_datagouv.csv") |>
   select(-Ligne_5) |> distinct() |> 
@@ -8897,6 +8899,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7.7),
 
 ```{r table indic}
 # Fonction de calcul de l'indicateur et sauvegarde
+    # par territoire
 fonction_stat_commune <- function(table, territoire, Externalité_texte, Indicateur_texte, nom_export){
     # Calcul de l'indicateur
     stat_commune <- table |> 
@@ -8922,8 +8925,33 @@ fonction_stat_commune <- function(table, territoire, Externalité_texte, Indicat
     # Export
     assign(glue("stat_commune_{nom_export}"), stat_commune, envir = .GlobalEnv)
 }
+    # pour l'ensemble de l'échantillon
+fonction_stat_commune_ensemble <- function(table, Externalité_texte, Indicateur_texte, nom_export){
+    # Calcul de l'indicateur
+    stat_commune <- table |> 
+        select(variable_indic) |> 
+        count(variable_indic) |> 
+        mutate(percent = round(n / sum(n) * 100, 0),
+               nb_reponses = sum(n)) |> 
+        ungroup() |> 
+        filter(variable_indic == "1") |> 
+        mutate(Catégorie = case_when(percent <= quantile(percent, 0.25, na.rm = TRUE) ~ "Faible",
+                                     percent > quantile(percent, 0.25, na.rm = TRUE) & percent <= median(percent, na.rm = T) ~ "Moyen",
+                                     percent > median(percent, na.rm = T) & percent <= quantile(percent, 0.75, na.rm = TRUE) ~ "Élevé",
+                                     percent > quantile(percent, 0.75, na.rm = TRUE) ~ "Très élevé")) |> 
+        arrange(desc(nb_reponses)) |> 
+        select(nb_reponses, percent, Catégorie) |> 
+        rename(`Nombre de réponses` = nb_reponses,
+               `%` = percent) |> 
+        na.omit() |> 
+        mutate(Externalité = Externalité_texte,
+               Indicateur = Indicateur_texte, .before = `Nombre de réponses`)
+    # Export
+    assign(glue("stat_commune_{nom_export}"), stat_commune, envir = .GlobalEnv)
+}
 
 # Fonction de calcul de l'indicateur RÉSUMÉ et sauvegarde
+    # par territoire
 fonction_stat_commune_resume <- function(table, territoire, Externalité_texte, Indicateur_texte, nom_export){
     # Calcul de l'indicateur
     stat_commune <- table |> 
@@ -8937,7 +8965,30 @@ fonction_stat_commune_resume <- function(table, territoire, Externalité_texte, 
         ungroup() |> 
         filter(is_all1 == "1") |> 
         arrange(desc(nb_reponses)) |> 
-        filter(Libelle_acheminement2 == territoire) |> 
+        filter(if (territoire != "") Libelle_acheminement2 == territoire else TRUE) |> 
+        #filter(Libelle_acheminement2 == territoire) |> 
+        select(nb_reponses, percent) |> 
+        rename(`Nombre de réponses` = nb_reponses,
+               `%` = percent) |> 
+        na.omit() |> 
+        mutate(Externalité = Externalité_texte,
+               Indicateur = Indicateur_texte, .before = `Nombre de réponses`)
+    # Export
+    assign(glue("stat_commune_{nom_export}"), stat_commune, envir = .GlobalEnv)
+}
+    # pour l'ensemble de l'échantillon
+fonction_stat_commune_resume_ensemble <- function(table, Externalité_texte, Indicateur_texte, nom_export){
+    # Calcul de l'indicateur
+    stat_commune <- table |> 
+        mutate(is_all1 = ifelse(`a_considerer...1` == "1" & `variable_indic...2` == "1" & `a_considerer...4` == "1" & 
+                                   `variable_indic...5` == "1" & `a_considerer...6` == "1" &  `variable_indic...7` == "1",
+                                "1", "0")) |> 
+        count(is_all1) |> 
+        mutate(percent = round(n / sum(n) * 100, 0),
+               nb_reponses = sum(n)) |> 
+        ungroup() |> 
+        filter(is_all1 == "1") |> 
+        arrange(desc(nb_reponses)) |> 
         select(nb_reponses, percent) |> 
         rename(`Nombre de réponses` = nb_reponses,
                `%` = percent) |> 
@@ -8950,6 +9001,7 @@ fonction_stat_commune_resume <- function(table, territoire, Externalité_texte, 
 
 
 #--- Calcul des indicateurs 
+    # par territoire
 calcul_indicateur_territoire <- function(territoire, territoire_nom){
     # Aider les personnes précaires
         # Sélection des données
@@ -9320,9 +9372,356 @@ calcul_indicateur_territoire <- function(territoire, territoire_nom){
                                  Indicateur_texte = "% de commerces combinant les 3 externalités",
                                  nom_export = glue("{territoire_nom}_espace_public_resume"))
 }
+    # pour l'ensemble de l'échantillon
+calcul_indicateur_territoire_ensemble <- function(territoire_nom){
+    # Aider les personnes précaires
+        # Sélection des données
+    table <- data |> 
+        filter(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") ==  FALSE,
+               !is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`)) |> 
+        mutate(variable_indic = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Solidarités", 
+                          Indicateur_texte = "% de commerces sollicités par des personnes précaires proposant une aide",
+                          nom_export = glue("{territoire_nom}_solidarites_precaires"))
+    
+    # Prendre soin des gens
+        # Sélection des données
+    table <- data |> 
+        filter(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` != "Je ne sais pas",
+               !is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`)) |> 
+        mutate(variable_indic = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Solidarités", 
+                          Indicateur_texte = "% de commerces a qui se confient les clients sur des sujets privés chaque semaine",
+                          nom_export = glue("{territoire_nom}_solidarites_soin_gens"))
+    
+    # Orienter vers l'aide sociale
+        # Sélection des données
+    table <- data |> 
+        filter(!is.na(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`)) |> 
+        mutate(variable_indic = ifelse(grepl("Oui", `Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) == TRUE, "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Solidarités", 
+                          Indicateur_texte = "% de commerces ayant déjà redirigé des clients vers des aides extérieures",
+                          nom_export = glue("{territoire_nom}_solidarites_aide_ext"))
+    
+    # Indicateur récap - Solidarités
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.` %in% c("Jamais", "Je ne sais pas") == TRUE | is.na(`Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.`), "0", "1"),
+               variable_indic = ifelse(grepl("Je n'ai pas l'habitude de proposer quelque chose", `Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)`) == TRUE, "0", "1")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`== "Je ne sais pas" | is.na(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?`), "0", "1"),
+               variable_indic = ifelse(`Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Vous arrive-t-il de rediriger un client vers une aide extérieure ?`), "0", "1"),
+               variable_indic = ifelse(grepl("Oui", `Vous arrive-t-il de rediriger un client vers une aide extérieure ?`) == TRUE, "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Solidarités", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_solidarites_resume"))
+
+    
+    # Socialisation et réduire l'isolement
+        # Sélection des données
+    table <- data |> 
+        filter(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` != "Je ne sais pas",
+               !is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`)) |> 
+        mutate(variable_indic = ifelse(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Lien social", 
+                          Indicateur_texte = "% de commerces ayant des discussions informelles avec leurs clients chaque semaine",
+                          nom_export = glue("{territoire_nom}_liensocial_socialiser"))
+    
+    # Partager des savoirs-faire
+        # Sélection des données
+    table <- data |> 
+        filter(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` != "Je ne sais pas",
+               !is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`)) |> 
+        mutate(variable_indic = ifelse(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) 
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Lien social", 
+                          Indicateur_texte = "% de commerces donnant des explications approfondies sur les produits chaque semaine",
+                          nom_export = glue("{territoire_nom}_liensocial_savoirs-faires"))
+    
+    # Construire une communauté locale
+        # Sélection des données
+    table <- data |> 
+        filter(!is.na(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`)) |> 
+        mutate(variable_indic = ifelse(grepl("Oui", `Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) == TRUE, "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Lien social", 
+                          Indicateur_texte = "% de commerces collaborant avec des associations locales",
+                          nom_export = glue("{territoire_nom}_liensocial_collab_asso"))
+
+        # Indicateur récap - Lien social
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` == "Je ne sais pas" | is.na(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)`), "0", "1"),
+               variable_indic = ifelse(`Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` == "Je ne sais pas" | is.na(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.`), "0", "1"),
+               variable_indic = ifelse(`À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`), "0", "1"),
+               variable_indic = ifelse(grepl("Oui", `Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Lien social", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_liensocial_resume"))
+
+    
+    # Renforcer l'entraide entre commerçants
+        # Sélection des données
+    table <- data |> 
+        filter(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` != "Cette situation ne s'applique pas à mon activité",
+               !is.na(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`)) |> 
+        mutate(nb_aides = str_count(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`, ",") +1,
+               variable_indic = ifelse(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` %in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services") == FALSE & nb_aides >= 2, "1", "0")) 
+        #%in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services"), "0", "1"
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Vie de quartier", 
+                          Indicateur_texte = "% de commerces rendant au moins deux types de service à leurs collègues commerçants",
+                          nom_export = glue("{territoire_nom}_viequartier_entreaide_co"))
+    
+    # Animer la rue
+        # Sélection des données
+    table <- data |> 
+        filter(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?` != "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce",
+               !is.na(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?`)) |> 
+        mutate(variable_indic = ifelse(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?` %in% c("Je ne connais pas vraiment les habitants de mon immeuble", "Je connais les habitants mais je n'ai pas l'occasion de rendre ces services"), "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Vie de quartier", 
+                          Indicateur_texte = "% de commerces rendant des services aux habitants de leur immeuble",
+                          nom_export = glue("{territoire_nom}_viequartier_entreaide_hab"))
+    
+    # Contribuer à l'attractivité
+        # Sélection des données
+    table <- data |> 
+        filter(!is.na(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.`)) |> 
+        mutate(variable_indic = ifelse(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.` == 0, "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Vie de quartier", 
+                          Indicateur_texte = "% de commerces participant à l'organisation d'évènements dynamisant la vie de quartier",
+                          nom_export = glue("{territoire_nom}_viequartier_contrib_attrac"))
+    
+            # Indicateur récap - Vie de quartier
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` == "Cette situation ne s'applique pas à mon activité" | is.na(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`), "0", "1"),
+               nb_aides = str_count(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)`, ",") +1,
+               variable_indic = ifelse(`L'entraide entre commerçants permet de faire face à des difficultés et constitue un réseau d'échange de services. Quels services avez-vous l'habitude de rendre à vos collègues commerçants ? (Plusieurs réponses sont possibles)` %in% c("Je ne connais pas vraiment les autres commerçants de ma rue/quartier", "Je connais les autres commerçants mais je n'ai pas l'occasion de rendre ces services") == FALSE & nb_aides >= 2, "1", "0")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?` == "Je n'ai pas de voisins d'immeuble dans le cadre de mon commerce" | is.na(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?`), "0", "1"),
+               variable_indic = ifelse(`De même, il peut exister une entraide avec les habitants de l'immeuble dans lequel se situe votre commerce. Quels services avez-vous l'habitude de rendre aux habitants de votre immeuble ?` %in% c("Je ne connais pas vraiment les habitants de mon immeuble", "Je connais les habitants mais je n'ai pas l'occasion de rendre ces services"), "0", "1")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.`), "0", "1"),
+               variable_indic = ifelse(`Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.` == 0, "0", "1")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Vie de quartier", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_viequartier_resume"))
+    
+    
+    # Intervenir en cas d'insécurité
+        # Sélection des données
+    table <- data |>
+        filter(!is.na(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`)) |>
+        mutate(variable_indic = ifelse(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?` == "J'agis dès que je vois quelque chose d'inhabituel. J'interviens directement ou j'appelle les forces de l'ordre", "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Santé et sécurité",
+                          Indicateur_texte = "% de commerces agissant immédiatement lorsqu'ils sont témoins d'une situation d'insécurité",
+                          nom_export = glue("{territoire_nom}_sante_secu_interv_insecu"))
+    
+    # Aider en cas d'incident
+        # Sélection des données
+    table <- data |>
+        filter(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` != "Je ne sais pas",
+               !is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`)) |>
+        mutate(variable_indic = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Jamais", "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Santé et sécurité",
+                          Indicateur_texte = "% de commerces intervenant lorsqu'ils sont témoins d'un malaise ou d'un accident",
+                          nom_export = glue("{territoire_nom}_sante_secu_aide_incident"))
+    
+    # Veiller sur la rue
+        # Sélection des données
+    table <- data |>
+        filter(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?` != "Je ne sais pas",
+               !is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`)) |>
+        mutate(variable_indic = ifelse(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?` == "Jamais", "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Santé et sécurité",
+                          Indicateur_texte = "% de commerces ayant affaire à des citoyens en insécurité qui se réfugient dans leur commerce",
+                          nom_export = glue("{territoire_nom}_sante_secu_veille_rue"))
+    
+                # Indicateur récap - Santé et sécurité
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?`), "0", "1"),
+               variable_indic = ifelse(`Un vol, une bagarre ou une agression peuvent malheureusement avoir lieu à proximité de votre lieu d'activité. Lorsque cela arrive, comment réagissez-vous ?` == "J'agis dès que je vois quelque chose d'inhabituel. J'interviens directement ou j'appelle les forces de l'ordre", "1", "0")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Je ne sais pas" | is.na(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?`), "0", "1"),
+               variable_indic = ifelse(`Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?` == "Jamais", "0", "1")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?` == "Je ne sais pas" | is.na(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?`), "0", "1"),
+               variable_indic = ifelse(`L'espace public peut être le lieu où se déroule une série de situations portant attente à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?` == "Jamais", "0", "1")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Santé et sécurité", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_sante_secu_resume"))
+    
+    
+    # Réduire la conso d'eau / électricité
+        # Sélection des données
+    table <- data |>
+        filter(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(variable_indic = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Environnement",
+                          Indicateur_texte = "% de commerces concernés ayant installé des équipements pour réduire leur consommation",
+                          nom_export = glue("{territoire_nom}_environnement_eau_elec"))
+    
+    # Sensibiliser les clients
+        # Sélection des données
+    table <- data |>
+        filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(variable_indic = ifelse(grepl("J'ai parfois des discussions informelles sur le sujet", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Environnement",
+                          Indicateur_texte = "% de commerces discutant avec les clients de l'impact environnemental de leur consommation",
+                          nom_export = glue("{territoire_nom}_environnement_sensib_clients"))
+    
+    # Réduire les déchêts
+        # Sélection des données
+    table <- data |>
+        filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(variable_indic = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Environnement",
+                          Indicateur_texte = "% de commerces ayant mis en place des actions pour réduire leurs déchêts",
+                          nom_export = glue("{territoire_nom}_environnement_dechets"))
+    
+                    # Indicateur récap - Environnement
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" | is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`), "0", "1"),
+               variable_indic = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`), "0", "1"),
+               variable_indic = ifelse(grepl("J'ai parfois des discussions informelles sur le sujet", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" | is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`), "0", "1"),
+               variable_indic = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Environnement", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_environnement_resume"))
+    
+    
+    # Prendre soin de l'espace public
+        # Sélection des données
+    table <- data |>
+        filter(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?`)) |>
+        mutate(variable_indic = ifelse(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?` == "Je n’ai pas mené d’initiative particulière", "0", "1"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Espace public",
+                          Indicateur_texte = "% de commerces concernés impliqués dans des initiatives d'embellissement de la rue",
+                          nom_export = glue("{territoire_nom}_espace_public_embell_rue"))
+    
+    # Préserver le patrimoine architectural
+        # Sélection des données
+    table <- data |>
+        filter(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?` != "Je ne sais pas",
+               !is.na(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`)) |>
+        mutate(variable_indic = ifelse(grepl("Oui", `Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`) == TRUE, "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Espace public",
+                          Indicateur_texte = "% de commerces se situant dans un bâtiment classé patrimoine historique",
+                          nom_export = glue("{territoire_nom}_espace_public_patrimoine"))
+    
+    # Assurer la propreté
+        # Sélection des données
+    table <- data |>
+        filter(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)` != "Je ne sais pas",
+               !is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`)) |>
+        mutate(variable_indic = ifelse(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0"))
+        # Calcul de l'indicateur
+    fonction_stat_commune_ensemble(table,
+                          Externalité_texte = "Espace public",
+                          Indicateur_texte = "% de commerces nettoyant les abords de leur commerce au moins une fois par semaine",
+                          nom_export = glue("{territoire_nom}_espace_public_nettoyage"))
+    
+        # Indicateur récap - Espace public
+        # Sélection des données
+    table1 <- data |> 
+        mutate(a_considerer = ifelse(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?` == "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" | is.na(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?`), "0", "1"),
+               variable_indic = ifelse(`Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?` == "Je n’ai pas mené d’initiative particulière", "0", "1")) |> 
+        select(a_considerer, variable_indic, Libelle_acheminement2)
+    table2 <- data |> 
+        mutate(a_considerer = ifelse(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?` == "Je ne sais pas" | is.na(`Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`), "0", "1"),
+               variable_indic = ifelse(grepl("Oui", `Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?`) == TRUE, "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table3 <- data |> 
+        mutate(a_considerer = ifelse(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)` == "Je ne sais pas" | is.na(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)`), "0", "1"),
+               variable_indic = ifelse(`Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)` %in% c("Ponctuellement (1 à 2 fois par semaine)", "Régulièrement (3 à 5 fois par semaine)", "Très régulièrement (plusieurs fois par jour)"), "1", "0")) |> 
+        select(a_considerer, variable_indic)
+    table <- bind_cols(table1, table2, table3)
+            # Calcul de l'indicateur
+    fonction_stat_commune_resume_ensemble(table,
+                                 Externalité_texte = "Espace public", 
+                                 Indicateur_texte = "% de commerces combinant les 3 externalités",
+                                 nom_export = glue("{territoire_nom}_espace_public_resume"))
+}
 
 # Application des fonctions
-#calcul_indicateur_territoire("", "ensemble")
+calcul_indicateur_territoire_ensemble("ensemble")
 calcul_indicateur_territoire("PARIS", "paris")
 calcul_indicateur_territoire("ST OUEN SUR SEINE", "stouen")
 calcul_indicateur_territoire("ROUEN", "rouen")
@@ -9452,6 +9851,100 @@ gt_comparaison <- stat_commune_finale |>
       }")
 gt_comparaison
 gtsave(gt_comparaison, "Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html")
+```
+
+
+<br>
+
+# Résumé
+
+```{r}
+    # Affichage
+gt_resume <- stat_commune_ensemble |> 
+    select(-Catégorie) |> 
+    # Transformation de la colonne externalité pour mettre le picto
+    mutate(` ` = case_match(Externalité,
+                                    "Lien social" ~ "images/lien_social.png",
+                                    "Solidarités" ~ "images/solidarites.png",
+                                    "Vie de quartier" ~ "images/vie_quartier.png",
+                                    "Santé et sécurité" ~ "images/sante_securite.png",
+                                    "Environnement" ~ "images/environnement.png",
+                                    "Espace public" ~ "images/espace_public.png")) |> 
+    relocate(` `) |> 
+    # Ordre des lignes et groupes
+    mutate(Externalité = factor(Externalité, 
+                                levels = c("Lien social","Solidarités","Vie de quartier","Santé et sécurité","Environnement","Espace public"))) |> 
+    mutate(ordre = ifelse(Indicateur == "% de commerces combinant les 3 externalités", 2, 1)) |> 
+    arrange(Externalité, ordre) |>  # Tri par externalité, puis indicateur
+    select(-ordre) |> 
+    # GT TABLE
+    gt(groupname_col = "Externalité") |> 
+    # Titres
+    tab_header(title = md("**Les externalités positives du commerce sur la ville**")) |>
+    tab_source_note(source_note = md("*Données d'une enquête diffusée d'avril à novembre 2024 auprès de **324 commerces** de France entière.*")) |> 
+    # Rassemblement des chiffres par territoires
+    #tab_spanner(label = md("**Ensemble**"), columns = c(`Nombre de réponses`, `%`)) |> 
+    # Style de la table
+    tab_style(style = list(cell_text(weight = "lighter")), 
+              locations = cells_body(columns = Indicateur)) |>  
+    # Couleur des indicateurs récapitulatifs
+    tab_style(style = list(cell_text(weight = "bold")),
+              locations = cells_body(columns = everything(), 
+                                     rows = Indicateur == "% de commerces combinant les 3 externalités")) |> 
+    # Intégration des pictos externalités
+    text_transform(locations = cells_body(columns = " "),
+                   fn = function(x) {
+                      local_image(
+                        filename = x,
+                        height = 27)
+                    }) |> 
+    cols_width(` ` ~ "5%") |> 
+    # % en barres
+    gt_plt_bar_pct(`%`, scaled = TRUE, labels=TRUE, decimals = 0, 
+                   font_size = "14px", fill = "#343333", height = 20) |> 
+    # couleur des noms de groupes (familles d'externalités)
+    tab_style(style = list(cell_fill(color = "#B4B1B1", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Lien social")) |> 
+    tab_style(style = list(cell_fill(color = "#004654", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Solidarités")) |> 
+    tab_style(style = list(cell_fill(color = "#0097B2", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Vie de quartier")) |> 
+    tab_style(style = list(cell_fill(color = "#00A589", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Santé et sécurité")) |>
+    tab_style(style = list(cell_fill(color = "#E1B441", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Environnement")) |>
+    tab_style(style = list(cell_fill(color = "#FF5757", alpha = .4),
+                           cell_text(weight = "bold")),
+              locations = cells_row_groups(groups = "Espace public")) |> 
+    tab_style(style = list(cell_borders(sides = c("t", "b"), color = "white", weight = px(2))),
+              locations = cells_row_groups()) |> 
+    # centrage des colonnes
+    cols_align(align = "center", columns = c(`Nombre de réponses`, `%`)) |> 
+    # fixe les noms de colonnes et titre 
+    opt_css(css = "
+      /* Fixer le titre */
+      .gt_title, .gt_subtitle {
+        position: sticky;
+        top: 0; 
+        background-color: #f9f9f9; /* Couleur de fond pour le titre */
+        z-index: 2;               /* Met le titre au-dessus */
+        padding: 5px;             /* Ajoute un peu de marge interne */
+      }
+      
+      /* Fixer les noms des colonnes */
+      thead th {
+        position: sticky;
+        top: 30px;                /* Ajuste en fonction de la hauteur du titre */
+        background-color: #ffffff; /* Couleur de fond pour l'en-tête */
+        z-index: 1;               /* Met les noms de colonnes devant les lignes */
+      }")
+gt_resume
+gtsave(gt_resume, "Questionnaire_effets_commerce_files/figure-html/tableau-resume.html")
 ```
 
 

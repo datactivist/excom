@@ -99,6 +99,10 @@ Lancé fin 2022 par Paris Commerces et Datactivist, le projet avait pour objecti
 Ce rapport présente les résultats des deuxième et troisième phases du projet EXCOM, ayant pour objectif de **mesurer les 18 externalités identifiées** et les **mettre en équivalence**, c'est-à-dire les transformer en valeur monétaire et/ou en « objectif de politique publique ». Pour cela, une **enquête par questionnaire** a été diffusée d’avril à novembre 2024 auprès de commerçants partout en France, et a reçu 324 réponses.
 
 
+# En résumé
+
+<iframe frameborder="0" width="1050" height="1500" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-resume.html"></iframe>
+
 # Aperçu des données
 
 <center>
