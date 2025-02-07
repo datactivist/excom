@@ -585,7 +585,6 @@ mon_graph <- data |>
             panel.grid.major.y = ggplot2::element_blank(),
             axis.title.y = element_blank())
 mon_graph
- #girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph)), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html", 
            selfcontained = TRUE)
@@ -1294,7 +1293,7 @@ mon_graph <- table |>
     scale_y_continuous(labels = scales::percent, limits = c(0,1)) + # pourcentages
     labs(x = "Population", y = "Pourcentage des commerces", linetype = "",
          subtitle = stringr::str_wrap("Répartition des commerces selon leurs discussions privées avec des clients par taille de ville", width = 55),
-         title = stringr::str_wrap("Le nombre d'habitants des villes influence peu la fréquence de discussions privées", width = 45)) +
+         title = stringr::str_wrap("Quelle que soit la taille de ville, les commerçants tissent des liens", width = 45)) +
     theme_classic() +
     custom_theme() +
     theme(legend.position = "top",
@@ -1442,7 +1441,7 @@ viz_liensocial_frequence_confidence <- function(donnees, title_name){
         guides(alpha = "none")
 }
 
-mon_graph <- viz_liensocial_frequence_confidence(data, "Près de 7 commerçants sur 10 ont des discussions privées avec leurs clients au moins une fois par semaine")
+mon_graph <- viz_liensocial_frequence_confidence(data, "Près de 7 commerçants sur 10 ont des discussions régulières avec leurs clients")
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html", 
@@ -1797,8 +1796,7 @@ mon_graph <- table |>
     scale_alpha_manual(values=c(1, .4)) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         subtitle = stringr::str_wrap("Répartition des commerces selon la fréquence d'explications sur les produits avec des clients", width = 55),
-         title = stringr::str_wrap("Expliquer et détailler ses produits est le quotidien de plus de 7 commerçants sur 10", width = 45)) +
+         title = stringr::str_wrap("7 commerçants sur 10 donnent tous les jours des explications sur leurs produits", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
@@ -2229,7 +2227,6 @@ viz_liensocial_associations <- function(donnees, title_name){
         theme_bw() +
         coord_flip() +
         labs(title = title_name, #str_wrap() ne marche plus avec le element_markdown()
-             subtitle = "Collaborations des commerçants avec des associations \nlocales",
              y = "Nombre de commerces") +
         scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 30)) +
         scale_y_continuous(breaks = c(0, 50, 100, 150), limits = c(0, 190)) + 
@@ -2240,7 +2237,7 @@ viz_liensocial_associations <- function(donnees, title_name){
               panel.grid.major.y = ggplot2::element_blank(),
               plot.title = element_markdown())
 }
-mon_graph <- viz_liensocial_associations(data, "Les <span style='color: #3182BD'>associations de quartier</span> sont les principales <br>associations avec lesquelles les commerçants <br>s'associent") +
+mon_graph <- viz_liensocial_associations(data, "Un tiers des commerçants collabore avec des <br><span style='color: #3182BD'>associations de quartier</span>") +
         ggplot2::annotate("text",
                  x = 5,
                  y = 98.4,
@@ -2261,42 +2258,28 @@ viz_liensocial_techniquestra <- function(donnees, title_name){
     # Données
     val2 <- donnees |> 
         count(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`) |> 
-        na.omit()
+        na.omit() |> 
+        mutate(Pourcentage = round(n / sum(n) * 100, 0))
     
     # Dataviz
     val2 |> 
-      mutate(Pourcentage = round(n / sum(n) * 100, 0)) |> 
-      arrange(desc(n)) |> 
-      mutate(ypos = cumsum(n) - .5 * n) |> 
-      ggplot(aes(x="", y=n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`,
-                 tooltip = ifelse(n == 1, 
-                                  paste("Utilisation", `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`, ":", n, "commerce"), 
-                                  paste("Utilisation", `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`, ":", n, "commerces")))) +  
-          geom_bar_interactive(stat="identity", width=1, color="white", size = 2) +
-          coord_polar("y") +
-          scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-          labs(title = str_wrap(title_name, width = 35),
-               subtitle = paste(donnees |> filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) |> nrow(), "réponses de commerçants")) +
-          theme_classic() + 
-          theme(legend.position = "top",
-                strip.text.x = element_text(size = 12, face = "bold"),
-                strip.background = element_blank(),
-                axis.title = element_blank(),
-                axis.ticks = element_blank(),
-                axis.line = element_blank(),
-                axis.text = element_blank(),
-                legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Open sans", size = 12),
-                plot.title = ggplot2::element_text(size = 15, face = "bold", color = "#222222"), 
-                plot.caption = ggplot2::element_text(face = "italic", size = 18, 
-                                                     color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
-                plot.title.position = "plot", 
-                plot.caption.position = "plot",
-                plot.margin = ggplot2::margin(0, 0, 0, -190)) +
-          guides(fill = guide_legend(reverse = F, title = " ")) +
-          geom_text(aes(y = ypos, x = 2, label = paste(round(Pourcentage,0), "%", sep="")), color = "#333333", size=5, check_overlap = T)
+    ggplot() +
+    aes(x = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`, y = n, fill=`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`,
+        tooltip = paste(n, "commerces")) +
+    geom_col_interactive() +
+    scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+    labs(x = "Utilisation de techniques artisanales",
+         y = "Nombre de commerces",
+         title = str_wrap(title_name, width = 35),
+         subtitle = paste(data |> filter(!is.na(`Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`)) |> nrow(), "réponses de commerçants")) +
+    geom_label(aes(x = `Utilisez-vous des techniques traditionnelles et/ou artisanales pour fabriquer vos produits ?`, y = n+.1*max(n), 
+                   label = paste(round(Pourcentage,0), "%", sep="")), 
+               color = "#333333", size=5, check_overlap = T, fill = "white", label.size = NA) +
+    theme_minimal() +
+    custom_theme() +
+    theme(legend.position = "none")
 }
-mon_graph <- viz_liensocial_techniquestra(data, "Utilisation de techniques traditionnelles ou artisanales chez les commerçants fabriquant les produits qu'ils vendent")
+mon_graph <- viz_liensocial_techniquestra(data, "79% des commerçants sont artisans")
 mon_graph
 saveWidget(girafe(print(mon_graph)), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html", 
@@ -2487,7 +2470,7 @@ viz_solidarites_wordcloud_aides <- function(donnees, title_name){
           theme(plot.title = ggplot2::element_text(family = font,size = 21, face = "bold", color = "#222222"),
                 plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, -30, 0)))
 }
-viz_solidarites_wordcloud_aides(data, "L'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
+viz_solidarites_wordcloud_aides(data, "Les commerçants soutiennent les personnes précaires par de nombreux gestes")
 ```
 
 
@@ -3511,7 +3494,7 @@ viz_solidarites_redirection <- function(donnees, title_name){
                  label = paste0(round(percent_collab_quartier$percent, 0), "% des orientations \nse font vers des \nservices sociaux"),
                  color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 }
-mon_graph <- viz_solidarites_redirection(data, "Le <span style='color: #3182BD'>social</span> est le principal type de service <br>vers lequel les commerçants orientent")
+mon_graph <- viz_solidarites_redirection(data, "Plus de 4 commerçants sur 10 ont déjà <br>réorienté quelqu’un vers un service <br>d’aide <span style='color: #3182BD'>sociale</span>")
 mon_graph
 saveWidget(girafe(print(mon_graph)), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/lollipop_social-91.html", 
@@ -4134,7 +4117,7 @@ mon_graph <- table |>
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 35)) + #axis-text trop longs sur plusieurs lignes
     scale_y_continuous(breaks = c(0, 100, 200), limits = c(0, 280)) +
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         title = str_wrap("Un quart des commerçants recommande et adresse des clients à des commerces voisins", width = 40),
+         title = str_wrap("Un quart des commerçants redirige ses clients vers des commerces voisins", width = 40),
          subtitle = stringr::str_wrap("Services rendus par les commerces aux commerces voisins", width = 55)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = paste0(round(percent, 0), "%")),
                size = 5, fill = "white", label.size = NA) +
@@ -5257,7 +5240,7 @@ viz_santesecu_frequence_accidents <- function(donnees, title_name, valeur_ressor
               axis.title.x = element_blank()) +
         guides(alpha = "none")
 }
-mon_graph <- viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 commerces ont déjà été confrontés à des situations d'urgence", "")
+mon_graph <- viz_santesecu_frequence_accidents(data, "Plus de 8 commerçants sur 10 ont déjà été confrontés à des situations d'urgence", "")
 mon_graph
 #girafe(print(mon_graph))
 saveWidget(girafe(print(mon_graph), width_svg = 7, height_svg = 6.4), 
@@ -6114,8 +6097,7 @@ word_data |>
   ggplot(aes(label = word, size = freq)) +
       geom_text_wordcloud(color = rep_len(c('#afc7de','#9ecae1', "#3081bc"), nrow(word_data)), family = "Montserrat") +
       scale_size_area(max_size = 18) +
-      labs(title = str_wrap("Éteindre la vitrine hors des horaires d'ouverture du commerce est un autre moyen utilisé pour réduire l'impact sur l'environnement", width = 50),
-           subtitle = str_wrap("Autres équipements installés par les commerçants pour réduire leur consommation d'eau et d'électricité", width = 55)) +
+      labs(title = str_wrap("Autres équipements installés par les commerçants pour réduire leur consommation d'eau et d'électricité", width = 50)) +
       theme_minimal() +
       theme(plot.title = ggplot2::element_text(family = font,size = 20, face = "bold", color = "#222222"),
             plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, -30, 0)))
@@ -6205,7 +6187,7 @@ viz_environnement_discu_envt <- function(donnees, title_name){
         scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
         coord_flip()
 }
-mon_graph <- viz_environnement_discu_envt(data, "Un tiers des commerçants a des discussions informelles avec ses clients sur l'environnement") +
+mon_graph <- viz_environnement_discu_envt(data, "Un tiers des commerçants discute des enjeux environnementaux avec ses clients") +
         scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 140))
 mon_graph
 #girafe(print(mon_graph))
@@ -6406,7 +6388,7 @@ viz_environnement_fournisseurs <- function(donnees, title_name){
           custom_theme() +
           theme(legend.position = "none")
 }
-viz_environnement_fournisseurs(data, "Plus de 3 commerçants sur 10 font le choix de \nfournisseurs écoresponsables pour réduire \nleurs déchêts")
+viz_environnement_fournisseurs(data, "Plus de 3 commerçants sur 10 choisissent des \nfournisseurs écoresponsables")
 ```
 
 <br>
@@ -6667,8 +6649,7 @@ mon_graph <- table |>
     scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 25)) + #axis-text trop longs sur plusieurs lignes
     labs(x = "", y = "Nombre de commerces", linetype = "",
-         subtitle = stringr::str_wrap("Répartition des commerces selon les interpellations des services de la mairie", width = 55),
-         title = stringr::str_wrap("Plus de la moitié des commerçants a déjà interpellé les services de la mairie", width = 45)) +
+         title = stringr::str_wrap("Plus de la moitié des commerçants a déjà fait appel aux services de la mairie", width = 45)) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA) +
     theme_classic() +
@@ -7107,6 +7088,7 @@ table <- data |>
 graph_questions_freq(table, ref_nettoyage_abords, "15% des commerçants nettoient les abords de leur commerce plusieurs fois par jour", 
                      "Répartition des commerces selon leur soin à nettoyer les abords extérieurs",  "Très régulièrement (plusieurs fois par jour)", "#3182bd") +
     theme(plot.caption = element_blank(),
+          plot.subtitle = element_blank(),
           plot.margin = unit(c(0, 1, 0, 0), "cm")) +
     geom_label(aes(x = Var, y = n+0.1*max(n), label = ifelse(is.na(percent), NA, paste0(round(percent, 0), "%"))),
                size = 5, fill = "white", label.size = NA) +
@@ -7545,33 +7527,21 @@ viz_espacepublic_patrimoine <- function(donnees, title_name){
     
     # Dataviz
     table |> 
-        ggplot(aes(x="", y=nb, fill=Var,
-                   tooltip = paste(Var, ":", nb, "commerces"))) +  
-          geom_bar_interactive(stat="identity", width=1, color="white", size = 2) +
-          coord_polar("y") +
-          scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
-          labs(title = str_wrap(title_name, width = 33),
-               subtitle = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 42)) +
-          theme_classic() + 
-          theme(legend.position = "top",
-                strip.text.x = element_text(size = 12, face = "bold"),
-                strip.background = element_blank(),
-                axis.title = element_blank(),
-                axis.ticks = element_blank(),
-                axis.line = element_blank(),
-                axis.text = element_blank(),
-                legend.text = ggplot2::element_text(size = 18,color = "#222222"), 
-                legend.title = ggplot2::element_text(size = 18,color = "#222222"), 
-                text = element_text(family = "Open sans", size = 12),
-                plot.title = ggplot2::element_text(size = 19, face = "bold", color = "#222222"), 
-                plot.caption = ggplot2::element_text(face = "italic", size = 18, 
-                                                     color = "#666666", margin = ggplot2::margin(9, 0, 9, 0)), 
-                plot.title.position = "plot", 
-                plot.subtitle = ggplot2::element_text(family = font,size = 18, face = "italic", margin = ggplot2::margin(0, 0, 9, 0)), 
-                plot.caption.position = "plot") +
-          guides(fill = guide_legend(reverse = F, title = "Classé")) +
-          geom_text(aes(y = ypos, x = 2, label = paste0(round(Pourcentage,0), "%")), color = "#333333", 
-                    size=5, check_overlap = T)
+        ggplot() +
+        aes(x = Var, y = nb, fill=Var,
+            tooltip = paste(nb, "commerces")) +
+        geom_col_interactive() +
+        scale_fill_manual(values = c("Oui" = "#3182bd", "Non" = "#9ecae1")) +
+        labs(x = "Bâtiment classé",
+             y = "Nombre de commerces",
+             title = str_wrap(title_name, width = 50),
+             subtitle = str_wrap("Répartition des commerces selon si leur local est classé au patrimoine architectural", width = 55)) +
+        geom_label(aes(x = Var, y = nb+.1*max(nb), 
+                       label = paste(round(Pourcentage,0), "%", sep="")), 
+                   color = "#333333", size=5, check_overlap = T, fill = "white", label.size = NA) +
+        theme_minimal() +
+        custom_theme() +
+        theme(legend.position = "none")
 }
 viz_espacepublic_patrimoine(data, "2 commerces sur 10 se situent dans un bâtiment classé")
 ```
@@ -7869,7 +7839,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_liensocial_associations(paris, "À Paris, les <span style='color: #3182BD'>associations de quartier</span> sont les <br>principales associations avec lesquelles les <br>commerçants s'associent") +
+mon_graph <- viz_liensocial_associations(paris, "À Paris, 4 commerçants sur 10 collaborent avec des <br><span style='color: #3182BD'>associations de quartier</span>") +
     scale_y_continuous(breaks = c(0, 25, 50, 75, 100), limits = c(0, 120))+
     ggplot2::annotate("text",
                       x = 5,
@@ -7898,7 +7868,7 @@ cc_solidarites(paris, "     À Paris :")
 
 ```{r}
 viz_solidarites_prepa_wordcloud(paris)
-viz_solidarites_wordcloud_aides(paris, "À Paris, l'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
+viz_solidarites_wordcloud_aides(paris, "À Paris, les commerçants soutiennent les personnes précaires par de nombreux gestes")
 ```
 
 ```{r}
@@ -7920,7 +7890,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_solidarites_redirection(paris, "À Paris, le <span style='color: #3182BD'>social</span> est le principal type de service <br>vers lequel les commerçants orientent")
+mon_graph <- viz_solidarites_redirection(paris, "À Paris, plus de 4 commerçants sur 10 ont déjà <br>réorienté quelqu’un vers un service <br>d’aide <span style='color: #3182BD'>sociale</span>")
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html", 
@@ -8024,7 +7994,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 8.5, height_svg = 7),
 ```
 
 ```{r}
-viz_environnement_fournisseurs(paris, "À Paris, plus de 2 commerçants sur 10 font le \nchoix de fournisseurs écoresponsables \npour réduire leurs déchêts")
+viz_environnement_fournisseurs(paris, "À Paris, plus de 2 commerçants sur 10 \nchoisissent des fournisseurs écoresponsables")
 ```
 
 
@@ -8062,7 +8032,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```{r}
 mon_graph <- viz_espacepublic_patrimoine(paris, "À Paris, 1 commerce sur 10 se situe dans un bâtiment classé")
 mon_graph
-saveWidget(girafe(print(mon_graph), width_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 6.5), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html", 
            selfcontained = TRUE)
 ```
@@ -8247,7 +8217,7 @@ cc_solidarites(stouen, "     À Saint Ouen :")
 
 ```{r}
 viz_solidarites_prepa_wordcloud(stouen)
-viz_solidarites_wordcloud_aides(stouen, "À St Ouen, l'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
+viz_solidarites_wordcloud_aides(stouen, "À St Ouen, les commerçants soutiennent les personnes précaires par de nombreux gestes")
 ```
 
 ```{r}
@@ -8505,7 +8475,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```{r}
 mon_graph <- viz_espacepublic_patrimoine(stouen, "À St Ouen, 27% des commerces se situent dans un bâtiment classé")
 mon_graph
-saveWidget(girafe(print(mon_graph), width_svg = 8), 
+saveWidget(girafe(print(mon_graph), width_svg = 7.5), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/batiment_282.html", 
            selfcontained = TRUE)
 ```
@@ -8616,7 +8586,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, les <br><span style='color: #3182BD'>associations sociales</span> sont les principales <br>associations avec lesquelles les <br>commerçants s'associent") +
+mon_graph <- viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, 4 commerçants sur 10 collaborent avec des <br><span style='color: #3182BD'>associations sociales</span>") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50), limits = c(0, 50)) +
     ggplot2::annotate("text",
                       x = 5,
@@ -8645,7 +8615,7 @@ cc_solidarites(rouen, "     À la Métropole Rouen Normandie :")
 
 ```{r}
 viz_solidarites_prepa_wordcloud(rouen)
-viz_solidarites_wordcloud_aides(rouen, "À la Métropole Rouen Normandie, l'accès aux toilettes et le don de nourriture / eau / café sont les actions les plus fréquentes des commerçants pour aider les personnes précaires")
+viz_solidarites_wordcloud_aides(rouen, "À la Métropole Rouen Normandie, les commerçants soutiennent les personnes précaires par de nombreux gestes")
 ```
 
 ```{r}
@@ -8668,7 +8638,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, le <span style='color: #3182BD'>social</span> est <br>le principal type de service vers lequel les <br>commerçants orientent")
+mon_graph <- viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, plus de 4 commerçants sur 10 ont déjà <br>réorienté quelqu’un vers un service <br>d’aide <span style='color: #3182BD'>sociale</span>")
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/social_297.html", 
@@ -8860,7 +8830,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```{r}
 mon_graph <- viz_espacepublic_patrimoine(rouen, "À la Métropole Rouen Normandie, 28% des commerces intérrogés se situent dans un bâtiment classé")
 mon_graph
-saveWidget(girafe(print(mon_graph), width_svg = 9), 
+saveWidget(girafe(print(mon_graph), width_svg = 8), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/batiment_315.html", 
            selfcontained = TRUE)
 ```
