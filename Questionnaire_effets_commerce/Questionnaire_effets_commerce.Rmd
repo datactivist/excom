@@ -7592,7 +7592,7 @@ viz_espacepublic_detail_partimoine <- function(donnees, title_name, coef_label){
 mon_graph <- viz_espacepublic_detail_partimoine(data, "Près d'un commerce sur trois porte une attention particulière à l'entretien de sa façade", 0.15)
 mon_graph
 #girafe(print(mon_graph))
-saveWidget(girafe(print(mon_graph), width_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 7.5), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/patrimoine_216.html", 
            selfcontained = TRUE)
 ```
@@ -8484,7 +8484,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7.5),
 mon_graph <- viz_espacepublic_detail_partimoine(stouen, "À St Ouen, plus de 7 commerces sur 10 sont situés dans des bâtiments non classés", 0.1) +
     scale_y_continuous(breaks = c(0, 2,4,6,8,10), limits = c(0, 10))
 mon_graph
-saveWidget(girafe(print(mon_graph), width_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 7.5), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_283.html", 
            selfcontained = TRUE)
 ```
@@ -8586,7 +8586,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, 4 commerçants sur 10 collaborent avec des <br><span style='color: #3182BD'>associations sociales</span>") +
+mon_graph <- viz_liensocial_associations(rouen, "À la Métropole Rouen Normandie, 4 commerçants <br>sur 10 collaborent avec des <span style='color: #3182BD'>associations sociales</span>") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50), limits = c(0, 50)) +
     ggplot2::annotate("text",
                       x = 5,
@@ -8594,7 +8594,7 @@ mon_graph <- viz_liensocial_associations(rouen, "À la Métropole Rouen Normandi
                       label = "40% des collaborations \nse font avec des \nassociations sociales",
                       color = "#3182BD", size=4 , angle=0, fontface="bold", hjust=0)
 mon_graph
-saveWidget(girafe(print(mon_graph), width_svg = 7), 
+saveWidget(girafe(print(mon_graph), width_svg = 7.5), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_291.html", 
            selfcontained = TRUE)
 ```
@@ -8638,7 +8638,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, plus de 4 commerçants sur 10 ont déjà <br>réorienté quelqu’un vers un service <br>d’aide <span style='color: #3182BD'>sociale</span>")
+mon_graph <- viz_solidarites_redirection(rouen, "À la Métropole Rouen Normandie, plus de 4 <br>commerçants sur 10 ont déjà réorienté <br>quelqu’un vers un service d’aide <span style='color: #3182BD'>sociale</span>")
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
            "Questionnaire_effets_commerce_files/figure-ggiraph/social_297.html", 

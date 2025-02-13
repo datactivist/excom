@@ -1,7 +1,7 @@
 ---
 title: "Mise en équivalence <br>des externalités positives <br>du commerce de proximité"
 subtitle: "Projet de recherche-action EXCOM"
-author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Allyson Pallisser <br>Samuel Goëta
+author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Samuel Goëta
 date: 02/28/2025
 format: 
   html:
@@ -103,7 +103,7 @@ Ce rapport présente les résultats des deuxième et troisième phases du projet
 
 # En résumé
 
-<iframe frameborder="0" width="1050" height="1500" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-resume.html"></iframe>
+<iframe frameborder="0" width="1050" height="1550" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-resume.html"></iframe>
 
 # Aperçu des données
 
@@ -1273,7 +1273,7 @@ réponses collectées à Paris
 
 <br>
 
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
+<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
 </center>
 
 :::
