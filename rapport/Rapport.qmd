@@ -1436,8 +1436,8 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_279.html"></iframe>
+<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_280.html"></iframe>
 
 <br>
 
