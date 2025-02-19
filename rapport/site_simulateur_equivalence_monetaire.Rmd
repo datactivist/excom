@@ -6,8 +6,41 @@ output:
 runtime: shiny
 ---
 
+<br>
+
+![](images/logos_partenaires.png)
+
 
 # Simulateur d'équivalences monétaires {.tabset}
+
+Le simulateur d'équivalences monétaires s'inscrit dans le cadre du [**projet de recherche-action EXCOM**](https://projet-excom.fr/). Celui-ci a été lancé avec pour objectif de nommer et quantifier les effets des commerces sur la vie d'un territoire, peu visibles dans leur globalité. Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
+
+La première phase du projet, menée d'août 2023 à avril 2024, consistait à définir ces effets à travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans. Celle-ci a permis d'identifier et caractériser 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier.
+
+La deuxième phase du projet quant à elle, menée de janvier 2024 à février 2025, visait à mesurer et mettre en valeur ces 18 externalités, au travers d'une enquête nationale par questionnaire, ayant recueilli 324 réponses entre avril et novembre 2024. Celle-ci a permis de quantifier le temps passé et les actions menées par les commerçants dans chacune des 6 catégories identifiées en phase 1. Elle a également été le terrain pour développer une méthodologie de mise en équivalence, permettant de transformer ces externalités en valeur monétaire ou en objectifs de politique publique à l'échelle d'un territoire. 
+
+**L'ensemble de la méthodologie et des résultats du projet sont consultables en ligne :**
+
+- [rapport de phase 1](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) ; 
+- [rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html).
+
+<br>
+
+<p style="font-size: 1.7em; color: #304B95;">`r fontawesome::fa("book-open", fill = "#304B95")` **Notice technique**</p>
+
+<br>
+
+L'outil suivant vise à **estimer les bénéfices théoriques générés par les commerçants sur une année** pour 5 catégories d'externalité.
+
+Certains services rendus par les commerçants ne relèvent pas des compétences d’une collectivité, sont répartis entre plusieurs acteurs, ne remplacent pas l'intervention des services publics. **Les estimations proposées ne rendent donc pas compte de réelles économies réalisées par une collectivité territoriale, mais correspondent à une valeur monétaire théorique.**
+
+Le bénéfice est présenté à l'échelle d'un commerce sur l'année dans un premier temps, puis à l'échelle d'un territoire entier dans un second temps. Le calcul se concentre sur les commerces particulièrement investis sur une thématique, qualifiés de 'super commerçant·es' dans les formules (pour la catégorie *Lien social* par exemple, on considère que 20% des commerçants agissent positivement sur les liens sociaux dans leur quartier).
+
+**Tous les paramètres sont modulables**, permettant d'adapter le calcul aux caractéristiques du territoire souhaité ; le bénéfice se mettant automatiquement à jour lors de modifications des paramètres. Le nombre de commerces à l'échelle souhaitée correspond par défaut au nombre de commerces en activité commerciale de la ville de Rouen, ayant servi d'exemple pour la construction de la méthodologie (voir [rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html)).
+
+<br>
+
+<p style="font-size: 1.7em; color: #304B95;">`r fontawesome::fa("gear", fill = "#304B95")` **Simulateur**</p>
 
 <br>
 
@@ -104,8 +137,24 @@ output$benefice_quartier <- renderText({
 })
 ```
 
-## <FONT COLOR="#004654">Solidarités</FONT>
+&nbsp;
+<hr />
+<p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
+<p style="text-align: center; font-family: Open Sans;"><span style="color: #0000FF;"><em>hello@datactivist.coop</em></span></p>
 
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://twitter.com/datactivi_st?lang=fr" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/company/datactivist/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/datactivist" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
+## <FONT COLOR="#004654">Solidarités</FONT>
 
 <br>
 
@@ -209,6 +258,23 @@ output$benefice_quartier2 <- renderText({
 })
 ```
 
+&nbsp;
+<hr />
+<p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
+<p style="text-align: center; font-family: Open Sans;"><span style="color: #0000FF;"><em>hello@datactivist.coop</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://twitter.com/datactivi_st?lang=fr" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/company/datactivist/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/datactivist" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
 ## <FONT COLOR="#0097B2">Vie de quartier</FONT>
 
 <br>
@@ -307,6 +373,23 @@ output$benefice_quartier3 <- renderText({
 ```
 
 
+&nbsp;
+<hr />
+<p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
+<p style="text-align: center; font-family: Open Sans;"><span style="color: #0000FF;"><em>hello@datactivist.coop</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://twitter.com/datactivi_st?lang=fr" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/company/datactivist/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/datactivist" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
 ## <FONT COLOR="#00A589">Santé et sécurité</FONT>
 
 <br>
@@ -399,6 +482,23 @@ output$benefice_quartier4 <- renderText({
 ```
 
 
+&nbsp;
+<hr />
+<p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
+<p style="text-align: center; font-family: Open Sans;"><span style="color: #0000FF;"><em>hello@datactivist.coop</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://twitter.com/datactivi_st?lang=fr" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/company/datactivist/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/datactivist" class="fa fa-github"></a>
+</p>
+
+&nbsp;
+
 ## <FONT COLOR="#FF5757">Espace public</FONT>
 
 <br>
@@ -490,3 +590,20 @@ output$benefice_quartier6 <- renderText({
 })
 ```
 
+
+&nbsp;
+<hr />
+<p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
+<p style="text-align: center; font-family: Open Sans;"><span style="color: #0000FF;"><em>hello@datactivist.coop</em></span></p>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Add font awesome icons -->
+<p style="text-align: center;">
+    <a href="https://twitter.com/datactivi_st?lang=fr" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/company/datactivist/" class="fa fa-linkedin"></a>
+    <a href="https://github.com/datactivist" class="fa fa-github"></a>
+</p>
+
+&nbsp;
