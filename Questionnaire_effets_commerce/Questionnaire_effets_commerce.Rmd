@@ -8799,7 +8799,7 @@ viz_environnement_fournisseurs(rouen, "À la Métropole Rouen Normandie, 2 \ncom
 #### Espace public
 
 ```{r}
-mon_graph <- cc_espacepublic(rouen, "     À la Métropole Rouen Normandie :")
+cc_espacepublic(rouen, "     À la Métropole Rouen Normandie :")
 ```
 
 ```{r}

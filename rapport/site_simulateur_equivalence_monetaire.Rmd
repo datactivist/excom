@@ -10,19 +10,44 @@ runtime: shiny
 
 ![](images/logos_partenaires.png)
 
-
 # Simulateur d'équivalences monétaires {.tabset}
 
 Le simulateur d'équivalences monétaires s'inscrit dans le cadre du [**projet de recherche-action EXCOM**](https://projet-excom.fr/). Celui-ci a été lancé avec pour objectif de nommer et quantifier les effets des commerces sur la vie d'un territoire, peu visibles dans leur globalité. Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
 
-La première phase du projet, menée d'août 2023 à avril 2024, consistait à définir ces effets à travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans. Celle-ci a permis d'identifier et caractériser 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier.
+La **première phase du projet**, menée d'août 2023 à avril 2024, consistait à définir ces effets à travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans. Celle-ci a permis d'identifier et caractériser 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier.
 
-La deuxième phase du projet quant à elle, menée de janvier 2024 à février 2025, visait à mesurer et mettre en valeur ces 18 externalités, au travers d'une enquête nationale par questionnaire, ayant recueilli 324 réponses entre avril et novembre 2024. Celle-ci a permis de quantifier le temps passé et les actions menées par les commerçants dans chacune des 6 catégories identifiées en phase 1. Elle a également été le terrain pour développer une méthodologie de mise en équivalence, permettant de transformer ces externalités en valeur monétaire ou en objectifs de politique publique à l'échelle d'un territoire. 
+<center>
+ <p style="color: darkgrey;">*Roue des externalités identifiées en phase 1*</p>
+</center>
+
+<p align="center">
+ <img src="images/Roue_externalites_verte.png" width = "450">
+</p>
+
+
+
+La **deuxième phase du projet** quant à elle, menée de janvier 2024 à février 2025, visait à mesurer et mettre en valeur ces 18 externalités, au travers d'une enquête nationale par questionnaire, ayant recueilli 324 réponses entre avril et novembre 2024. Celle-ci a permis de quantifier le temps passé et les actions menées par les commerçants dans chacune des 6 catégories identifiées en phase 1. Elle a également été le terrain pour développer une méthodologie de mise en équivalence, permettant de transformer ces externalités en valeur monétaire ou en objectifs de politique publique à l'échelle d'un territoire.
+
+<br>
 
 **L'ensemble de la méthodologie et des résultats du projet sont consultables en ligne :**
 
-- [rapport de phase 1](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) ; 
-- [rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html).
+- le [**rapport de phase 1**](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) présente une revue bibliographique sur l'importance du commerce de proximité dans la dynamique urbaine, la méthodologie et la genèse du projet, et cartographie 18 externalités classées en 6 catégories ;
+- le [**rapport de phase 2**](https://datactivist.coop/excom/rapport/Rapport.html) présente les résultats de l'analyse des données du questionnaire, pour quantifier chacune des 18 externalités à travers des graphiques, chiffres-clés, tableaux et des calculs de mise en équivalence monétaire.
+
+<br>
+
+<p style="font-size: 1.7em; color: #304B95;">`r fontawesome::fa("magnifying-glass", fill = "#304B95")` **Remarques méthodologiques**</p>
+
+<br>
+
+**Une estimation quantitative simplifie forcément la réalité**. Toute tentative de produire une estimation monétaire pour une dynamique sociale (ici, les apports non marchands des commerces) est imparfaite et prête à débat. Notre objectif n’est pas de proposer des chiffres fermes, indiscutables, mais de mettre en valeur un travail dépassant le strict cadre de la relation marchande.
+
+Dans l’optique d’une estimation monétaire mesurée, **nous calculons le temps passé sur la base du coût employeur d’un salaire minimum**.
+
+**En pratique, si un service d’utilité sociale n’est pas rendu par le commerçant, il est parfois fait par des bénévoles**, généralement dans un cadre associatif.
+
+Enfin, sauf exception des dons de produits ou d’argent (cf. catégorie Solidarités), les commerçants interagissent avec des personnes qui consomment un minimum. **Le temps passé à tisser du lien, ou à entretenir la rue, dépasse les attendus minimaux du travail commercial mais ne constitue pas en soi du travail gratuit/bénévole**. Nous n’avons par ailleurs pas la matière empirique pour mesurer les externalités négatives du commerce (ex : dégradation du lien social en cas de commerçant particulièrement antipathique)
 
 <br>
 
@@ -372,7 +397,6 @@ output$benefice_quartier3 <- renderText({
 })
 ```
 
-
 &nbsp;
 <hr />
 <p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
@@ -481,7 +505,6 @@ output$benefice_quartier4 <- renderText({
 })
 ```
 
-
 &nbsp;
 <hr />
 <p style="text-align: center; font-family: Open Sans;">Réalisé par <a href="https://datactivist.coop/fr/">Datactivist</a></p>
@@ -589,7 +612,6 @@ output$benefice_quartier6 <- renderText({
   )
 })
 ```
-
 
 &nbsp;
 <hr />
