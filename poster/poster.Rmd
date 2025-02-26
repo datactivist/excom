@@ -1,0 +1,98 @@
+---
+title: "Projet de recherche-action EXCOM"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    logo: ../Questionnaire_effets_commerce/images/Logo_excom_complet.png
+    css: styles.css
+---
+
+
+
+```{r}
+library(tidyverse)
+library(here)
+library(hrbrthemes)
+library(patchwork)
+#postr::render("poster/poster.html", width = 1300, height = 1000)
+```
+
+## Header row {data-height=13}
+
+### {data-width=1000}
+
+
+<table style="width:100%">
+<tr>
+  <td rowspan="5">
+  <img src="../Questionnaire_effets_commerce/images/lien_social.png" style="width:65px"></img>
+  </td>
+  <td><FONT COLOR="#B4B1B1">
+  **Animateurs de lien social :** Créer des connexions au sein du quartier
+  </td></FONT>
+</tr>
+</table> 
+
+### {data-width=200}
+
+[`r fontawesome::fa("globe", fill = "#9B9FA2")`](https://projet-excom.fr/) &nbsp;&nbsp;
+[`r fontawesome::fa("github", fill = "#9B9FA2")`](https://github.com/datactivist/excom) &nbsp;&nbsp;
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html)
+
+<FONT COLOR="#9B9FA2">*Réalisé par Datactivist - 03/2025*</FONT>
+
+## Body row {data-height=65}
+
+### <FONT COLOR="red">**Introduction**</FONT COLOR> {data-width=650}
+
+#### Le projet
+
+Le projet de recherche-action EXCOM a été lancé avec pour objectif de nommer et quantifier les effets des commerces sur la vie d’un territoire, peu visibles dans leur globalité. 
+
+#### Les partenaires
+
+Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
+    
+#### La phase 1
+
+Menée d’août 2023 à avril 2024, elle consistait à définir les effets à travers une enquête de terrain auprès de plus de 200 commerçants. Celle-ci a permis d’identifier et caractériser 18 externalités, regroupées en 6 catégories.
+
+### **Résultats d'analyse** {data-width=950}
+
+
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png){height=300}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-23-2.png){height=300}
+
+
+
+## Footer row {data-height=30} 
+
+### **Données et méthodologie** {data-width=45}
+
+#### Les données
+
+- enquête par questionnaire diffusée d’avril à novembre 2024
+- 40 questions portant sur 6 catégories d'externalités
+- 324 réponses reçues de partout en France
+
+#### La méthodologie
+
+- les réponses ont été nettoyées, enrichies puis traitées
+- chaque question a été analysée individuellement puis a été croisée avec d'autres
+
+### **Conclusions** {data-width=40}
+
+#### Les commerces au cœur des interactions quotidiennes
+
+- Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, les commerces constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles.
+- La contribution des commerces à l’entretien du lien social s’observe sur tous les territoires de l’enquête. 
+
+### **Équivalence monétaire** {data-width=25}
+
+*20% des commerçants échangent avec leurs clients sur des sujets privés plusieurs fois par jour. Sous hypothèse que cela leur prend 30 minutes quotidiennement :*
+
+- **Bénéfice d'un commerce** = temps passé par semaine (en heures) * nombre de semaines travaillées par an * coût horaire = 2,5 * 47 * 54 = 6227,5€
+- **Bénéfice sur un territoire** (ex pour Rouen qui compte 2968 commerces) = bénéfice d’un commerce * nombre de commerces total sur le territoire * taux de commerçants très investis (0,2) = 6228 * 2968 * 0,2 = 3 696 644€
+

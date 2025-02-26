@@ -1,0 +1,32 @@
+
+/* Cibler h3 dans les div de classe .section avec !important */
+.section h3 {
+  background-color: #ffcc00 !important;  /* Couleur de fond */
+  text-align: center !important;         /* Centrer le texte */
+  padding: 10px !important;              /* Espacement autour du texte */
+  border-radius: 5px !important;         /* Coins arrondis */
+  font-size: 24px !important;            /* Taille de la police */
+  font-weight: bold !important;          /* Mettre en gras */
+}
+
+
+
+.navbar-logo img {
+  max-height: 45px; /* Ajuste la taille selon tes besoins */
+  width: auto;
+}
+
+.navbar {
+  background-color: #304B95 !important; /* Remplace par la couleur souhaitée */
+  border-bottom: 2px solid #304B95; /* Optionnel : bordure sous la barre */
+}
+
+.navbar-brand {
+  color: white !important; /* Couleur du titre */
+  font-weight: bold !important; /* Met le titre en gras */
+}
+
+body {
+  text-align: justify;
+  background: #D3DBE8;
+}
