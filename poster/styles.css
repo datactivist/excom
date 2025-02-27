@@ -1,16 +1,4 @@
 
-/* Cibler h3 dans les div de classe .section avec !important */
-.section h3 {
-  background-color: #ffcc00 !important;  /* Couleur de fond */
-  text-align: center !important;         /* Centrer le texte */
-  padding: 10px !important;              /* Espacement autour du texte */
-  border-radius: 5px !important;         /* Coins arrondis */
-  font-size: 24px !important;            /* Taille de la police */
-  font-weight: bold !important;          /* Mettre en gras */
-}
-
-
-
 .navbar-logo img {
   max-height: 45px; /* Ajuste la taille selon tes besoins */
   width: auto;
@@ -26,7 +14,41 @@
   font-weight: bold !important; /* Met le titre en gras */
 }
 
+/* Arrondir les boîtes Flexdashboard */
+#introduction {
+  border-radius: 20px !important;
+}
+# {
+  border-radius: 20px !important;
+}
+#résultats-danalyse {
+  border-radius: 20px !important;
+}
+#données-et-méthodologie {
+  border-radius: 20px !important;
+}
+#conclusions {
+  border-radius: 20px !important;
+}
+#équivalence-monétaire {
+  border-radius: 20px !important;
+}
+
+
+
 body {
   text-align: justify;
   background: #D3DBE8;
+  line-height: 1.2 !important;
+}
+
+/* Custom l'apparence des hyperliens du doc */
+a:link { /*lien hyper texte*/
+    color: #304B95;
+}
+a:hover { /*souris au-dessus du lien hyper texte*/
+    color: #304B95;
+}
+a:visited { /*lien visité*/
+    color: #304B95;
 }

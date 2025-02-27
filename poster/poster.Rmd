@@ -27,23 +27,29 @@ library(patchwork)
   <td rowspan="5">
   <img src="../Questionnaire_effets_commerce/images/lien_social.png" style="width:65px"></img>
   </td>
-  <td><FONT COLOR="#B4B1B1">
-  **Animateurs de lien social :** Créer des connexions au sein du quartier
-  </td></FONT>
+  <td><p style="margin-top: 10px; font-size: 1.8em; color: #B4B1B1;">
+  &nbsp; **Animateurs de lien social :** Créer des connexions au sein du quartier
+  </td></p>
 </tr>
 </table> 
 
-### {data-width=200}
+### {data-width=400}
 
-[`r fontawesome::fa("globe", fill = "#9B9FA2")`](https://projet-excom.fr/) &nbsp;&nbsp;
-[`r fontawesome::fa("github", fill = "#9B9FA2")`](https://github.com/datactivist/excom) &nbsp;&nbsp;
-[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html)
+<FONT COLOR="#9B9FA2">
+[`r fontawesome::fa("globe", fill = "#9B9FA2")`](https://projet-excom.fr/) Site du projet &nbsp;&nbsp;
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) Rapport de phase 1 &nbsp;&nbsp;
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html) Rapport de phase 2 &nbsp;&nbsp;
+</FONT>
 
 <FONT COLOR="#9B9FA2">*Réalisé par Datactivist - 03/2025*</FONT>
 
-## Body row {data-height=65}
+## Body row {data-height=67}
 
-### <FONT COLOR="red">**Introduction**</FONT COLOR> {data-width=650}
+###  {data-width=800}
+
+<center>
+<p style="aligne: center; font-size: 1.4em; color: white; background-color: #304B95;">**Introduction**</p>
+</center>
 
 #### Le projet
 
@@ -53,23 +59,27 @@ Le projet de recherche-action EXCOM a été lancé avec pour objectif de nommer 
 
 Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
     
-#### La phase 1
+#### Les phases
 
-Menée d’août 2023 à avril 2024, elle consistait à définir les effets à travers une enquête de terrain auprès de plus de 200 commerçants. Celle-ci a permis d’identifier et caractériser 18 externalités, regroupées en 6 catégories.
+- **Phase 1, Mise en visibilité** : menée d’août 2023 à avril 2024, elle consistait à définir les effets à travers une enquête de terrain qui a permis d’identifier 18 externalités, regroupées en 6 catégories.
+- **Phase 2, Mise en données** : menée de janvier 2024 à février 2025, elle visait à quantifier ces 18 externalités, au travers d’une enquête nationale par questionnaire ayant reçu 324 réponses.
+- **Phase 3, Mise en équivalence** : menée en parrallèle de la phase 2, elle visait à transformer ces externalités en valeur monétaire ou objectifs de politique publique à l’échelle d’un territoire.
 
-### **Résultats d'analyse** {data-width=950}
+### {data-width=800}
+
+<center>
+<p style="aligne: center; font-size: 1.4em; color: white; background-color: #304B95;">**Résultats d'analyse**</p>
+</center>
+
+
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png){height=280}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-23-2.png){height=280}
 
 
 
+## Footer row {data-height=28} 
 
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png){height=300}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-23-2.png){height=300}
-
-
-
-## Footer row {data-height=30} 
-
-### **Données et méthodologie** {data-width=45}
+### **Données et méthodologie** {data-width=40}
 
 #### Les données
 
@@ -79,8 +89,7 @@ Menée d’août 2023 à avril 2024, elle consistait à définir les effets à t
 
 #### La méthodologie
 
-- les réponses ont été nettoyées, enrichies puis traitées
-- chaque question a été analysée individuellement puis a été croisée avec d'autres
+- les réponses ont été nettoyées, enrichies puis analysées
 
 ### **Conclusions** {data-width=40}
 
@@ -89,10 +98,16 @@ Menée d’août 2023 à avril 2024, elle consistait à définir les effets à t
 - Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, les commerces constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles.
 - La contribution des commerces à l’entretien du lien social s’observe sur tous les territoires de l’enquête. 
 
-### **Équivalence monétaire** {data-width=25}
+### **Équivalence monétaire** {data-width=40}
 
-*20% des commerçants échangent avec leurs clients sur des sujets privés plusieurs fois par jour. Sous hypothèse que cela leur prend 30 minutes quotidiennement :*
+#### Lien social 
 
-- **Bénéfice d'un commerce** = temps passé par semaine (en heures) * nombre de semaines travaillées par an * coût horaire = 2,5 * 47 * 54 = 6227,5€
-- **Bénéfice sur un territoire** (ex pour Rouen qui compte 2968 commerces) = bénéfice d’un commerce * nombre de commerces total sur le territoire * taux de commerçants très investis (0,2) = 6228 * 2968 * 0,2 = 3 696 644€
+Les **bénéfices théoriques** générés par un commerçant sur une année est de **6.228€**.
+
+*Pour plus de détails sur la méthodologie et le calcul de cette estimation, veuillez consulter le simulateur d'équivalences monétaires :* 
+
+<p style="font-size: 1em; color: #9B9FA2;">
+[`r fontawesome::fa("gear", fill = "#9B9FA2")`](https://projet-excom.fr/) Simulateur
+</p>
+
 
