@@ -1,8 +1,8 @@
 ---
-title: "Mise en équivalence <br>des externalités positives <br>du commerce de proximité"
+title: "Au-delà du marchand :<br>Mesurer la valeur<br>du commerce de proximité"
 subtitle: "Projet de recherche-action EXCOM"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Samuel Goëta
-date: 02/28/2025
+date: 03/07/2025
 format: 
   html:
     toc: true
@@ -89,17 +89,40 @@ font_add_google("Open sans", "Open sans")
 
 *[Télécharger cette étude en PDF](https://nextcloud.datactivist.coop/s/jxFWmm7CKqPtt5J)*
 
-Les commerces ne sont pas de stricts acteurs économiques, dont la valeur sociale serait équivalente à la valeur marchande. Cette intuition est largement partagée dans les espaces politiques, académiques ou encore économiques.
-Ce postulat central à notre projet commence à s’intégrer dans les politiques publiques. Le soutien aux commerçants est en effet perçu comme un levier de l’action publique pour redynamiser les centres urbains. La vitalité commerciale est ainsi un axe central du plan national Action cœur de ville, qui réaffirme l’importance des centres-villes, notamment ceux des villes moyennes, dans le paysage territorial.
-Pourtant, les effets du commerce sont encore mal identifiés, et les quelques travaux académiques ou produits par des experts se concentrent quasi exclusivement sur leur rôle d’entretien du vivre ensemble, ou sur leurs externalités négatives (par exemple leur rôle dans les processus de gentrification). En conséquence, les effets dans leur globalité sont peu, voire pas visibilisés ni quantifiés.
-**Le projet de recherche-action EXCOM a pour objectif de combler ce manque en nommant et en mesurant ces effets, étape essentielle pour repenser la valeur globale du commerce.**
-Il s’inscrit au croisement des questionnements de six partenaires : Paris Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Urbanis aménagement, Altavia Foundation, Datactivist.
+La tendance à [l'éloignement des commerces de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural), particulièrement hors des grandes villes, ne revêt pas qu'un enjeu économique. Les Français et Françaises qui vivent dans des communes ayant perdu leurs commerces  regrettent certes l'absence d'accès à un service marchand, mais pas seulement : il leur manque également les relations sociales du quotidien, essentielles dans la vie d'un quartier et qui ont un impact fort  sur  la qualité de vie des habitants. Mais comment mesurer concrètement ces apports ?
 
+Malgré l’importance du sujet, peu d’études ont fait la lumière sur les impacts d’un commerce sur la vie du territoire. Et les travaux académiques existants se concentrent souvent sur un aspect spécifique ou sur leurs impacts négatifs, sans proposer de vision complète et synthétique de leur rôle. Cette approche partielle ne permet ni de rendre visible ni de mesurer la valeur créée par les commerçants.
 
-Lancé fin 2022 par Paris Commerces et Datactivist, le projet avait pour objectif de **rendre visible les effets sociaux et environnementaux du commerce de proximité** et de proposer de les objectiver, afin de réinventer la valeur du commerce. Une première phase a été menée d'août 2023 à avril 2024 pour **objectiver les externalités du commerce de proximité**. Celle-ci a permis d’aboutir à 18 externalités, classées en 6 catégories (lien social, environnement, espace public, santé et sécurité, solidarité, vie de quartier) grâce à un **travail sur le terrain** où plus de 200 commerçants, micro-commerçants et artisans ont été interrogés.
+[Dans un billet de 2019](https://medium.com/@emmanuelle.hoss/de-quoi-la-rentabilit%C3%A9-est-elle-le-nom-22938111ed9e), Emmanuelle Hoss (Paris Commerces) et Joël Gombin (opsci, ex-Datactivist), regrettaient que "*la rentabilité d’un projet telle qu’on l’entend communément aujourd’hui, ne prend compte ni les externalités négatives, ni les externalités positives. Elle fonctionne en mode binaire, sans se préoccuper des interactions et des conséquences engendrées par ses actions.*" 
 
-Ce rapport présente les résultats des deuxième et troisième phases du projet EXCOM, ayant pour objectif de **mesurer les 18 externalités identifiées** et les **mettre en équivalence**, c'est-à-dire les transformer en valeur monétaire et/ou en « objectif de politique publique ». Pour cela, une **enquête par questionnaire** a été diffusée d’avril à novembre 2024 auprès de commerçants partout en France, et a reçu 324 réponses.
+Ce constat a été le point de départ du projet de recherche-action EXCOM. Celui-ci a été lancé avec pour objectif de nommer et de quantifier ces effets alors peu visibles dans leur globalité. Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
 
+La première phase du projet, menée d'août 2023 à avril 2024, a permis une avancée significative dans la compréhension des externalités du commerce de proximité. À travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans, l'équipe a identifié et caractérisé 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier. 
+
+<p align="center">
+ <img src="images/Roue_externalites_verte.png" width = "600">
+</p>
+
+Autrement dit, ces entretiens ont permis de mettre à jour que les commerçants endossent six rôles “informels”, au-delà de ceux qui leur sont habituellement attribués : 
+
+- Animateurs de lien social : ils créent des connexions et favorisent la solidarité entre les habitants.
+- Piliers de la solidarité locale : leurs actions renforcent l'entraide et la cohésion communautaire.
+- Moteurs de la vie de quartier : en animant le quotidien, ils insufflent vitalité et dynamisme aux espaces publics.
+- Garants de la santé et de la sécurité : ils constituent un soutien clé en cas de problème.
+- Acteurs engagés pour l'environnement : par leurs pratiques responsables, ils participent activement à un avenir durable.
+- Contributeurs à l'espace public : ils transforment les lieux urbains en espaces de rencontre et de convivialité.
+
+Indéniablement, les petits commerçants et micro-commerçants ont bien plus qu’une fonction économique. Leur impact s'étend au-delà des transactions marchandes, contribuant à tisser le lien social, à renforcer la solidarité et à dynamiser les territoires. 
+
+Ce nouveau rapport met en valeur ces contributions positives tout en éclairant les décideurs publics sur l'ensemble de la valeur créée par ces entrepreneurs. Il offre des éléments concrets pour aider les collectivités locales et les législateurs à mieux comprendre et valoriser leur rôle dans le développement des territoires. 
+
+Son objectif est double : mesurer ces 18 externalités à travers une enquête par questionnaire d'envergure nationale ayant recueilli 324 réponses entre avril et novembre 2024 ; d'autre part, proposer une méthode de mise en équivalence permettant de transformer ces externalités en valeur monétaire ou en objectifs de politique publique. Cette démarche répond à un besoin crucial identifié dès le lancement du projet : "*rendre concrète cette proposition [mesurer les apports non-marchands des commerces] implique de pouvoir l'outiller. Cela nécessite de pouvoir, et savoir, objectiver les externalités, négatives et surtout positives, des commerces. Pour le dire autrement, il faut produire des données sur le sujet — car ne compte que ce qu'on compte.*"[^0]
+
+[^0]: <ins>Source</ins> : *"De quoi la rentabilité est-elle le nom ?"* 
+
+    **Emmanuelle Hoss, Joël Gombin**, billet publié sur Medium, décembre 2019
+
+<br>
 
 # En résumé
 
@@ -198,23 +221,32 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 **Nous nous concentrerons sur les commerces particulièrement investis sur une thématique**. Par exemple, nous montrerons que le temps passé par les commerçants très préoccupés par l’entretien de l’espace public (environ 20% des personnes interrogées dans le cadre de l’enquête) équivaut à 6h de travail d’un agent d’entretien municipal par mois. 
 **Notre calcul n’est donc pas une moyenne. Il quantifie les bénéfices générés par une minorité de “super” commerçants et commerçantes**. 
 
+Il y a des cas où un service bénéficie au territoire et/ou à ses habitants mais ne relève pas des compétences d’une collectivité (il ne se substitue donc pas en tant que tel à un service public). 
+
+Dans d’autres, le coût des activités est réparti entre plusieurs acteurs (la solidarité relève par exemple des collectivités et des associations). 
+
+Enfin, les services rendus par les commerçants ne remplacent pas directement les interventions de certains services publics (par exemple, la veille sur la rue des commerçants ne remplace bien sûr pas les interventions des agents municipaux dans l’espace public).
+
+**Les estimations proposées ne rendent donc pas compte de réelles économies réalisées par une collectivité territoriale, mais correspondent à une valeur monétaire théorique.**
+
+
 <br>
 
 🔎️  **Remarques méthodologiques**
 
 - **Une estimation quantitative simplifie forcément la réalité**. Toute tentative de produire une estimation monétaire pour une dynamique sociale (ici, les apports non marchands des commerces) est imparfaite et prête à débat. Notre objectif n’est pas de proposer des chiffres fermes, indiscutables, mais de mettre en valeur un travail dépassant le strict cadre de la relation marchande. 
-- Dans l’optique d’une estimation monétaire mesurée, **nous calculons le temps passé sur la base du coût employeur d’un salaire minimum** (dans l’hypothèse où le temps passé par le commerçant “décharge” la collectivité d’un coût). 
+- Dans l’optique d’une estimation monétaire mesurée, **nous calculons le temps passé sur la base du coût employeur d’un salaire minimum**. 
 - **En pratique, si un service d’utilité sociale n’est pas rendu par le commerçant, il est parfois fait par des bénévoles**, généralement dans un cadre associatif. 
 - Enfin, sauf exception des dons de produits ou d’argent (cf. catégorie Solidarités), les commerçants interagissent avec des personnes qui consomment un minimum. **Le temps passé à tisser du lien, ou à entretenir la rue, dépasse les attendus minimaux du travail commercial mais ne constitue pas en soi du travail gratuit/bénévole**. 
-Nous n’avons par ailleurs pas la matière empirique pour mesurer les externalités négatives du commerce (ex : dégradation du lien social en cas de commerçant particulièrement antipathique)
+Nous n’avons par ailleurs pas la matière empirique pour mesurer les externalités négatives du commerce (ex : dégradation du lien social en cas de commerçant particulièrement antipathique).
 
 </div>
 
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT> {-}
-#### <FONT COLOR="#B4B1B1">Les commerces au cœur des interactions quotidiennes</FONT>
+# ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Animateurs de lien social</FONT> {-}
+#### <FONT COLOR="#B4B1B1">Créer des connexions au sein du quartier</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -340,7 +372,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 **Le travail d’un ou une “super” commerçante équivaut à 10h de bénévolat par mois au sein d’une association d’écoute (ex : SOS amitié).**
 
-**Si la collectivité devait prendre en charge ce service d'écoute, cela lui coûterait environ 6228€.**
+**La valeur monétaire théorique de ce service d’écoute est de 6228€ par an et par commerce.**
 
 
 <br>
@@ -351,11 +383,11 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 3259 commerces. 
+<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
 
-> 6228 * 3259 * 0,2 = 4 059 084€
+> 6228 * 2968 * 0,2 = 3 696 644€
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 4 millions d’euros dans le domaine du lien social.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 3,7 millions d’euros dans le domaine du lien social.
 
 
 </div>
@@ -363,8 +395,8 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT> {-}
-#### <FONT COLOR="#004654">Des interlocuteurs essentiels pour les personnes en situation de précarité</FONT>
+# ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#004654">Piliers de la solidarité locale</FONT> {-}
+#### <FONT COLOR="#004654">Renforcer l’entraide et la cohésion entre les habitants</FONT>
 
 
 :::: {.columns}
@@ -506,7 +538,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 **Le travail d’un ou une “super” commerçante équivaut à 2h de bénévolat par mois au sein d’une association de solidarité (ex : Secours populaire).**
 
-**Si la collectivité devait prendre en charge ces services d’entraide, cela lui coûterait environ 1293€.**
+**La valeur théorique monétaire de ces services d’entraide est d’environ 1293€ par an et par commerce.**
 
 
 <br>
@@ -517,19 +549,19 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 3259 commerces. 
+<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
 
-> 1293 * 3259 * 0,2 = 843 777€
+> 1293 * 2968 * 0,2 = 767 228€
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 843 000€ dans le domaine de l’entretien des solidarités.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 767 000€ dans le domaine de l’entretien des solidarités.
 
 
 </div>
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT> {-}
-#### <FONT COLOR="#0097B2">Entre services rendus et organisation d’évènements, l’entretien du sentiment de vivre ensemble</FONT>
+# ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Moteurs de la vie de quartier</FONT> {-}
+#### <FONT COLOR="#0097B2">Dynamiser et animer le quotidien local</FONT>
 
 
 :::: {.columns}
@@ -652,7 +684,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 **Le travail d’un ou une “super” commerçante équivaut à une petite subvention à une association locale & 2h de bénévolat dans une association.**
 
-**Si la collectivité devait prendre en charge cette animation locale, cela lui coûterait environ 1446€.**
+**La valeur théorique monétaire de cette animation locale est d’environ 1446€ par an et par commerce.**
 
 
 <br>
@@ -664,20 +696,20 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 3259 commerces. 
+<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
 
-> 1446 * 3259 * 0,2 = 942 502€
+> 1446 * 2968 * 0,2 = 858 049€
 
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 942 000€ dans le domaine de la vie de quartier.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 858 000€ dans le domaine de la vie de quartier.
 
 
 </div>
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT> {-}
-#### <FONT COLOR="#00A589">Une présence dans la rue permettant des réponses immédiates</FONT>
+# ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Garants de la santé et sécurité</FONT> {-}
+#### <FONT COLOR="#00A589">Contribuer à la santé, à la sécurité et au confort des habitants</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -762,7 +794,7 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 **Le travail d’un ou une “super” commerçante équivaut à plus de 3 heures de temps d’un agent municipal par mois.** 
 
-**Si la collectivité devait prendre en charge ce temps de surveillance et d’assistance, cela lui coûterait environ 2068€.**
+**La valeur théorique monétaire de ce temps de surveillance et d’assistance est d’environ 2068€ par an et par commerce.**
 
 
 <br>
@@ -775,13 +807,13 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 3259 commerces. 
+<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
 
-> 2068 * 3259 * 0,2 = 1 347 920€
+> 2068 * 2968 * 0,2 = 1 227 286€
 
 
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 1,3 million d’euros dans le domaine de la santé et la sécurité.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,2 million d’euros dans le domaine de la santé et la sécurité.
 
 
 </div>
@@ -789,8 +821,8 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT> {-}
-#### <FONT COLOR="#E1B441">Une prise de conscience générale des enjeux environnementaux</FONT>
+# ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Acteurs engagés pour l'environnement</FONT> {-}
+#### <FONT COLOR="#E1B441">Adopter des pratiques responsables pour un avenir durable</FONT>
 
 
 
@@ -933,8 +965,8 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT> {-}
-#### <FONT COLOR="#FF5757">Des apports concrets au cadre de vie</FONT>
+# ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Contributeurs à l'espace public</FONT> {-}
+#### <FONT COLOR="#FF5757">Transformer les lieux urbains en espaces de rencontre et de convivialité</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -1067,7 +1099,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 **Le travail d’un ou une “super” commerçante équivaut à 5 heures de travail d’un agent d’entretien de l’espace public par mois.** 
 
-**Si la collectivité devait prendre en charge ce temps d’entretien de l’espace, cela lui coûterait environ 3114€.**
+**La valeur théorique monétaire de ce temps d’entretien de l’espace est d’environ 3114€ par an et par commerce.**
 
 
 <br>
@@ -1080,15 +1112,27 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 3259 commerces. 
+<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
 
-> 3114 * 3259 * 0,15 = 1 522 279€
+> 3114 * 2968 * 0,15 = 1 386 242€
 
 
-À l’échelle de la ville, les commerces permettent une économie théorique d’environ 1,5 million d’euros dans le domaine de l’entretien de l’espace public.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,4 million d’euros dans le domaine de l’entretien de l’espace public.
 
 
 </div>
+
+<br>
+
+# Conclusion
+
+Cette étude révèle le rôle complexe des commerces de proximité, qui constituent des points d’ancrage dans le tissu urbain et dont le rôle ne se limite pas à la production de valeur économique. Ils sont de véritables piliers du développement durable des villes, agissant simultanément sur les plans social, environnemental et économique.
+
+Parler, demander son chemin, trouver refuge quand on est suivi, signaler un problème, échanger une parole… Ces pratiques sociales simples mais essentielles trouvent encore un relais chez les commerçants. Certains d’entre eux assurent un service public de fait, sans y être contraints, par choix et par engagement. Ils veillent sur la propreté de leur rue, sur la sécurité de leur quartier, sur le tissu social de leur ville. En d’autres termes, ils endossent de nombreuses fonctions sociales, à des degrés divers. 
+
+Cet engagement a un prix ; c’est une charge assumée mais un coût encore ignoré. L'étude le démontre largement : pour une ville comme Rouen, la valeur de ces services rendus atteint presque les 8 millions d'euros annuels pour 2.968 commerces. Ce chiffre, bien que théorique, révèle l'ampleur du travail invisible réalisé par ces acteurs essentiels de la vie urbaine. Il met en lumière un paradoxe : alors que les commerces de proximité assument de fait des missions d'intérêt général, ce rôle social reste largement sous-évalué dans les politiques publiques. 
+
+À l'heure où de nombreux centres-villes luttent contre la désertification commerciale, il devient urgent de reconnaître et de valoriser ces contributions qui, bien que non marchandes, sont essentielles à la vitalité de nos territoires. Car en perdant un commerce, c'est tout un écosystème social qui s'effrite, avec un coût bien réel pour la collectivité. L’enjeu pour les politiques publiques réside donc dans la préservation de ces lieux à la fonction structurante de l’espace urbain, pour leur donner les moyens de continuer à être des piliers du vivre-ensemble.
 
 <br>
 
@@ -1096,7 +1140,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 Le nombre de résultats collectés sur ces différents territoires a permis d’en tirer des focus. Ils concernent la Métropole Rouen Normandie et les villes de Paris et Saint-Ouen. 
 
-Le tableau comparatif met en lumière des similarités entre les différents territoires, autrement dit montre tendances de fond sur la production d’effets sociaux et environnementaux par les commerçants. Ce comparatif confirme qu’indépendamment de leur territoire d’implantation, les commerces ont des effets concrets sur le quartier, ses habitants, ses passants et les autres commerçants. Les commerces qui (co)produisent du lien social, des solidarités ou encore impactent positivement l’espace public ne sont pas des accidents statistiques mais existent partout.
+Le tableau comparatif met en lumière des similarités entre les différents territoires, autrement dit montre des tendances de fond sur la production d’effets sociaux et environnementaux par les commerçants. Ce comparatif confirme qu’indépendamment de leur territoire d’implantation, les commerces ont des effets concrets sur le quartier, ses habitants, ses passants et les autres commerçants. Les commerces qui (co)produisent du lien social, des solidarités ou encore impactent positivement l’espace public ne sont pas des accidents statistiques mais existent partout.
 
 Notre enquête s’est cependant essentiellement concentrée sur des villes. Or la littérature académique et de nombreux rapports montrent que le lien des habitants aux commerces varie souvent selon la densité de population. Afin de rendre compte des dynamiques propres aux territoires ruraux et peu denses, sur lesquels les commerces sont susceptibles de produire des effets légèrement différenciés, il serait nécessaire de collecter plus de données. 
 
@@ -1459,9 +1503,17 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-La ville de Rouen compte [3.259 commerces](https://www.linternaute.com/ville/rouen/ville-76540/entreprises), pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 28.6 commerces pour 1.000 habitants.
+La ville de Rouen compte 2.968 commerces[^10], pour plus de [110.000 habitants](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.insee.fr/fr/statistiques/1405599%3Fgeo%3DCOM-76540&ved=2ahUKEwiqut-AjoyKAxUZRfEDHVzaEk8QFnoECBoQAw&usg=AOvVaw1TQrdtv294LH1ZMo40MI_o), soit environ 26 commerces pour 1.000 habitants. La ville d’Elbeuf-Sur-Seine compte 334 commerces[^11], pour près de [16.000 habitants](https://www.insee.fr/fr/statistiques/1405599?geo=COM-76231), soit environ 21 commerces pour 1.000 habitants. La ville de Duclair compte 80 commerces[^11], pour plus de [4.000 habitants](https://www.insee.fr/fr/statistiques/1405599?geo=COM-76222), soit environ 20 commerces pour 1.000 habitants. Enfin, la ville du Trait compte 60 commerces[^11], pour près de [5.000 habitants](https://www.insee.fr/fr/statistiques/1405599?geo=COM-76709), soit environ 12.5 commerces pour 1.000 habitants.
 
-Le portrait de territoire de la **Métropole Rouen Normandie** porte sur les 4 villes suivantes : Rouen, Elbeuf-Sur-Seine, Duclair et Le Trait. 75 réponses ont été collectées dans ces 4 territoires ; 47 à Rouen, 10 à Elbeuf-Sur-Seine, 7 à Duclair et 11 à Le Trait, soit 23% de l'échantillon des répondants à l'enquête.
+[^10]: <ins>Source</ins> : *Chiffres-clés 2023*
+    
+    **Observatoire Commerce Métropole Rouen Normandie**
+    
+[^11]: <ins>Source</ins> : *Ibid.*
+
+<br>
+
+Le portrait de territoire de la **Métropole Rouen Normandie** porte sur ces 4 villes : Rouen, Elbeuf-Sur-Seine, Duclair et Le Trait. 75 réponses ont été collectées dans ces 4 territoires ; 47 à Rouen, 10 à Elbeuf-Sur-Seine, 7 à Duclair et 11 à Le Trait, soit 23% de l'échantillon des répondants à l'enquête.
 
 ::: {.column-margin}
 <br>
@@ -1657,6 +1709,6 @@ Le présent rapport, produit par Datactivist, est mis à disposition sous licenc
 
 Réalisé par [Datactivist](https://datactivist.coop/fr/)
 
-<FONT COLOR="#666666">*31/01/2024*</FONT>
+<FONT COLOR="#666666">*07/03/2025*</FONT>
 
 </center>
