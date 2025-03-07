@@ -21,7 +21,8 @@ library(tidyverse)
 library(here)
 library(hrbrthemes)
 library(patchwork)
-#postr::render("poster/poster.html", width = 1300, height = 1000)
+Sys.setenv(OPENSSL_CONF="/dev/null")
+webshot::webshot("poster.html", "poster.png", vwidth = 1550, vheight = 800)
 ```
 
 ## Header row {data-height=10}
@@ -50,7 +51,7 @@ library(patchwork)
 
 <FONT COLOR="#9B9FA2">*Réalisé par Datactivist - 03/2025*</FONT>
 
-## Body row {data-height=67}
+## Body row {data-height=65}
 
 ###  {data-width=800}
 
