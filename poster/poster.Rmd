@@ -7,7 +7,14 @@ output:
     css: styles.css
 ---
 
+<style>
 
+.panel, .card, .bslib-card {
+    border: none !important;
+    box-shadow: none !important;
+}
+      
+</style>
 
 ```{r}
 library(tidyverse)
@@ -17,7 +24,7 @@ library(patchwork)
 #postr::render("poster/poster.html", width = 1300, height = 1000)
 ```
 
-## Header row {data-height=13}
+## Header row {data-height=10}
 
 ### {data-width=1000}
 
@@ -36,9 +43,9 @@ library(patchwork)
 ### {data-width=400}
 
 <FONT COLOR="#9B9FA2">
-[`r fontawesome::fa("globe", fill = "#9B9FA2")`](https://projet-excom.fr/) Site du projet &nbsp;&nbsp;
-[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) Rapport de phase 1 &nbsp;&nbsp;
-[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html) Rapport de phase 2 &nbsp;&nbsp;
+[`r fontawesome::fa("globe", fill = "#9B9FA2")`](https://projet-excom.fr/) [Site du projet](https://projet-excom.fr/) &nbsp;&nbsp;
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) [Rapport de phase 1](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p) &nbsp;&nbsp;
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html) [Rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html) &nbsp;&nbsp;
 </FONT>
 
 <FONT COLOR="#9B9FA2">*Réalisé par Datactivist - 03/2025*</FONT>
@@ -77,9 +84,13 @@ Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen
 
 
 
-## Footer row {data-height=28} 
+## Footer row {data-height=30} 
 
-### **Données et méthodologie** {data-width=40}
+###  {data-width=40}
+
+<center>
+<p style="aligne: center; font-size: 1.4em; color: white; background-color: #304B95;">**Données et méthodologie**</p>
+</center>
 
 #### Les données
 
@@ -91,23 +102,31 @@ Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen
 
 - les réponses ont été nettoyées, enrichies puis analysées
 
-### **Conclusions** {data-width=40}
+###  {data-width=40}
+
+<center>
+<p style="aligne: center; font-size: 1.4em; color: white; background-color: #304B95;">**Conclusions**</p>
+</center>
 
 #### Les commerces au cœur des interactions quotidiennes
 
 - Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, les commerces constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles.
 - La contribution des commerces à l’entretien du lien social s’observe sur tous les territoires de l’enquête. 
 
-### **Équivalence monétaire** {data-width=40}
+###  {data-width=40}
+
+<center>
+<p style="aligne: center; font-size: 1.4em; color: white; background-color: #304B95;">**Équivalence monétaire**</p>
+</center>
 
 #### Lien social 
 
 Les **bénéfices théoriques** générés par un commerçant sur une année sont de **6.228€**.
 
-*Pour plus de détails sur la méthodologie et le calcul de cette estimation, veuillez consulter le simulateur d'équivalences monétaires :* 
+*Pour plus de détails sur la méthodologie et le calcul de cette estimation, veuillez consulter le rapport d'analyse :* 
 
 <p style="font-size: 1em; color: #9B9FA2;">
-[`r fontawesome::fa("gear", fill = "#9B9FA2")`](https://projet-excom.fr/) Simulateur
+[`r fontawesome::fa("file", fill = "#9B9FA2")`](https://datactivist.coop/excom/rapport/Rapport.html) [Rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html)
 </p>
 
 

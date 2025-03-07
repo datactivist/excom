@@ -14,6 +14,9 @@
   font-weight: bold !important; /* Met le titre en gras */
 }
 
+}
+
+
 /* Arrondir les boîtes Flexdashboard */
 #introduction {
   border-radius: 20px !important;
@@ -34,21 +37,20 @@
   border-radius: 20px !important;
 }
 
-
-
 body {
   text-align: justify;
   background: #D3DBE8;
   line-height: 1.2 !important;
+  border-color: white;
 }
 
 /* Custom l'apparence des hyperliens du doc */
 a:link { /*lien hyper texte*/
-    color: #304B95;
+    color: #9B9FA2;
 }
 a:hover { /*souris au-dessus du lien hyper texte*/
-    color: #304B95;
+    color: #9B9FA2;
 }
 a:visited { /*lien visité*/
-    color: #304B95;
+    color: #9B9FA2;
 }
