@@ -61,7 +61,7 @@ Certains services rendus par les commerçants ne relèvent pas des compétences 
 
 Le bénéfice est présenté à l'échelle d'un commerce sur l'année dans un premier temps, puis à l'échelle d'un territoire entier dans un second temps. Le calcul se concentre sur les commerces particulièrement investis sur une thématique, qualifiés de 'super commerçant·es' dans les formules (pour la catégorie *Lien social* par exemple, on considère que 20% des commerçants agissent positivement sur les liens sociaux dans leur quartier).
 
-**Tous les paramètres sont modulables**, permettant d'adapter le calcul aux caractéristiques du territoire souhaité ; le bénéfice se mettant automatiquement à jour lors de modifications des paramètres. Le nombre de commerces à l'échelle souhaitée correspond par défaut au nombre de commerces en activité commerciale de la ville de Rouen, ayant servi d'exemple pour la construction de la méthodologie (voir [rapport de phase 2](https://datactivist.coop/excom/rapport/Rapport.html)).
+**Tous les paramètres sont modulables**, permettant d'adapter le calcul aux caractéristiques du territoire souhaité ; le bénéfice se mettant automatiquement à jour lors de modifications des paramètres. 
 
 <br>
 
