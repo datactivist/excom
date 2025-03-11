@@ -106,7 +106,7 @@ fluidPage(
       numericInput(
         inputId = 'nb_commerces',
         label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
-        value = 2968,
+        value = 1000,
         step = 100
       ),
       numericInput(
@@ -226,7 +226,7 @@ fluidPage(
       numericInput(
         inputId = 'nb_commerces2',
         label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
-        value = 2968,
+        value = 1000,
         step = 100
       ),
       numericInput(
@@ -341,7 +341,7 @@ fluidPage(
       numericInput(
         inputId = 'nb_commerces3',
         label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
-        value = 2968,
+        value = 1000,
         step = 100
       ),
       numericInput(
@@ -449,7 +449,7 @@ fluidPage(
       numericInput(
         inputId = 'nb_commerces4',
         label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
-        value = 2968,
+        value = 1000,
         step = 100
       ),
       numericInput(
@@ -557,7 +557,7 @@ fluidPage(
       numericInput(
         inputId = 'nb_commerces6',
         label = "Nombre total de commerces à l'échelle souhaitée (ex : la ville)",
-        value = 2968,
+        value = 1000,
         step = 100
       ),
       numericInput(
