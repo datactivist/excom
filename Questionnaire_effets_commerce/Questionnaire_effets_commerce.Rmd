@@ -58,7 +58,7 @@ Commerce, la Métropole Rouen Normandie, la fondation Urbanis, Altavia Foundatio
 Datactivist.
 
 <p align="center">
- <img src="images/Roue_externalites_verte.png" width = "600">
+ <img src="images/Roue_externalites.png" width = "600">
 </p>
 
 
@@ -864,7 +864,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
            selfcontained = TRUE)
 ```
 
-# ![](images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Lien social</FONT>
+# ![](images/lien_social.png){width=11%}  <FONT COLOR="#688E8E">Lien social</FONT>
 
 ```{r out.width = '80%'}
 # Fonction pour les infographies
@@ -946,11 +946,11 @@ cc_liensocial <- function(donnees, autre_titre){
 cc_liensocial(data, "     Dans l'échantillon des répondants :")
 ```
 
-## <FONT COLOR="#B4B1B1">Socialiser & réduire l'isolement</FONT>
+## <FONT COLOR="#688E8E">Socialiser & réduire l'isolement</FONT>
 
 
 
-### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
+### <FONT COLOR="#688E8E">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -1019,7 +1019,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces en h
                   val3, "des commerces ont des discussiones privées avec leurs clients", 'fa-comments')
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse globale</FONT>
+### <FONT COLOR="#688E8E">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Certaines personnes rentrent dans un magasin pour acheter un produit, mais aussi pour se sentir moins seules. Il se peut que certains de vos clients vous confient leurs problématiques personnelles. A quelle fréquence échangez-vous sur ces sujets privés ?*".
 
@@ -1051,7 +1051,7 @@ table |>
 ```
 
 
-### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#688E8E">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -1361,7 +1361,7 @@ table |>
     coord_flip()
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#688E8E">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -1721,10 +1721,10 @@ saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9),
 
 
 
-## <FONT COLOR="#B4B1B1">Partager des savoir-faire</FONT>
+## <FONT COLOR="#688E8E">Partager des savoir-faire</FONT>
 
 
-### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
+### <FONT COLOR="#688E8E">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -1770,7 +1770,7 @@ infographie_graph(paste0(round(val1$n / val1_totalrep * 100, 0), "%"), "des comm
                   paste0(round(val3$percent, 0), "%"), "des commerces donnent plusieurs fois par jour des explications approfondies sur leurs produits à leurs clients", 'fa-comment')
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#688E8E">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*À quelle fréquence donnez-vous des explications approfondies sur vos produits à vos clients ? Cela peut aussi concerner des démonstrations.*".
 
@@ -1907,7 +1907,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
                       "Répartition des commerces selon la fréquence d'explications sur les produits avec des clients")
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#688E8E">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -2156,10 +2156,10 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 
 
 
-## <FONT COLOR="#B4B1B1">Construire une communauté locale</FONT>
+## <FONT COLOR="#688E8E">Construire une communauté locale</FONT>
 
 
-### <FONT COLOR="#B4B1B1">Chiffres clés</FONT>
+### <FONT COLOR="#688E8E">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -2199,7 +2199,7 @@ infographie_graph(paste0(round(val1_sub$n / nrow(val1) * 100, 0), "%"), "des col
                   paste0(round(val3$somme / nrow(data) * 100, 0), "%"), "des commerces collaborent avec des associations locales", 'fa-handshake-o')
 ```
 
-### <FONT COLOR="#B4B1B1">Analyse globale</FONT>{.tabset}
+### <FONT COLOR="#688E8E">Analyse globale</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Collaborez-vous avec des associations locales ? Par exemple des associations de quartier ou d'aide humanitaire.(Plusieurs réponses sont possibles)*".
 
@@ -2300,7 +2300,7 @@ saveWidget(girafe(print(mon_graph)),
 ```
 
 
-# ![](images/solidarites.png){width=11%}  <FONT COLOR="#004654">Solidarités</FONT>
+# ![](images/solidarites.png){width=11%}  <FONT COLOR="#EC6459">Solidarités</FONT>
 
 ```{r out.width = '80%'}
 # Fonction pour générer les chiffres-clés
@@ -2349,10 +2349,10 @@ cc_solidarites <- function(donnees, autre_titre){
 cc_solidarites(data, "     Dans l'échantillon des répondants :")
 ```
 
-## <FONT COLOR="#004654">Aider les personnes précaires</FONT>
+## <FONT COLOR="#EC6459">Aider les personnes précaires</FONT>
 
 
-### <FONT COLOR="#004654">Chiffres clés</FONT>
+### <FONT COLOR="#EC6459">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -2417,7 +2417,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtel
 
 
 
-### <FONT COLOR="#004654">Analyse globale</FONT>
+### <FONT COLOR="#EC6459">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Lorsque vous êtes sollicité par quelqu'un en situation de précarité, quel type d'aide proposez-vous ? (Plusieurs réponses sont possibles)*".
 
@@ -2488,7 +2488,7 @@ viz_solidarites_wordcloud_aides(data, "Les commerçants soutiennent les personne
 ```
 
 
-### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Etes-vous sollicité par des personnes en situation de précarité dans le cadre de votre activité commerciale ?Cela peut être pour un café, de l'eau ou pour utiliser des toilettes.*".
 
@@ -2628,7 +2628,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
                       "Répartition des commerces selon les sollicitations par des personnes en situation de précarité")
 ```
 
-### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -2909,9 +2909,9 @@ saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9),
 
 
 
-## <FONT COLOR="#004654">Prendre soin des gens</FONT>
+## <FONT COLOR="#EC6459">Prendre soin des gens</FONT>
 
-### <FONT COLOR="#004654">Chiffres clés</FONT>
+### <FONT COLOR="#EC6459">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -2977,7 +2977,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces de s
 ```
 
 
-### <FONT COLOR="#004654">Analyse globale</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse globale</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Avez-vous l'habitude de discuter avec vos clients en dehors du cadre strict de la vente ? (exemple : prendre des nouvelles personnelles)*".
 
@@ -3037,7 +3037,7 @@ table |>
 
 <br>
 
-### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -3151,7 +3151,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
                       "Répartition des commerces selon leurs discussions informelles avec des clients")
 ```
 
-### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -3398,9 +3398,9 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-## <FONT COLOR="#004654">Orienter vers l'aide sociale</FONT>
+## <FONT COLOR="#EC6459">Orienter vers l'aide sociale</FONT>
 
-### <FONT COLOR="#004654">Chiffres clés</FONT>
+### <FONT COLOR="#EC6459">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -3454,7 +3454,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces qui 
 ```
 
 
-### <FONT COLOR="#004654">Analyse globale</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse globale</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il de rediriger un client vers une aide extérieure ?*".
 
@@ -3518,7 +3518,7 @@ saveWidget(girafe(print(mon_graph)),
 
 
 
-### <FONT COLOR="#004654">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*A quelle fréquence cela vous arrive-t-il ?*".
 
@@ -3733,7 +3733,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
                       "Répartition des commerces selon les redirections des clients vers des aides extérieures")
 ```
 
-### <FONT COLOR="#004654">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#EC6459">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -3979,7 +3979,7 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-# ![](images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Vie de quartier</FONT>
+# ![](images/vie_quartier.png){width=11%}  <FONT COLOR="#9AB0B0">Vie de quartier</FONT>
 
 ```{r out.width = '80%'}
 # Fonction pour générer les chiffres-clés
@@ -4028,10 +4028,10 @@ cc_viequartier <- function(donnees, autre_titre){
 cc_viequartier(data, "     Dans l'échantillon des répondants :")
 ```
 
-## <FONT COLOR="#0097B2">Renforcer l'entraide entre commerçants</FONT>
+## <FONT COLOR="#9AB0B0">Renforcer l'entraide entre commerçants</FONT>
 
 
-### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+### <FONT COLOR="#9AB0B0">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -4066,7 +4066,7 @@ infographie_graph(paste0(round(sum(val1$is_helping) / nrow(val1) *100, 0), "%"),
                   paste0(round(val3$percent, 0), "%"), "des commerces font partie d'une association de commerçants", 'fa-handshake-o')
 ```
 
-### <FONT COLOR="#0097B2">Analyse globale</FONT>
+### <FONT COLOR="#9AB0B0">Analyse globale</FONT>
 
 
 
@@ -4204,10 +4204,10 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
            selfcontained = TRUE)
 ```
 
-## <FONT COLOR="#0097B2">Animer la rue</FONT>
+## <FONT COLOR="#9AB0B0">Animer la rue</FONT>
 
 
-### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+### <FONT COLOR="#9AB0B0">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -4247,7 +4247,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des collaboration
                   paste0(round(sum(val3$is_helping) / nrow(val3) *100, 0), "%"), paste("des commerçants rendent des services aux habitants de leur immeuble"), 'fa-users')
 ```
 
-### <FONT COLOR="#0097B2">Analyse globale</FONT>
+### <FONT COLOR="#9AB0B0">Analyse globale</FONT>
 
 
 **Question posée dans l'enquête :** "*Faites-vous appel ou collaborez-vous avec des commerçants indépendants sans pas-de-porte fixe (exemples : un artisan n'ayant pas de local dédié, un commerçant ambulant) ?*".
@@ -4320,9 +4320,9 @@ table_microco_treemap |>
             plot.title = ggplot2::element_text(size = 53))
 ```
 
-## <FONT COLOR="#0097B2">Contribuer à l'attractivité</FONT>
+## <FONT COLOR="#9AB0B0">Contribuer à l'attractivité</FONT>
 
-### <FONT COLOR="#0097B2">Chiffres clés</FONT>
+### <FONT COLOR="#9AB0B0">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -4355,7 +4355,7 @@ infographie_graph(paste0(round(sum(val1$is_higer9) / nrow(val1)*100, 1), "%"), "
 ```
 
 
-### <FONT COLOR="#0097B2">Analyse globale</FONT>
+### <FONT COLOR="#9AB0B0">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Les fêtes de quartier, marchés de Noël et d'autres évènements permettent de dynamiser la vie du quartier. Les commerçants y sont très souvent impliqués. Participez-vous à l'organisation de ce genre d'évènement ? Si oui, combien de fois par an ?Marquez "0" si vous n'avez pas l'habitude d'organiser ce genre d'évènement.*".
 
@@ -4399,7 +4399,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 11),
            selfcontained = TRUE)
 ```
 
-# ![](images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Santé et sécurité</FONT>
+# ![](images/sante_securite.png){width=11%}  <FONT COLOR="#F2907F">Santé et sécurité</FONT>
 
 ```{r out.width='80%'}
 # Fonction pour générer les chiffres-clés
@@ -4445,10 +4445,10 @@ cc_santesecu(data, "     Dans l'échantillon des répondants :")
 ```
 
 
-## <FONT COLOR="#00A589">Intervenir en cas d'insécurité</FONT>
+## <FONT COLOR="#F2907F">Intervenir en cas d'insécurité</FONT>
 
 
-### <FONT COLOR="#00A589">Chiffres clés</FONT>
+### <FONT COLOR="#F2907F">Chiffres clés</FONT>
 
 ```{r out.width='80%'}
 # Données
@@ -4505,7 +4505,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des commerces de s
 
 
 
-### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*A quelle fréquence intervenez-vous dans des situations d'insécurité (vols, bagarres, agressions) ?*".
 
@@ -4676,7 +4676,7 @@ table <- data |>
 graph_comparaison_pop2(table, "Répartition des commerces selon leur intervention dans des situations d'insécurité")
 ```
 
-### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -4982,9 +4982,9 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 
 
-## <FONT COLOR="#00A589">Aider en cas d'incident</FONT>
+## <FONT COLOR="#F2907F">Aider en cas d'incident</FONT>
 
-### <FONT COLOR="#00A589">Chiffres clés</FONT>
+### <FONT COLOR="#F2907F">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -5047,7 +5047,7 @@ infographie_graph(round(val1$ratio, 1), paste("Les cafés, hôtels et restaurant
 ```
 
 
-### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*Un cycliste qui tombe, une personne âgée qui glisse, un accident de voiture… Ce sont des exemples de situations pouvant avoir eu lieu à proximité de votre lieu d'activité. À quelle fréquence venez-vous en aide à une personne accidentée ou ayant fait un malaise ?*".
 
@@ -5194,7 +5194,7 @@ table <- data |>
 graph_comparaison_pop2(table, "Répartition des commerces selon l'aide aux personnes accidentées ou souffrantes")
 ```
 
-### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -5446,9 +5446,9 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
 
 
 
-## <FONT COLOR="#00A589">Veiller sur la rue</FONT>
+## <FONT COLOR="#F2907F">Veiller sur la rue</FONT>
 
-### <FONT COLOR="#00A589">Chiffres clés</FONT>
+### <FONT COLOR="#F2907F">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -5511,7 +5511,7 @@ infographie_graph(round(val1$ratio, 1), paste("Les commerces dans l'équipement 
 ```
 
 
-### <FONT COLOR="#00A589">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par taille de communes</FONT>{.tabset}
 
 **Question posée dans l'enquête :** "*L'espace public peut être le lieu où se déroule une série de situations portant atteinte à la sécurité des citoyens – harcèlement de rue, vol, agression physique, sexuelle ou verbale, etc. Suite à un de ces évènements, les personnes victimes rentrent dans des commerces pour se sentir en sécurité. À quelle fréquence avez-vous affaire à ce genre de situation ?*".
 
@@ -5652,7 +5652,7 @@ table <- data |>
 graph_comparaison_pop2(table, "Répartition des commerces selon la confrontation à des situations d'insécurité")
 ```
 
-### <FONT COLOR="#00A589">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#F2907F">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 
@@ -5898,57 +5898,36 @@ graph_type_commerce_comparaison2(table, ref_data_freq_agregee, "Comparaison en %
                      "Répartition des commerces selon la confrontation à des situations d'insécurité", "", "#3182bd")
 ```
 
-# ![](images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Environnement</FONT>
+# ![](images/environnement.png){width=11%}  <FONT COLOR="#CCD5D6">Environnement</FONT>
 
 ```{r out.width = '80%'}
 # Fonction pour générer les chiffres-clés
 cc_environnement <- function(donnees, autre_titre){
     # Données
         # boxe 1
-    table <- donnees |> 
-        mutate(Var = str_replace_all(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`, 
-                                     c("Mise à disposition d'emballages réutilisables : sacs en tissu, pots en verre, etc" = "Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc",  
-                                       "Utilisation de contenants durables : en verre, inox ou bois" = "Utilisation de contenants durables : en verre inox ou bois",
-                                       "Je recycle les déchets engendrés par la fabrication de mes produits. \\(exemples : recycler la cire d'abeille en la transformant en bougie ou bee wrap, recycler le pain en chapelure, réutiliser des chutes de vêtements\\)" = "Recyclage des déchets engendrés par la fabrication de mes produits"))) |> 
-        mutate(Var = str_split(Var, ",")) |> 
-        unnest(Var) |> 
-        mutate(Var = str_replace_all(Var, c("Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc" = "Mise à disposition d'emballages réutilisables",
-                                            "Utilisation de contenants durables : en verre inox ou bois" = "Utilisation de contenants durables",
-                                            "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
-                                            "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
-        select(Var) |> 
-        count(Var) |> 
-        mutate(percent = n/sum(n)*100)
-    val1 <- table |> 
-        filter(Var != "Non concerné",
-               Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
-        summarise(percent = sum(percent)) 
+    val1 <- donnees |> 
+    filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+    select(Var) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
         # boxe 2
-    val2 <- donnees |> 
-        mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
-        unnest(Var) |> 
-        mutate(Var = str_squish(Var)) |> 
+    val2  <- donnees |>
+        filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(Var = ifelse(grepl("J'ai parfois des discussions informelles sur le sujet", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
         count(Var) |> 
-        na.omit() |> 
         mutate(percent = n/sum(n)*100) |> 
-        filter(Var == "J'ai parfois des discussions informelles sur le sujet")
+        filter(Var == 1)
         # boxe 3
-    table <- donnees |> 
-        mutate(Var = str_replace_all(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`, c("Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence, multiprises avec timer\\)" = "Equipements visant à réduire la consommation d'électricité \\(exemples : ampoules avec senseur de présence multiprises avec timer\\)",  "Low tech \\(technologies ou machines simples à basse consommation\\) pour fabriquer mes produits \\(exemples : saponification à froid, feu de bois, marmite norvégienne\\)" = "Low tech\\(technologies ou machines simples à basse consommation\\) pour fabriquer les produits \\(exemples : saponification à froid feu de bois marmite norvégienne\\)"))) |> 
-        mutate(Var = str_split(Var, ",")) |> 
-        unnest(Var) |> 
-        mutate(Var = str_remove(Var, "\\([^)]*\\)"),
-               Var = str_remove(Var, "\\([^)]*\\)"),
-               Var = str_replace_all(Var, c("La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
-                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
-        select(Var) |> 
-        mutate(Var = str_squish(Var)) |> 
-        count(Var)
-    val3 <- table |> 
-        filter(Var != "Non concerné") |> 
-        mutate(percent = n/sum(n)*100) |> 
-        filter(Var == "Equipements visant à réduire la consommation d'électricité" |
-               Var == "Equipements économes en eau")
+    val3 <- donnees |>
+    filter(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
         
     # Application de la fonction
     infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
@@ -5962,9 +5941,9 @@ cc_environnement(data, "     Dans l'échantillon des répondants :")
 ```
 
 
-## <FONT COLOR="#E1B441">Réduire la consommation d'eau / d'éléctricité</FONT>
+## <FONT COLOR="#CCD5D6">Réduire la consommation d'eau / d'éléctricité</FONT>
 
-### <FONT COLOR="#E1B441">Chiffres clés</FONT>
+### <FONT COLOR="#CCD5D6">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -6007,7 +5986,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des installations 
                   paste0(round(val3$percent, 0), "%"), "des commerces concernés ont installé des équipements pour réduire leur consommation d'eau et d'électricité", 'fa-pie-chart')
 ```
 
-### <FONT COLOR="#E1B441">Analyse globale</FONT>
+### <FONT COLOR="#CCD5D6">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ? (Plusieurs réponses sont possibles)*".
 
@@ -6119,9 +6098,9 @@ word_data |>
 ```
 
 
-## <FONT COLOR="#E1B441">Sensibiliser les clients</FONT>
+## <FONT COLOR="#CCD5D6">Sensibiliser les clients</FONT>
 
-### <FONT COLOR="#E1B441">Chiffres clés</FONT>
+### <FONT COLOR="#CCD5D6">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -6155,7 +6134,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des choses propos
                   paste0(round(val3$percent, 0), "%"), "des commerces proposent des choses à leurs clients pour limiter l'impact environnemental de leur consommation", 'fa-envira')
 ```
 
-### <FONT COLOR="#E1B441">Analyse globale</FONT>
+### <FONT COLOR="#CCD5D6">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ? (Plusieurs réponses sont possibles)*".
 
@@ -6212,9 +6191,9 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 
-## <FONT COLOR="#E1B441">Réduire les déchets</FONT>
+## <FONT COLOR="#CCD5D6">Réduire les déchets</FONT>
 
-### <FONT COLOR="#E1B441">Chiffres clés</FONT>
+### <FONT COLOR="#CCD5D6">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -6264,7 +6243,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des actions mises
 ```
 
 
-### <FONT COLOR="#E1B441">Analyse globale</FONT>
+### <FONT COLOR="#CCD5D6">Analyse globale</FONT>
 
 **Question posée dans l'enquête :** "*Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)*".
 
@@ -6455,7 +6434,7 @@ word_data |>
 ```
 
 
-# ![](images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Espace public</FONT>
+# ![](images/espace_public.png){width=11%}  <FONT COLOR="#F7B8A9">Espace public</FONT>
 
 ```{r out.width='80%'}
 # Fonction pour générer les chiffres-clés
@@ -6516,9 +6495,9 @@ cc_espacepublic <- function(donnees, autre_titre){
 cc_espacepublic(data, "     Dans l'échantillon des répondants :")
 ```
 
-## <FONT COLOR="#FF5757">Prendre soin de l'espace public</FONT>
+## <FONT COLOR="#F7B8A9">Prendre soin de l'espace public</FONT>
 
-### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+### <FONT COLOR="#F7B8A9">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -6572,7 +6551,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des initiatives d'
 
 **Question posée dans l'enquête :** "*Êtes-vous impliqué dans des initiatives d'embellissement de la rue ?*".
 
-### <FONT COLOR="#FF5757">Analyse globale</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse globale</FONT>{.tabset}
 
 ```{r}
 # Fonction pour générer le graph
@@ -6636,7 +6615,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7.3),
 
 **Question posée dans l'enquête :** "*Vous arrive-t-il d'interpeller les services techniques de la mairie suite à du matériel défectueux ou une dégradation de l'espace public environnant (exemples : lampadaire défectueux ou tags) ?*".
 
-### <FONT COLOR="#FF5757">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -6767,7 +6746,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
                       "Répartition des commerces selon les interpellations des services de la mairie")
 ```
 
-### <FONT COLOR="#FF5757">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 
@@ -7014,9 +6993,9 @@ graph_type_commerce_comparaison(table, ref_data_freq_agregee, "Comparaison en % 
 ```
 
 
-## <FONT COLOR="#FF5757">Assurer la propreté</FONT>
+## <FONT COLOR="#F7B8A9">Assurer la propreté</FONT>
 
-### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+### <FONT COLOR="#F7B8A9">Chiffres clés</FONT>
 
 ```{r out.width='80%'}
 # Données
@@ -7080,7 +7059,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste("des cafés, hôtel
 
 **Question posée dans l'enquête :** "*Nettoyez-vous les abords extérieurs de votre commerce ? (exemples : coup de balai, ramassage de déchets)*".
 
-### <FONT COLOR="#FF5757">Analyse par taille de communes</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse par taille de communes</FONT>{.tabset}
 
 #### Général
 
@@ -7229,7 +7208,7 @@ graph_comparaison_pop(table, title_name = "Comparaison des communes selon leur p
 
 
 
-### <FONT COLOR="#FF5757">Analyse par catégorie de commerces</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse par catégorie de commerces</FONT>{.tabset}
 
 
 #### Général
@@ -7482,10 +7461,10 @@ saveWidget(girafe(print(mon_graph), width_svg = 11, height_svg = 9),
            selfcontained = TRUE)
 ```
 
-## <FONT COLOR="#FF5757">Préserver le patrimoine architectural</FONT>
+## <FONT COLOR="#F7B8A9">Préserver le patrimoine architectural</FONT>
 
 
-### <FONT COLOR="#FF5757">Chiffres clés</FONT>
+### <FONT COLOR="#F7B8A9">Chiffres clés</FONT>
 
 ```{r out.width = '80%'}
 # Données
@@ -7529,7 +7508,7 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerces qui se sit
 
 **Question posée dans l'enquête :** "*Certains commerces, surtout ceux situés en centre-ville, font partie du patrimoine architectural. La façade ou les murs sont parfois classés. Est-ce que votre commerce se situe dans un local classé au patrimoine architectural ?*".
 
-### <FONT COLOR="#FF5757">Analyse globale</FONT>{.tabset}
+### <FONT COLOR="#F7B8A9">Analyse globale</FONT>{.tabset}
 
 ```{r}
 # Fonction pour générer le graph
@@ -9778,22 +9757,22 @@ gt_comparaison <- stat_commune_finale |>
     gt_plt_bar_pct(`% `, scaled = TRUE, labels=TRUE, decimals = 0, 
                    font_size = "14px", fill = "#343333", height = 20) |> 
     # couleur des noms de groupes (familles d'externalités)
-    tab_style(style = list(cell_fill(color = "#B4B1B1", alpha = .4),
-                           cell_text(weight = "bold")),
+    tab_style(style = list(cell_fill(color = "#688E8E", alpha = .9),
+                           cell_text(weight = "bold", color = "white")),
               locations = cells_row_groups(groups = "Lien social")) |> 
-    tab_style(style = list(cell_fill(color = "#004654", alpha = .4),
-                           cell_text(weight = "bold")),
+    tab_style(style = list(cell_fill(color = "#EC6459", alpha = .9),
+                           cell_text(weight = "bold", color = "white")),
               locations = cells_row_groups(groups = "Solidarités")) |> 
-    tab_style(style = list(cell_fill(color = "#0097B2", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#9AB0B0", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Vie de quartier")) |> 
-    tab_style(style = list(cell_fill(color = "#00A589", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#F2907F", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Santé et sécurité")) |>
-    tab_style(style = list(cell_fill(color = "#E1B441", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#CCD5D6", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Environnement")) |>
-    tab_style(style = list(cell_fill(color = "#FF5757", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#F7B8A9", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Espace public")) |> 
     tab_style(style = list(cell_borders(sides = c("t", "b"), color = "white", weight = px(2))),
@@ -9820,6 +9799,7 @@ gt_comparaison <- stat_commune_finale |>
       }")
 gt_comparaison
 gtsave(gt_comparaison, "Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html")
+#webshot::webshot("Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html", "Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.png", vwidth = 1000, vheight = 800)
 ```
 
 
@@ -9872,27 +9852,27 @@ gt_resume <- stat_commune_ensemble |>
     gt_plt_bar_pct(`%`, scaled = TRUE, labels=TRUE, decimals = 0, 
                    font_size = "14px", fill = "#343333", height = 20) |> 
     # couleur des noms de groupes (familles d'externalités)
-    tab_style(style = list(cell_fill(color = "#B4B1B1", alpha = .4),
-                           cell_text(weight = "bold")),
+    tab_style(style = list(cell_fill(color = "#688E8E", alpha = .9),
+                           cell_text(weight = "bold", color = "white")),
               locations = cells_row_groups(groups = "Lien social")) |> 
-    tab_style(style = list(cell_fill(color = "#004654", alpha = .4),
-                           cell_text(weight = "bold")),
+    tab_style(style = list(cell_fill(color = "#EC6459", alpha = .9),
+                           cell_text(weight = "bold", color = "white")),
               locations = cells_row_groups(groups = "Solidarités")) |> 
-    tab_style(style = list(cell_fill(color = "#0097B2", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#9AB0B0", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Vie de quartier")) |> 
-    tab_style(style = list(cell_fill(color = "#00A589", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#F2907F", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Santé et sécurité")) |>
-    tab_style(style = list(cell_fill(color = "#E1B441", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#CCD5D6", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Environnement")) |>
-    tab_style(style = list(cell_fill(color = "#FF5757", alpha = .4),
+    tab_style(style = list(cell_fill(color = "#F7B8A9", alpha = .9),
                            cell_text(weight = "bold")),
               locations = cells_row_groups(groups = "Espace public")) |> 
     tab_style(style = list(cell_borders(sides = c("t", "b"), color = "white", weight = px(2))),
               locations = cells_row_groups()) |> 
-    # centrage des colonnes
+     # centrage des colonnes
     cols_align(align = "center", columns = c(`Nombre de réponses`, `%`)) |> 
     # fixe les noms de colonnes et titre 
     opt_css(css = "
@@ -9914,6 +9894,7 @@ gt_resume <- stat_commune_ensemble |>
       }")
 gt_resume
 gtsave(gt_resume, "Questionnaire_effets_commerce_files/figure-html/tableau-resume.html")
+#webshot::webshot("Questionnaire_effets_commerce_files/figure-html/tableau-resume.html", "Questionnaire_effets_commerce_files/figure-html/tableau-resume.png", vwidth = 900, vheight = 800)
 ```
 
 

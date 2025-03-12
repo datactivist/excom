@@ -100,7 +100,7 @@ Ce constat a été le point de départ du projet de recherche-action EXCOM. Celu
 La première phase du projet, menée d'août 2023 à avril 2024, a permis une avancée significative dans la compréhension des externalités du commerce de proximité. À travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans, l'équipe a identifié et caractérisé 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier. 
 
 <p align="center">
- <img src="images/Roue_externalites_verte.png" width = "600">
+ <img src="images/Roue_externalites.png" width = "600">
 </p>
 
 Autrement dit, ces entretiens ont permis de mettre à jour que les commerçants endossent six rôles “informels”, au-delà de ceux qui leur sont habituellement attribués : 

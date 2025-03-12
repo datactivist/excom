@@ -17,7 +17,7 @@ svg text {
 
 
 h1.title { /*titre général du document*/
-  color: #00F193; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 3.8em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -27,7 +27,7 @@ h1.title { /*titre général du document*/
   margin-top: 30px; /*marge*/
 }
 h3.subtitle{ /*sous-titre*/
-  color: #0000FF; /*couleur titre*/
+  color: #005A56; /*couleur titre*/
   font-size: 2.5em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -51,7 +51,7 @@ h4.date { /*date*/
   font-weight: normal; /*pas en gras*/
 }
 h1 { /*titre de niveau #1*/
-  color: #0000FF; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 3em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -62,7 +62,7 @@ h1 { /*titre de niveau #1*/
   margin-top: 50px; /*espace avant ligne horizontale*/
 }
 h2 { /*titre de niveau #2*/
-  color: #0000FF; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 2.5em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -70,7 +70,7 @@ h2 { /*titre de niveau #2*/
   padding-left: 0px; /*tout à gauche, pas d'alinéa*/
 }
 h3 { /*titre de niveau #3*/
-  color: #0000FF; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 2em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -78,7 +78,7 @@ h3 { /*titre de niveau #3*/
   padding-left: 0px; /*tout à gauche, pas d'alinéa*/
 }
 h4 { /*titre de niveau #4*/
-  color: #0000FF; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 1.5em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -86,7 +86,7 @@ h4 { /*titre de niveau #4*/
   padding-left: 0px; /*tout à gauche, pas d'alinéa*/
 }
 h5 { /*titre de niveau #5*/
-  color: #0000FF; /*couleur titre*/
+  color: #EF3E43; /*couleur titre*/
   font-size: 1em; /*taille*/
   font-family: "Montserrat"; /*police*/
   font-weight: bold; /*gras*/
@@ -100,13 +100,13 @@ body { /*corps de texte*/
   list-style: disc inside; /*listes en bullet-points*/
 }
 a:link { /*lien hyper texte*/
-    color: #0000FF;
+    color: #EF3E43;
 }
 a:hover { /*souris au-dessus du lien hyper texte*/
-    color: #0000FF;
+    color: #EF3E43;
 }
 a:visited { /*lien visité*/
-    color: #0000FF;
+    color: #EF3E43;
 }
 
 
