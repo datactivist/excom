@@ -1489,9 +1489,6 @@ réponses collectées à Saint-Ouen
 <iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_281.html"></iframe>
 <iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_283.html"></iframe>
 
-<br>
-
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_282.html"></iframe>
 </center>
 
 
