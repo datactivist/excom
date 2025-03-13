@@ -5906,13 +5906,13 @@ cc_environnement <- function(donnees, autre_titre){
     # Données
         # boxe 1
     val1 <- donnees |> 
-    filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
-           !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
-    mutate(Var = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
-    select(Var) |> 
-    count(Var) |> 
-    mutate(percent = n/sum(n)*100) |> 
-    filter(Var == 1)
+        filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(Var = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+        select(Var) |> 
+        count(Var) |> 
+        mutate(percent = n/sum(n)*100) |> 
+        filter(Var == 1)
         # boxe 2
     val2  <- donnees |>
         filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
@@ -5922,12 +5922,12 @@ cc_environnement <- function(donnees, autre_titre){
         filter(Var == 1)
         # boxe 3
     val3 <- donnees |>
-    filter(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
-           !is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`)) |>
-    mutate(Var = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
-    count(Var) |> 
-    mutate(percent = n/sum(n)*100) |> 
-    filter(Var == 1)
+        filter(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(Var = ifelse(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` == "La réduction de la consommation d'eau ou d'électricité est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+        count(Var) |> 
+        mutate(percent = n/sum(n)*100) |> 
+        filter(Var == 1)
         
     # Application de la fonction
     infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
@@ -5938,6 +5938,92 @@ cc_environnement <- function(donnees, autre_titre){
 
 # Application de la fonction
 cc_environnement(data, "     Dans l'échantillon des répondants :")
+```
+
+
+```{r verif % nb commerces envt, eval=FALSE, include=FALSE}
+# Propositions aux clients
+    #général
+val2  <- data |>
+    filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)` == "Je ne communique pas sur le sujet", "0", "1")) |> 
+    select(Var, `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
+    #conseils
+val2  <- data |>
+    filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Je donne des conseils pratiques", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var, `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #26%
+    #réductions
+val2  <- data |>
+    filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Je propose des réductions sur des produits si utilisation d'emballages réutilisables", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var, `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
+
+# Réduction conso
+val3 <- data |>
+    filter(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Equipements économes en eau \\(exemple : robinets à faible débit\\)", `Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var, `Avez-vous installé des équipements pour réduire la consommation d'eau ou d'électricité de votre commerce ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
+
+# Recyclage
+    #fournisseurs
+val1 <- data |> 
+    filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Choix de fournisseurs écoresponsables", `Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #41%
+    #recycle déchets
+val1 <- data |> 
+    filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Je recycle les déchets engendrés par la fabrication de mes produits", `Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var, `Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #28%
+    #utilise solutions
+val1 <- data |> 
+    filter(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` == "Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+    select(Var, `Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #69% des commerçants concernés, 39% de tous les commerçants
+    #autres 
+val1 <- data |> 
+    filter(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Autres", `Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
+    select(Var, `Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #34%
+    #général 
+val1 <- data |> 
+    filter(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` == "Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+    select(Var, `Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`) |> 
+    count(Var) |> 
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1) #34%
 ```
 
 
@@ -6142,18 +6228,26 @@ infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des choses propos
 # Fonction pour générer le graph
 viz_environnement_discu_envt <- function(donnees, title_name){
     # Données
-    table <- donnees |> 
-        mutate(Var = str_split(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`, ",")) |> 
-        unnest(Var) |> 
-        mutate(Var = str_squish(Var)) |> 
-        count(Var) |> 
-        na.omit() |> 
-        mutate(percent = n/sum(n)*100,
-               Var = str_replace_all(Var, c("J'ai des affiches et supports visuels" = "Affiches et supports visuels",
-                                            "J'ai parfois des discussions informelles sur le sujet" = "Discussions informelles",
-                                            "Je donne des conseils pratiques" = "Conseils pratiques",
-                                            "Je ne communique pas sur le sujet" = "Pas de communication",
-                                            "Je propose des réductions sur des produits si utilisation d'emballages réutilisables" = "Réductions si utilisation d'emballages réutilisables")))
+    nb_rep <- donnees |>
+        filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |> 
+        nrow()
+    table  <- donnees |>
+        filter(!is.na(`Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(conseils = ifelse(grepl("Je donne des conseils pratiques", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0),
+               discu_info = ifelse(grepl("J'ai parfois des discussions informelles sur le sujet", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0),
+               pas_com = ifelse(grepl("Je ne communique pas sur le sujet", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0),
+               autres = ifelse(grepl("Autres", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0),
+               affiches = ifelse(grepl("J'ai des affiches et supports visuels", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0),
+               reduc = ifelse(grepl("Je propose des réductions sur des produits si utilisation d'emballages réutilisables", `Que proposez-vous à vos clients pour limiter l'impact environnemental de leur consommation ?(Plusieurs réponses sont possibles)`) == TRUE, 1, 0)) |> 
+        summarise(`Discussions informelles` = sum(discu_info),
+                  `Conseils pratiques` = sum(conseils),
+                  `Pas de communication` = sum(pas_com),
+                  `Autres` = sum(autres),
+                  `Affiches et supports visuels` = sum(affiches),
+                  `Réductions si utilisation d'emballages réutilisables` = sum(reduc)) |> 
+        pivot_longer(everything()) |> 
+        rename(Var = name, n = value) |> 
+        mutate(percent = n/nb_rep*100) #nombre de commerces ayant répondu
     
     # Graphique
     table |> 
@@ -6181,7 +6275,7 @@ viz_environnement_discu_envt <- function(donnees, title_name){
         scale_fill_manual(values = c("1" = "#3182bd", "0" = "#ACCDE4")) +
         coord_flip()
 }
-mon_graph <- viz_environnement_discu_envt(data, "Un tiers des commerçants discute des enjeux environnementaux avec ses clients") +
+mon_graph <- viz_environnement_discu_envt(data, "Près de 4 commerçants sur 10 discutent des enjeux environnementaux avec ses clients") +
         scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 160))
 mon_graph
 #girafe(print(mon_graph))
@@ -6198,46 +6292,35 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```{r out.width = '80%'}
 # Données
     # boxe 1
-table <- data |> 
-    mutate(Var = str_replace_all(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`, 
-                                 c("Mise à disposition d'emballages réutilisables : sacs en tissu, pots en verre, etc" = "Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc",  
-                                   "Utilisation de contenants durables : en verre, inox ou bois" = "Utilisation de contenants durables : en verre inox ou bois",
-                                   "Je recycle les déchets engendrés par la fabrication de mes produits. \\(exemples : recycler la cire d'abeille en la transformant en bougie ou bee wrap, recycler le pain en chapelure, réutiliser des chutes de vêtements\\)" = "Recyclage des déchets engendrés par la fabrication de mes produits"))) |> 
-    mutate(Var = str_split(Var, ",")) |> 
-    unnest(Var) |> 
-    mutate(Var = str_replace_all(Var, c("Mise à disposition d'emballages réutilisables : sacs en tissu pots en verre etc" = "Mise à disposition d'emballages réutilisables",
-                                        "Utilisation de contenants durables : en verre inox ou bois" = "Utilisation de contenants durables",
-                                        "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités" = "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités",
-                                        "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce" = "Non concerné"))) |> 
+val1 <- data |> 
+    filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(grepl("Choix de fournisseurs écoresponsables", `Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`) == TRUE, "1", "0")) |> 
     select(Var) |> 
-    mutate(Var = str_squish(Var)) |> 
     count(Var) |> 
-    mutate(percent = n/sum(n)*100)
-val1 <- table |> 
-    filter(Var != "Non concerné",
-           Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
-    arrange(desc(percent)) |> 
-    slice(1)
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
     # boxe 2
-val2 <- table |> 
-    filter(Var != "Non concerné",
-           Var != "Compliqué à mettre en oeuvre et/ou ne fait pas partie des priorités") |> 
-    summarise(percent = sum(percent))
+val2 <- data |> 
+        filter(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+               !is.na(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)`)) |>
+        mutate(Var = ifelse(`Mettez-vous en œuvre des actions visant à réduire les déchets de votre commerce ? Ou bien des actions pour réduire les déchets engendrés par l'achat de vos produits ?(Plusieurs réponses sont possibles)` == "La réduction des déchets est compliquée à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+        select(Var) |> 
+        count(Var) |> 
+        mutate(percent = n/sum(n)*100) |> 
+        filter(Var == 1)
     # boxe 3
-table <- data |> 
-    mutate(Var = str_split(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`, ",")) |> 
-    unnest(Var) |> 
-    mutate(Var = str_squish(Var)) |> 
+val3 <- data |> 
+    filter(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce",
+           !is.na(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`)) |>
+    mutate(Var = ifelse(`Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)` == "Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités", "0", "1")) |> 
+    select(Var, `Proposez-vous au sein de votre commerce des solutions de recyclage ?(Plusieurs réponses sont possibles)`) |> 
     count(Var) |> 
-    na.omit() |> 
-    mutate(percent = n/sum(n)*100)
-val3 <- table |> 
-    filter(Var != "Le recyclage est compliqué à mettre en oeuvre et/ou ne fait pas partie de mes priorités",
-           Var != "Je ne suis pas concerné par ce sujet dans le cadre de mon commerce") |> 
-    summarise(percent = sum(percent))
+    mutate(percent = n/sum(n)*100) |> 
+    filter(Var == 1)
     
 # Application de la fonction
-infographie_graph(paste0(round(val1$percent, 0), "%"), paste0("des actions mises en œuvre par les commerçants pour réduire leurs déchêts sont : ", tolower(val1$Var)), 'fa-leaf',
+infographie_graph(paste0(round(val1$percent, 0), "%"), "des commerçants font le choix de fournisseurs écoresponsables", 'fa-leaf',
                   paste0(round(val2$percent, 0), "%"), "des commerçants mettent en œuvre des actions visant à réduire les déchets de leur commerce", 'fa-archive',
                   paste0(round(val3$percent, 0), "%"), "des commerçants proposent des solutions de recyclage au sein de leur commerce", 'fa-recycle')
 ```
@@ -7972,7 +8055,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7.8, height_svg = 6),
 ```
 
 ```{r}
-mon_graph <- viz_environnement_discu_envt(paris, "À Paris, 3 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement") +
+mon_graph <- viz_environnement_discu_envt(paris, "À Paris, près de 4 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement") +
     scale_y_continuous(breaks = c(0, 20, 40, 60, 100, 150, 200), limits = c(0, 65))
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
@@ -8368,7 +8451,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7),
 ```
 
 ```{r}
-mon_graph <- viz_environnement_discu_envt(stouen, "À St Ouen, près de 3 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
+mon_graph <- viz_environnement_discu_envt(stouen, "À St Ouen, plus d'un commerçant sur 3 a des discussions informelles avec ses clients sur l'environnement") +
      scale_y_continuous(breaks = c(0, 2, 4, 6, 8, 9), limits = c(0, 7))
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
@@ -8722,7 +8805,7 @@ saveWidget(girafe(print(mon_graph), width_svg = 7.8, height_svg = 6),
 ```
 
 ```{r}
-mon_graph <- viz_environnement_discu_envt(rouen, "À la Métropole Rouen Normandie, près de 4 commerçants sur 10 ont des discussions informelles avec ses clients sur l'environnement") +
+mon_graph <- viz_environnement_discu_envt(rouen, "À la Métropole Rouen Normandie, 4 commerçants sur 10 ont des discussions informelles avec leurs clients sur l'environnement") +
     scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60, 70), limits = c(0, 37))
 mon_graph
 saveWidget(girafe(print(mon_graph), width_svg = 7), 
