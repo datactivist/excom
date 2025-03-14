@@ -872,7 +872,7 @@ infographie_graph <- function(valeur1, texte1, icone1, valeur2, texte2, icone2, 
     # Données
     df <- data.frame(
         x = c(2, 2, 2),
-        y = c(2, 6.5, 11),
+        y = c(2, 6.5, 11), 
         h = rep(4.25, 3),
         w = rep(18, 3),
         value = c(valeur1, valeur2, valeur3),

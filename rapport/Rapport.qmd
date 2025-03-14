@@ -245,8 +245,8 @@ Nous n’avons par ailleurs pas la matière empirique pour mesurer les externali
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#B4B1B1">Animateurs de lien social</FONT> {-}
-#### <FONT COLOR="#B4B1B1">Créer des connexions au sein du quartier</FONT>
+# ![](../Questionnaire_effets_commerce/images/lien_social.png){width=11%}  <FONT COLOR="#688E8E">Animateurs de lien social</FONT> {-}
+#### <FONT COLOR="#688E8E">Créer des connexions au sein du quartier</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -263,7 +263,7 @@ Nous n’avons par ailleurs pas la matière empirique pour mesurer les externali
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/lien_social.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-13-1.png" width = "600">
 </p>
 
 Les commerces locaux offrent des espaces de rencontre, favorisant la santé sociale, la vitalité démocratique et le bien-être individuel. Dans un contexte où de nombreuses personnes sont isolées, notamment des personnes âgées, ils constituent des lieux privilégiés où se tissent et se renforcent les relations interpersonnelles. 
@@ -383,11 +383,11 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
 
-> 6228 * 2968 * 0,2 = 3 696 644€
+> 6228 * 1000 * 0,2 = 1 245 500€
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 3,7 millions d’euros dans le domaine du lien social.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,2 millions d’euros dans le domaine du lien social.
 
 
 </div>
@@ -395,8 +395,8 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#004654">Piliers de la solidarité locale</FONT> {-}
-#### <FONT COLOR="#004654">Renforcer l’entraide et la cohésion entre les habitants</FONT>
+# ![](../Questionnaire_effets_commerce/images/solidarites.png){width=11%}  <FONT COLOR="#EC6459">Piliers de la solidarité locale</FONT> {-}
+#### <FONT COLOR="#EC6459">Renforcer l’entraide et la cohésion entre les habitants</FONT>
 
 
 :::: {.columns}
@@ -418,7 +418,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/solidarites.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-54-1.png" width = "600">
 </p>
 
 De nombreux commerçants de proximité sont régulièrement au contact de personnes en situation de précarité et peuvent agir directement auprès d’elles, en leur offrant l’accès à des services de base. Ils peuvent aussi être des points relais pour diverses formes d'aide sociale, particulièrement dans les zones moins denses, où l’accès aux services peut être limité, [comme le souligne l’Avise](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural)[^3], association de soutien à l’économie sociale et solidaire. De nombreux commerçants ont également déclaré être impliqués dans des actions caritatives, comme la collecte de dons alimentaires ou la participation à des programmes d'aide aux personnes isolées. Ils sont ainsi comme de véritables acteurs de la solidarité, contribuant activement à soutenir les membres les plus vulnérables de leur communauté.
@@ -549,19 +549,19 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
 
-> 1293 * 2968 * 0,2 = 767 228€
+> 1293 * 1000 * 0,2 = 258 500€
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 767 000€ dans le domaine de l’entretien des solidarités.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 259 000€ dans le domaine de l’entretien des solidarités.
 
 
 </div>
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#0097B2">Moteurs de la vie de quartier</FONT> {-}
-#### <FONT COLOR="#0097B2">Dynamiser et animer le quotidien local</FONT>
+# ![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=11%}  <FONT COLOR="#9AB0B0">Moteurs de la vie de quartier</FONT> {-}
+#### <FONT COLOR="#9AB0B0">Dynamiser et animer le quotidien local</FONT>
 
 
 :::: {.columns}
@@ -579,7 +579,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/vie_quartier.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-107-1.png" width = "600">
 </p>
 
 Les commerces de proximité sont des piliers essentiels à la construction d’une communauté locale dynamique et attrayante. Ils jouent un rôle crucial dans le tissu social, économique et culturel d’un quartier. 
@@ -696,20 +696,20 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
 
-> 1446 * 2968 * 0,2 = 858 049€
+> 1446 * 1000 * 0,2 = 289 100€
 
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 858 000€ dans le domaine de la vie de quartier.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 289 000€ dans le domaine de la vie de quartier.
 
 
 </div>
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#00A589">Garants de la santé et sécurité</FONT> {-}
-#### <FONT COLOR="#00A589">Contribuer à la santé, à la sécurité et au confort des habitants</FONT>
+# ![](../Questionnaire_effets_commerce/images/sante_securite.png){width=11%}  <FONT COLOR="#F2907F">Garants de la santé et sécurité</FONT> {-}
+#### <FONT COLOR="#F2907F">Contribuer à la santé, à la sécurité et au confort des habitants</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -726,7 +726,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/sante_securite.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-117-1.png" width = "600">
 </p>
 
 Les commerces de proximité jouent un rôle crucial dans la santé et la sécurité des villes. Leur présence physique dans les rues contribue de manière significative à l'animation urbaine et à la création d'un environnement sûr et vivant. Jane Jacobs, urbaniste et philosophe américaine, a souligné l'importance des commerçants en tant qu'"yeux sur la rue", autrement dit comme **gardiens informels de l’espace**. Les commerces de proximité, en attirant des flux constants de clients, animent la rue et le quartier, ce qui contribue à créer un réseau de contrôle social spontané et au sentiment de sécurité. 
@@ -807,13 +807,13 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
 
-> 2068 * 2968 * 0,2 = 1 227 286€
+> 2068 * 1000 * 0,2 = 413 500€
 
 
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,2 million d’euros dans le domaine de la santé et la sécurité.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 414 000 euros dans le domaine de la santé et la sécurité.
 
 
 </div>
@@ -821,8 +821,8 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 <br>
 
 
-# ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#E1B441">Acteurs engagés pour l'environnement</FONT> {-}
-#### <FONT COLOR="#E1B441">Adopter des pratiques responsables pour un avenir durable</FONT>
+# ![](../Questionnaire_effets_commerce/images/environnement.png){width=11%}  <FONT COLOR="#CCD5D6">Acteurs engagés pour l'environnement</FONT> {-}
+#### <FONT COLOR="#CCD5D6">Adopter des pratiques responsables pour un avenir durable</FONT>
 
 
 
@@ -845,17 +845,17 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/environnement.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-166-1.png" width = "600">
 </p>
 
-Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble d'actions pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (79% des répondants), réduction de ses consommations (59%), sensibilisation de la clientèle à des pratiques plus durables (32%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
+Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer dans la transition environnementale. En plus de prendre en compte les injonctions à améliorer leurs performances énergétiques, l’enquête montre un ensemble d'actions pro-actives de la part des commerces de proximité. Meilleure gestion des déchets (88% des répondants), réduction de ses consommations (71%), sensibilisation de la clientèle à des pratiques plus durables (39%) : les commerçants s’engagent parfois activement dans des démarches plus responsables. 
 
 
 :::: {.columns}
 ::: {.column width="40%"}
 <br>
 <br>
-Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 22% des commerces.  
+Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 20% des commerces.  
 :::
 ::: {.column width="60%"}
 <iframe width="650" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_168.html"></iframe>
@@ -879,7 +879,7 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 :::: {.columns}
 ::: {.column width="55%"}
 <br>
-72% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 32% ont régulièrement des discussions informelles sur le sujet, 22% proposent des conseils. Une petite minorité (4%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent parfois emmener leur propre contenant (bien que certains commerçants déclarent ne pas souhaiter prendre de risque sanitaire en autorisant les emballages extérieurs). 
+66% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 39% ont régulièrement des discussions informelles sur le sujet, 26% proposent des conseils. Une petite minorité (5%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent parfois emmener leur propre contenant (bien que certains commerçants déclarent ne pas souhaiter prendre de risque sanitaire en autorisant les emballages extérieurs). 
 :::
 ::: {.column width="45%"}
 <iframe width="550" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_envt_172.html"></iframe>
@@ -891,7 +891,7 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
+<p style="font-size: 50px; color: #304B95; font-weight: bold;">66%</p>
 des commerçants participant à l'enquête ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
 :::
 
@@ -906,11 +906,11 @@ des commerçants participant à l'enquête ont à cœur de donner à leurs clien
 <br>
 <br>
 <br>
-Enfin, la meilleure gestion des déchets est un sujet important pour les commerçants, mais sur lequel nous observons une marge d’amélioration. Si une large majorité d’entre eux (79%) est attachée à la réduction des déchets, moins de la moitié (44%) utilise des solutions de recyclage. 
+Enfin, la meilleure gestion des déchets est un sujet important pour les commerçants. Si une large majorité d’entre eux (88% des commerçants concernés) est attachée à la réduction des déchets, 69% proposent des solutions de recyclage dans leur commerce. 
 :::
 ::::
 
-Environ 20% des répondants ont déclaré mettre en place des actions “autres” lorsque nous les avons interrogés sur leurs pratiques de recyclage. Ils ont fait remonter quelques pratiques que nous n’avions pas identifiées dans le questionnaire, par exemple : récupération des végétaux, dons d’invendu, reprise des lunettes, tri des métaux.  
+Environ 34% des répondants ont déclaré mettre en place des actions “autres” lorsque nous les avons interrogés sur leurs pratiques de recyclage. Ils ont fait remonter quelques pratiques que nous n’avions pas identifiées dans le questionnaire, par exemple : récupération des végétaux, dons d’invendu, reprise des lunettes, tri des métaux.  
 
 ::: {.column-margin}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-176-1.png)
@@ -953,7 +953,7 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 <div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
 ⚖️     <font size="5">**Mise en équivalence** </font>
 
-20% des commerçants donnent des conseils pratiques à leurs clients pour mettre en œuvre des pratiques de consommation plus responsable. Cela permet notamment d’éviter que certains déchets, par exemple d’emballages à usages uniques, soient produits. 
+26% des commerçants donnent des conseils pratiques à leurs clients pour mettre en œuvre des pratiques de consommation plus responsable. Cela permet notamment d’éviter que certains déchets, par exemple d’emballages à usages uniques, soient produits. 
 
 **Le travail d’un ou une “super” commerçante équivaut à une campagne de sensibilisation (ex : d’une agence publique, ou d’une association type Zéro Waste France).**
 
@@ -965,8 +965,8 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 
 <br>
 
-# ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#FF5757">Contributeurs à l'espace public</FONT> {-}
-#### <FONT COLOR="#FF5757">Transformer les lieux urbains en espaces de rencontre et de convivialité</FONT>
+# ![](../Questionnaire_effets_commerce/images/espace_public.png){width=11%}  <FONT COLOR="#F7B8A9">Contributeurs à l'espace public</FONT> {-}
+#### <FONT COLOR="#F7B8A9">Transformer les lieux urbains en espaces de rencontre et de convivialité</FONT>
 
 :::: {.columns}
 ::: {.column width="15%"}
@@ -987,7 +987,7 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 ::::
 
 <p align="center">
- <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-chiffres-cle/espace_public.png" width = "600">
+ <img src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-180-1.png" width = "600">
 </p>
 
 <br>
@@ -1112,12 +1112,12 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : La ville de Rouen compte 2968 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
 
-> 3114 * 2968 * 0,15 = 1 386 242€
+> 3114 * 1000 * 0,15 = 467 063€
 
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,4 million d’euros dans le domaine de l’entretien de l’espace public.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 467 000 euros dans le domaine de l’entretien de l’espace public.
 
 
 </div>
@@ -1130,7 +1130,7 @@ Cette étude révèle le rôle complexe des commerces de proximité, qui constit
 
 Parler, demander son chemin, trouver refuge quand on est suivi, signaler un problème, échanger une parole… Ces pratiques sociales simples mais essentielles trouvent encore un relais chez les commerçants. Certains d’entre eux assurent un service public de fait, sans y être contraints, par choix et par engagement. Ils veillent sur la propreté de leur rue, sur la sécurité de leur quartier, sur le tissu social de leur ville. En d’autres termes, ils endossent de nombreuses fonctions sociales, à des degrés divers. 
 
-Cet engagement a un prix ; c’est une charge assumée mais un coût encore ignoré. L'étude le démontre largement : pour une ville comme Rouen, la valeur de ces services rendus atteint presque les 8 millions d'euros annuels pour 2.968 commerces. Ce chiffre, bien que théorique, révèle l'ampleur du travail invisible réalisé par ces acteurs essentiels de la vie urbaine. Il met en lumière un paradoxe : alors que les commerces de proximité assument de fait des missions d'intérêt général, ce rôle social reste largement sous-évalué dans les politiques publiques. 
+Cet engagement a un prix ; c’est une charge assumée mais un coût encore ignoré. L'étude le démontre largement : pour une ville comptant 1000 commerces, la valeur de ces services rendus atteint presque les 3 millions d'euros annuels. Ce chiffre, bien que théorique, révèle l'ampleur du travail invisible réalisé par ces acteurs essentiels de la vie urbaine. Il met en lumière un paradoxe : alors que les commerces de proximité assument de fait des missions d'intérêt général, ce rôle social reste largement sous-évalué dans les politiques publiques. 
 
 À l'heure où de nombreux centres-villes luttent contre la désertification commerciale, il devient urgent de reconnaître et de valoriser ces contributions qui, bien que non marchandes, sont essentielles à la vitalité de nos territoires. Car en perdant un commerce, c'est tout un écosystème social qui s'effrite, avec un coût bien réel pour la collectivité. L’enjeu pour les politiques publiques réside donc dans la préservation de ces lieux à la fonction structurante de l’espace urbain, pour leur donner les moyens de continuer à être des piliers du vivre-ensemble.
 
@@ -1189,7 +1189,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+<FONT COLOR="#688E8E">**Lien social**</FONT>
 
 <br>
 
@@ -1210,7 +1210,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#004654">**Solidarités**</FONT>
+<FONT COLOR="#EC6459">**Solidarités**</FONT>
 
 <br>
 
@@ -1236,7 +1236,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+<FONT COLOR="#9AB0B0">**Vie de quartier**</FONT>
 
 <br>
 
@@ -1252,7 +1252,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+<FONT COLOR="#F2907F">**Santé et sécurité**</FONT>
 
 <br>
 
@@ -1273,7 +1273,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#E1B441">**Environnement**</FONT>
+<FONT COLOR="#CCD5D6">**Environnement**</FONT>
 
 <br>
 
@@ -1297,7 +1297,7 @@ réponses collectées à Paris
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#FF5757">**Espace public**</FONT>
+<FONT COLOR="#F7B8A9">**Espace public**</FONT>
 
 <br>
 
@@ -1364,7 +1364,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+<FONT COLOR="#688E8E">**Lien social**</FONT>
 
 <br>
 
@@ -1386,7 +1386,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#004654">**Solidarités**</FONT>
+<FONT COLOR="#EC6459">**Solidarités**</FONT>
 
 <br>
 
@@ -1411,7 +1411,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+<FONT COLOR="#9AB0B0">**Vie de quartier**</FONT>
 
 <br>
 
@@ -1427,7 +1427,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+<FONT COLOR="#F2907F">**Santé et sécurité**</FONT>
 
 <br>
 
@@ -1448,7 +1448,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#E1B441">**Environnement**</FONT>
+<FONT COLOR="#CCD5D6">**Environnement**</FONT>
 
 <br>
 
@@ -1472,7 +1472,7 @@ réponses collectées à Saint-Ouen
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#FF5757">**Espace public**</FONT>
+<FONT COLOR="#F7B8A9">**Espace public**</FONT>
 
 <br>
 
@@ -1545,7 +1545,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/lien_social.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#B4B1B1">**Lien social**</FONT>
+<FONT COLOR="#688E8E">**Lien social**</FONT>
 
 <br>
 
@@ -1567,7 +1567,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#004654">**Solidarités**</FONT>
+<FONT COLOR="#EC6459">**Solidarités**</FONT>
 
 <br>
 
@@ -1591,7 +1591,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/vie_quartier.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#0097B2">**Vie de quartier**</FONT>
+<FONT COLOR="#9AB0B0">**Vie de quartier**</FONT>
 
 <br>
 
@@ -1608,7 +1608,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#00A589">**Santé et sécurité**</FONT>
+<FONT COLOR="#F2907F">**Santé et sécurité**</FONT>
 
 <br>
 
@@ -1629,7 +1629,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#E1B441">**Environnement**</FONT>
+<FONT COLOR="#CCD5D6">**Environnement**</FONT>
 
 <br>
 
@@ -1652,7 +1652,7 @@ réponses collectées à la Métropole Rouen Normandie
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/espace_public.png){width=60%}</font>
 
 <center>
-<FONT COLOR="#FF5757">**Espace public**</FONT>
+<FONT COLOR="#F7B8A9">**Espace public**</FONT>
 
 <br>
 
