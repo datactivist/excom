@@ -1,14 +1,19 @@
 ---
-title: "Au-delà du marchand :<br>Mesurer la valeur<br>du commerce de proximité"
-subtitle: "Projet de recherche-action EXCOM"
+title: "AU-DELÀ DU MARCHAND &nbsp;&nbsp; ![](images/logo_excom.png){width=20%}"
+subtitle: "Mesurer la valeur du commerce de proximité"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Samuel Goëta
-date: 03/07/2025
+date: 03/20/2025
+title-block-banner: "#EF3E43"
+author-title: Auteurs
+published-title: Publication
+date-format: iso
 format: 
   html:
     toc: true
     toc-active: true
     toc-title: Sommaire
     toc-location: left
+    toc-depth: 2
     number-sections: false
     page-layout: full
     embed-resources: false
@@ -28,18 +33,15 @@ citation-location: margin
 
 
 
-```{r logo et police, echo = FALSE, message = FALSE, warning=FALSE, error=FALSE}
-# Graphisme haut droit de page
-htmltools::img(src = "visuel_haut_droit-removebg.png", 
-               alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; width:400px')
-
+```{r police, echo = FALSE, message = FALSE, warning=FALSE, error=FALSE}
 # Polices
 library(showtext)
-font_add("Montserrat", 
-         regular = "../Questionnaire_effets_commerce/fonts/Montserrat-VariableFont_wght.ttf",
-         bold = "../Questionnaire_effets_commerce/fonts/Montserrat-Bold.ttf")
-font_add("Open sans", regular = "../Questionnaire_effets_commerce/fonts/OpenSans-VariableFont_wdth,wght.ttf")
+font_add(family = "Din", regular = "fonts/din-condensed-bold.ttf")
+font_add(family = "Helvetica", 
+         regular = "fonts/helvetica-neue-regular.ttf",
+         bold = "fonts/helvetica-neue-bold.ttf",
+         italic = "fonts/helvetica-neue-italic.ttf")
+font_add(family = "FontAwesome", regular = "fonts/fontawesome/otfs/Font Awesome 6 Free-Solid-900.otf")
 showtext_auto()
 
 library(sysfonts)
@@ -64,7 +66,7 @@ font_add_google("Open sans", "Open sans")
 #toc-title {
     font-size: 1.2em;         /* Taille du texte */
     font-weight: bold;        /* Texte en gras */
-    color: #304B95;           /* Couleur du texte */
+    color: #EF3E43;           /* Couleur du texte */
     text-align: left;       /* Centrer le texte */
     margin-top: -2px;      /* Espacement sous le titre */
     margin-bottom: 10px;      /* Espacement sous le titre */
@@ -78,24 +80,28 @@ font_add_google("Open sans", "Open sans")
     margin: 0;                /* Supprimer les marges */
 }
 .sidebar.toc-left .nav-link.active {
-  color: #304B95 !important; /* Couleur pour l'élément actif */
+  color: #EF3E43 !important; /* Couleur pour l'élément actif */
   font-weight: bold; /* Gras pour l'élément actif */
 }
 ```
 
-
+![](images/logos_partenaires.png)
 
 <br>
 
 *[Télécharger cette étude en PDF](https://nextcloud.datactivist.coop/s/jxFWmm7CKqPtt5J)*
 
-La tendance à [l'éloignement des commerces de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural), particulièrement hors des grandes villes, ne revêt pas qu'un enjeu économique. Les Français et Françaises qui vivent dans des communes ayant perdu leurs commerces  regrettent certes l'absence d'accès à un service marchand, mais pas seulement : il leur manque également les relations sociales du quotidien, essentielles dans la vie d'un quartier et qui ont un impact fort  sur  la qualité de vie des habitants. Mais comment mesurer concrètement ces apports ?
+La tendance à [l'éloignement des commerces de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural), particulièrement hors des grandes villes, ne revêt pas qu'un enjeu économique. Les Français et Françaises qui vivent dans des communes ayant perdu leurs commerces  regrettent certes l'absence d'accès à un service marchand, mais pas seulement : il leur manque également les relations sociales du quotidien, essentielles dans la vie d'un quartier et qui ont un impact fort  sur  la qualité de vie des habitants. 
+
+##### Mais comment mesurer concrètement ces apports ?
 
 Malgré l’importance du sujet, peu d’études ont fait la lumière sur les impacts d’un commerce sur la vie du territoire. Et les travaux académiques existants se concentrent souvent sur un aspect spécifique ou sur leurs impacts négatifs, sans proposer de vision complète et synthétique de leur rôle. Cette approche partielle ne permet ni de rendre visible ni de mesurer la valeur créée par les commerçants.
 
 [Dans un billet de 2019](https://medium.com/@emmanuelle.hoss/de-quoi-la-rentabilit%C3%A9-est-elle-le-nom-22938111ed9e), Emmanuelle Hoss (Paris Commerces) et Joël Gombin (opsci, ex-Datactivist), regrettaient que "*la rentabilité d’un projet telle qu’on l’entend communément aujourd’hui, ne prend compte ni les externalités négatives, ni les externalités positives. Elle fonctionne en mode binaire, sans se préoccuper des interactions et des conséquences engendrées par ses actions.*" 
 
-Ce constat a été le point de départ du projet de recherche-action EXCOM. Celui-ci a été lancé avec pour objectif de nommer et de quantifier ces effets alors peu visibles dans leur globalité. Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
+##### Ce constat a été le point de départ du projet de recherche-action EXCOM. 
+
+Celui-ci a été lancé avec pour objectif de nommer et de quantifier ces effets alors peu visibles dans leur globalité. Il est porté depuis 2023 par six partenaires : Paris Commerce, Métropole Rouen Normandie, Fondation Urbanis, Urbanis Aménagement, Altavia Foundation et Datactivist.
 
 La première phase du projet, menée d'août 2023 à avril 2024, a permis une avancée significative dans la compréhension des externalités du commerce de proximité. À travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans, l'équipe a identifié et caractérisé 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier. 
 
@@ -105,14 +111,16 @@ La première phase du projet, menée d'août 2023 à avril 2024, a permis une av
 
 Autrement dit, ces entretiens ont permis de mettre à jour que les commerçants endossent six rôles “informels”, au-delà de ceux qui leur sont habituellement attribués : 
 
-- Animateurs de lien social : ils créent des connexions et favorisent la solidarité entre les habitants.
-- Piliers de la solidarité locale : leurs actions renforcent l'entraide et la cohésion communautaire.
-- Moteurs de la vie de quartier : en animant le quotidien, ils insufflent vitalité et dynamisme aux espaces publics.
-- Garants de la santé et de la sécurité : ils constituent un soutien clé en cas de problème.
-- Acteurs engagés pour l'environnement : par leurs pratiques responsables, ils participent activement à un avenir durable.
-- Contributeurs à l'espace public : ils transforment les lieux urbains en espaces de rencontre et de convivialité.
+- **Animateurs de lien social** : ils créent des connexions et favorisent la solidarité entre les habitants.
+- **Piliers de la solidarité locale** : leurs actions renforcent l'entraide et la cohésion communautaire.
+- **Moteurs de la vie de quartier** : en animant le quotidien, ils insufflent vitalité et dynamisme aux espaces publics.
+- **Garants de la santé et de la sécurité** : ils constituent un soutien clé en cas de problème.
+- **Acteurs engagés pour l'environnement** : par leurs pratiques responsables, ils participent activement à un avenir durable.
+- **Contributeurs à l'espace public** : ils transforment les lieux urbains en espaces de rencontre et de convivialité.
 
-Indéniablement, les petits commerçants et micro-commerçants ont bien plus qu’une fonction économique. Leur impact s'étend au-delà des transactions marchandes, contribuant à tisser le lien social, à renforcer la solidarité et à dynamiser les territoires. 
+##### Indéniablement, les petits commerçants et micro-commerçants ont bien plus qu’une fonction économique. 
+
+Leur impact s'étend au-delà des transactions marchandes, contribuant à tisser le lien social, à renforcer la solidarité et à dynamiser les territoires. 
 
 Ce nouveau rapport met en valeur ces contributions positives tout en éclairant les décideurs publics sur l'ensemble de la valeur créée par ces entrepreneurs. Il offre des éléments concrets pour aider les collectivités locales et les législateurs à mieux comprendre et valoriser leur rôle dans le développement des territoires. 
 
@@ -126,17 +134,17 @@ Son objectif est double : mesurer ces 18 externalités à travers une enquête p
 
 # En résumé
 
-<iframe frameborder="0" width="1050" height="1550" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-resume.html"></iframe>
+<iframe frameborder="0" width="1050" height="1550"  src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-resume.html"></iframe>
 
 # Aperçu des données
 
 <center>
-<iframe frameborder="0" width="750" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/cartographie_repondants.html"></iframe>
+<iframe frameborder="0" width="750" height="400"  src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/cartographie_repondants.html"></iframe>
 </center>
 
 <br>
 
-En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen-sur-Seine, Marseille ainsi que la Métropole de Rouen (dans les villes de Rouen, Elbeuf-Sur-Seine, Le Trait et Duclair), qui sont donc les territoires les plus représentés dans l’échantillon. 
+###### En plus de diffuser le questionnaire en ligne, nous sommes allés directement à la rencontre de commerçants à Paris, Saint-Ouen-sur-Seine, Marseille ainsi que la Métropole de Rouen (dans les villes de Rouen, Elbeuf-Sur-Seine, Le Trait et Duclair), qui sont donc les territoires les plus représentés dans l’échantillon. 
 
 <br>
 
@@ -150,7 +158,7 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-<iframe width="550" height="400" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html"></iframe>
+<iframe width="550" height="400" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html"></iframe>
 :::
 ::::
 
@@ -158,7 +166,7 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 
 :::: {.columns}
 ::: {.column width="48%"}
-<iframe width="750" height="465" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
+<iframe width="750" height="465" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
 :::
 ::: {.column width="52%"}
 <br>
@@ -174,7 +182,7 @@ Si les produits ou services vendus varient grandement, les commerces interrogés
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">89%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">89%</p>
 des commerçants participant à l'enquête sont indépendants
 :::
 
@@ -191,12 +199,12 @@ Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces d
 Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou sont composés de deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces.** 
 :::
 ::: {.column width="45%"}
-<iframe width="1000" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
+<iframe width="1000" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
 :::
 ::::
 
 <center>
-<iframe width="610" height="501" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html"></iframe>
+<iframe width="610" height="501" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/frequentation_commerce-12.html"></iframe>
 </center>
 
 Le rapport est divisé en 6 parties, afin de rendre compte des apports des commerces dans autant de grandes catégories d’effets sociaux et environnementaux : lien social, solidarités, vie de quartier, santé et sécurité, environnement, espace public. 
@@ -210,8 +218,9 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️  **Mise en équivalence** 
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 À la fin de chaque partie, nous proposons une mise en équivalence des bénéfices des commerces de proximité. Cela prendra deux formes : 
 
@@ -232,7 +241,7 @@ Enfin, les services rendus par les commerçants ne remplacent pas directement le
 
 <br>
 
-🔎️  **Remarques méthodologiques**
+<div style="font-size: 1.5em; font-family: 'Din bold'">Remarques méthodologiques</div>
 
 - **Une estimation quantitative simplifie forcément la réalité**. Toute tentative de produire une estimation monétaire pour une dynamique sociale (ici, les apports non marchands des commerces) est imparfaite et prête à débat. Notre objectif n’est pas de proposer des chiffres fermes, indiscutables, mais de mettre en valeur un travail dépassant le strict cadre de la relation marchande. 
 - Dans l’optique d’une estimation monétaire mesurée, **nous calculons le temps passé sur la base du coût employeur d’un salaire minimum**. 
@@ -253,11 +262,11 @@ Nous n’avons par ailleurs pas la matière empirique pour mesurer les externali
 <!-- empty column to create gap -->
 :::
 ::: {.column width="70%"}
-<FONT COLOR="#666666">
 
-> *“Ayant beaucoup de personnes âgées dans mon quartier qui viennent bavarder dans ma boutique quand elles font leurs courses, certaines donnent mon numéro de téléphone à leurs enfants qui peuvent m'appeler s'ils n'arrivent pas à se joindre, j'ai même des clefs pour aller chez leurs parents.”*
+###### “Ayant beaucoup de personnes âgées dans mon quartier qui viennent bavarder dans ma boutique quand elles font leurs courses, certaines donnent mon numéro de téléphone à leurs enfants qui peuvent m'appeler s'ils n'arrivent pas à se joindre, j'ai même des clefs pour aller chez leurs parents.”
 
-<div style="text-align: right">*-- Fleuriste, Paris --*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Fleuriste, Paris --</div>
 </FONT>
 :::
 ::::
@@ -270,7 +279,7 @@ Les commerces locaux offrent des espaces de rencontre, favorisant la santé soci
 
 :::: {.columns}
 ::: {.column width="50%"}
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html"></iframe>
+<iframe width="550" height="420" class="img-border-red" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu-privees-25.html"></iframe>
 :::
 ::: {.column width="8%"}
 <!-- empty column to create gap -->
@@ -287,7 +296,7 @@ Concrètement, **deux tiers des commerces entretiennent régulièrement des conv
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">20%</p>
 des commerçants participant à l'enquête ont plusieurs discussions d'ordre privé quotidiennement
 :::
 
@@ -314,14 +323,14 @@ Seuls 22 répondants sur les 324 déclarent ne jamais évoquer de sujets privés
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-discu-privees-23.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-discu-privees-23.html"></iframe>
 :::
 ::::
 
 Toutes les catégories de commerces sont par ailleurs concernées par le fait d’échanger longuement avec certains clients. Le croisement des données ne fait en effet pas ressortir d’écart marqué selon ce qui est vendu. Concrètement, les commerces alimentaires autant que les commerces culturels/de loisir sont des **acteurs de la socialisation quotidienne**. 
 
 <center>
-<iframe width="650" height="558" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-categorie-discu-privees-34.html"></iframe>
+<iframe width="650" height="558" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comp-categorie-discu-privees-34.html"></iframe>
 </center>
 
 En plus de contribuer à **réduire l’isolement** des personnes, les commerces **font vivre des savoirs et savoir-faire**. 
@@ -330,10 +339,10 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 
 :::: {.columns}
 ::: {.column width="55%"}
-<iframe width="950" height="530" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
+<iframe width="950" height="530" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi-53.html"></iframe>
 :::
 ::: {.column width="45%"}
-<iframe width="670" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
+<iframe width="670" height="440" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/detail-produits-36.html"></iframe>
 :::
 ::::
 
@@ -342,7 +351,7 @@ Parmi ceux qui vendent les produits qu’ils fabriquent eux-mêmes (115 réponda
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">72%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">72%</p>
 des commerçants participant à l'enquête prennent le temps plusieurs fois par jour d’échanger longuement avec leurs clients sur les produits vendus
 :::
 
@@ -351,22 +360,23 @@ des commerçants participant à l'enquête prennent le temps plusieurs fois par 
 Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au sein de communautés locales**. Plus de la moitié des répondants collaborent ainsi avec des associations. Cela peut prendre des formes variées : adhérer à une association de quartier en tant que commerçant, faire des dons à des associations d’aide sociale/humanitaire ou encore participer à la tombola d’une association sportive. 
 
 <center>
-<iframe width="750" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso-quartier-52.html"></iframe>
+<iframe width="750" height="510" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso-quartier-52.html"></iframe>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : les commerces proposent à la fois un espace d’échange du quotidien, de partage, et contribuent à faire vivre le tissu associatif local.
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces proposent à la fois un espace d’échange du quotidien, de partage, et contribuent à faire vivre le tissu associatif local.
 </div>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 20% des commerçants échangent avec leurs clients sur des sujets privés plusieurs fois par jour. Faisons l’hypothèse que cela leur prend 30 minutes quotidiennement. En un mois, cela représente 10h. 
 
@@ -387,7 +397,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 > 6228 * 1000 * 0,2 = 1 245 500€
 
-À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,2 millions d’euros dans le domaine du lien social.
+À l’échelle de la ville, les commerces créent une valeur théorique d’environ 1,2 million d’euros dans le domaine du lien social.
 
 
 </div>
@@ -404,15 +414,17 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 <!-- empty column to create gap -->
 :::
 ::: {.column width="70%"}
-<FONT COLOR="#666666">
 
-> *“Notre engagement est social, écologique et politique, c'est le cœur battant de tout commerçant de centre-ville !”*
+###### “Notre engagement est social, écologique et politique, c'est le cœur battant de tout commerçant de centre-ville !”
 
-<div style="text-align: right">*-- Magasin de vêtements, Sénas*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Magasin de vêtements, Sénas --</div>
+</FONT>
 
-> *“Nous sommes une boutique solidaire et nous sommes identifiés comme un lieu bienveillant par la population. On crée du lien et de l’écoute avec l'équipe de bénévoles mais aussi entre les clients.”*
+###### “Nous sommes une boutique solidaire et nous sommes identifiés comme un lieu bienveillant par la population. On crée du lien et de l’écoute avec l'équipe de bénévoles mais aussi entre les clients.”
 
-<div style="text-align: right">*-- Recyclerie, Elbeuf-Sur-Seine*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Recyclerie, Elbeuf-Sur-Seine --</div>
 </FONT>
 :::
 ::::
@@ -431,7 +443,7 @@ De nombreux commerçants de proximité sont régulièrement au contact de person
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png)
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png){.img-border-red width=400}
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -456,7 +468,7 @@ Cependant, nous observons une sursollicitation des cafés-restaurants par rappor
 <!-- empty column to create gap -->
 :::
 ::: {.column width="55%"}
-<iframe width="650" height="535" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/sollic_freq-58.html"></iframe>
+<iframe width="650" height="535" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/sollic_freq-58.html"></iframe>
 :::
 ::::
 
@@ -465,17 +477,17 @@ Cependant, nous observons une sursollicitation des cafés-restaurants par rappor
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">23%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">23%</p>
 des commerçants participant à l'enquête sont interpellés au moins une fois par semaine par des personnes dans le besoin
 :::
 
 <center>
-<iframe width="650" height="560" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-72.html"></iframe>
+<iframe width="650" height="560" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-72.html"></iframe>
 </center>
 
 
 <center>
-<iframe width="650" height="515" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/lollipop_social-91.html"></iframe>
+<iframe width="650" height="515" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/lollipop_social-91.html"></iframe>
 </center>
 
 
@@ -486,7 +498,7 @@ des commerçants participant à l'enquête sont interpellés au moins une fois p
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">45%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">45%</p>
 de tous les commerçants participant à l'enquête ont déjà renvoyé au moins un client vers une aide extérieure (services sociaux, de santé ou forces de l’ordre).
 :::
 
@@ -498,19 +510,19 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 #### Population moyenne
 
 <center>
-<iframe width="650" height="590" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html"></iframe>
+<iframe width="650" height="590" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_petites-comm-94.html"></iframe>
 </center>
 
 #### Population élevée
 
 <center>
-<iframe width="650" height="590" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html"></iframe>
+<iframe width="650" height="590" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_moyennes-comm-95.html"></iframe>
 </center>
 
 #### Population très élevée
 
 <center>
-<iframe width="650" height="590" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html"></iframe>
+<iframe width="650" height="590" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirections_grandes-comm-96.html"></iframe>
 </center>
 
 :::
@@ -522,16 +534,17 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : les commerces de proximité sont des points d’échange informels avec les clients, mais également des relais vers des services adaptés à répondre à des besoins spécifiques. Ils sont également en première ligne face à des personnes précaires.
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité sont des points d’échange informels avec les clients, mais également des relais vers des services adaptés à répondre à des besoins spécifiques. Ils sont également en première ligne face à des personnes précaires.
 </div>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 20% des commerces sont sollicités plusieurs fois par jour par des personnes dans le besoin (faisons l’hypothèse de 2 personnes). 
 Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estimons le coût dépensé par sollicitation à 0,5€. Le temps passé est également notable, de l’ordre de 30 minutes par semaine. 
@@ -571,9 +584,10 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 ::: {.column width="70%"}
 <FONT COLOR="#666666">
 
-> *“La vie de quartier chez nous, c’est accueillir les nouveaux arrivants lors de nos dégustations de vins tous les jeudis soir. Mes clients sont vite devenus amis entre eux.”*
+###### “La vie de quartier chez nous, c’est accueillir les nouveaux arrivants lors de nos dégustations de vins tous les jeudis soir. Mes clients sont vite devenus amis entre eux.”
 
-<div style="text-align: right">*-- Caviste, Saint Ouen --*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Caviste, Saint Ouen --</div>
 </FONT>
 :::
 ::::
@@ -587,7 +601,7 @@ Les commerces de proximité sont des piliers essentiels à la construction d’u
 Ils s’intègrent tout d’abord dans des **réseaux professionnels de proximité**. La quasi-totalité (96%) des personnes interrogées déclare ainsi rendre des services aux autres commerçants des alentours. On observe par ailleurs que l’intégration dans le tissu associatif local va souvent de pair avec un réseau d’entraide commerciale. 
 
 ::: {.column-margin}
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">96%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">96%</p>
 des commerçants participant à l'enquête rendent des services aux autres commerçants des alentours
 :::
 
@@ -595,10 +609,10 @@ des commerçants participant à l'enquête rendent des services aux autres comme
 
 :::: {.columns}
 ::: {.column width="44%"}
-<iframe width="515" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrice_collab-109.html"></iframe>
+<iframe width="515" height="440" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrice_collab-109.html"></iframe>
 :::
 ::: {.column width="56%"}
-<iframe width="590" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/aides_commerçants_110.html"></iframe>
+<iframe width="590" height="510" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/aides_commerçants_110.html"></iframe>
 :::
 ::::
 
@@ -611,7 +625,7 @@ Cette entraide prend des formes variées : recommander un commerce voisin à des
 Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidarités professionnelles à l’échelle de la rue.
 :::
 ::: {.column width="53%"}
-<iframe width="590" height="510" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/collab_asso_113.html"></iframe>
+<iframe width="590" height="510" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/collab_asso_113.html"></iframe>
 :::
 ::::
 
@@ -623,7 +637,7 @@ Ce soutien mutuel crée des dynamiques de réciprocité et renforce les solidari
 
 :::: {.columns}
 ::: {.column width="55%"}
-<iframe width="650" height="480" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/reception_colis_111.html"></iframe>
+<iframe width="650" height="480" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/reception_colis_111.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -640,7 +654,7 @@ Des relations de proximité sont également développées entre les commerçants
 ::: {.column-margin}
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">70%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">70%</p>
 des commerçants participant à l'enquête rendent des services aux habitants de l’immeuble dans lequel se situe leur local
 :::
 
@@ -663,21 +677,22 @@ Une [enquête réalisée par Clara Hercule pour *Sur-Mesure*](https://www.revues
 Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’échelle du quartier, les commerçants contribuent à l’animer** par l’organisation, parfois dans le cadre d’associations de commerçants, d’évènements. 43% des répondants en organisent ainsi au moins un par an (et plus d’un tiers au moins deux). Ces actions parfois collectives participent à la vitalité et l’attractivité du quartier.  
 :::
 ::: {.column width="55%"}
-<iframe width="650" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/orga_events_116.html"></iframe>
+<iframe width="650" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/orga_events_116.html"></iframe>
 :::
 ::::
 
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : les commerces de proximité sont des acteurs clés de la vie de quartier, tissant des réseaux d’entraide professionnelle et sociale entre commerçants et habitants. Ils soutiennent les dynamiques locales par des services réciproques, des liens de sociabilité, et l’organisation d’événements.
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité sont des acteurs clés de la vie de quartier, tissant des réseaux d’entraide professionnelle et sociale entre commerçants et habitants. Ils soutiennent les dynamiques locales par des services réciproques, des liens de sociabilité, et l’organisation d’événements.
 </div>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 40% des commerces participent à l’organisation d’au moins un évènement de quartier par an. Plus de la moitié prend également le temps d’aider régulièrement les commerçants des alentours et ses voisins. Pour les plus investis d’entre eux (environ 20%), le temps passé sur un mois correspond à environ 2h. 
 53% des commerçants collaborent par ailleurs avec au moins une association locale, hors solidarité (ex : don pour une tombola). Estimons ce coût à 200€ annuellement. 
@@ -716,11 +731,11 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 <!-- empty column to create gap -->
 :::
 ::: {.column width="70%"}
-<FONT COLOR="#666666">
 
-> *“Le commerce est devenu un point de ralliement pour les habitants du quartier qui n’hésitent pas à venir demander de l’aide, comme mon voisin en situation de handicap qui s’est retrouvé coincé en dehors de chez lui. Grâce à un autre commerçant serrurier il a réussi à rentrer chez lui sans frais, car il n’avait pas les moyens.”*
+###### “Le commerce est devenu un point de ralliement pour les habitants du quartier qui n’hésitent pas à venir demander de l’aide, comme mon voisin en situation de handicap qui s’est retrouvé coincé en dehors de chez lui. Grâce à un autre commerçant serrurier il a réussi à rentrer chez lui sans frais, car il n’avait pas les moyens.”
 
-<div style="text-align: right">*-- Librairie, Paris --*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Librairie, Paris --</div>
 </FONT>
 :::
 ::::
@@ -737,24 +752,24 @@ Les situations d’insécurité sont relativement rares. 39% des commerçants n�
 ::: {.column-margin}
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">39%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">39%</p>
 des commerçants participant à l'enquête n’ont jamais rencontré de situations d’insécurité
 :::
 
 
 :::: {.columns}
 ::: {.column width="50%"}
-<iframe width="550" height="495" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html"></iframe>
+<iframe width="550" height="495" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_151.html"></iframe>
 :::
 ::: {.column width="50%"}
-<iframe width="550" height="520" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html"></iframe>
+<iframe width="550" height="520" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/urgence_141.html"></iframe>
 :::
 ::::
 
 
 :::: {.columns}
 ::: {.column width="45%"}
-<iframe width="550" height="520" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html"></iframe>
+<iframe width="550" height="520" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/malaise_135.html"></iframe>
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
@@ -779,16 +794,17 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : l'impact des commerces de proximité sur la sécurité se manifeste à plusieurs niveaux : prévention par leur simple présence et l'affluence qu'ils génèrent, intervention en cas de situations d’insécurité ou d’incidents, accueil des personnes qui ont besoin d’un lieu sûr.
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>L'impact des commerces de proximité sur la sécurité se manifeste à plusieurs niveaux : prévention par leur simple présence et l'affluence qu'ils génèrent, intervention en cas de situations d’insécurité ou d’incidents, accueil des personnes qui ont besoin d’un lieu sûr.
 </div>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribue au sentiment de sécurité. 20% de commerçants interviennent par ailleurs au moins une fois par mois face à un incident dans le domaine public, et autant en cas d’accident. La majorité a également déjà accueilli des personnes en détresse dans son espace. Nous estimons à 10 minutes par jour le temps passé à surveiller la rue et, dans une moindre mesure, à accompagner les personnes qui en ont besoin. 
 
@@ -831,15 +847,18 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 <!-- empty column to create gap -->
 :::
 ::: {.column width="70%"}
-<FONT COLOR="#666666">
 
-> *“Quand les clients me demandent une carte de visite, je leur réponds : pour moins de Flyers et plus de fleurs, je vous propose de flasher le QR CODE du site internet.”*
+###### “Quand les clients me demandent une carte de visite, je leur réponds : pour moins de Flyers et plus de fleurs, je vous propose de flasher le QR CODE du site internet.”
 
-<div style="text-align: right">*-- Fleuriste, Saint-Ouen --*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Fleuriste, Saint-Ouen --</div>
+</FONT>
 
-> *“Notre épicerie était avant tout écologique, mais on s’est rendu compte avec le temps qu’on a un ÉNORME impact social. Les magasins de proximité c’est la vie ! Et c’est la paix. Sans ça il n’y a plus de lien et chacun commande sur internet, on meurt de solitude ou on finit par détester tout et tout le monde, c’est la guerre.”*
 
-<div style="text-align: right">*-- Épicerie, Paris --*</div>
+###### “Notre épicerie était avant tout écologique, mais on s’est rendu compte avec le temps qu’on a un ÉNORME impact social. Les magasins de proximité c’est la vie ! Et c’est la paix. Sans ça il n’y a plus de lien et chacun commande sur internet, on meurt de solitude ou on finit par détester tout et tout le monde, c’est la guerre.”
+
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Épicerie, Paris --</div>
 </FONT>
 :::
 ::::
@@ -858,7 +877,7 @@ Comme chaque acteur individuel ou collectif, les commerces ont un rôle à jouer
 Une majorité de commerçants interrogés a par exemple investi pour réduire sa consommation électrique (ex : ampoules basse consommation). Cela ne s’explique pas uniquement par souci écologique mais également par le coût élevé de l’électricité. L’usage de solutions pour économiser de l’eau (ex : filtre économiseur d’eau) est moins répandu mais pas rare : il concerne 20% des commerces.  
 :::
 ::: {.column width="60%"}
-<iframe width="650" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_168.html"></iframe>
+<iframe width="650" height="440" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_168.html"></iframe>
 :::
 ::::
 
@@ -882,7 +901,7 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 66% des commerces ont par ailleurs à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables. 39% ont régulièrement des discussions informelles sur le sujet, 26% proposent des conseils. Une petite minorité (5%) propose des réductions pour favoriser la diminution des emballages à usages uniques. Cela concerne par exemple les cafés et certains restaurants proposant de la vente à emporter, dans lesquels les clients peuvent parfois emmener leur propre contenant (bien que certains commerçants déclarent ne pas souhaiter prendre de risque sanitaire en autorisant les emballages extérieurs). 
 :::
 ::: {.column width="45%"}
-<iframe width="550" height="380" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_envt_172.html"></iframe>
+<iframe width="550" height="380" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_envt_172.html"></iframe>
 :::
 ::::
 
@@ -891,14 +910,14 @@ D’autres initiatives, qui relèvent des pratiques plutôt que de l’équipeme
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">66%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">66%</p>
 des commerçants participant à l'enquête ont à cœur de donner à leurs clients la possibilité d’avoir des modes de consommation plus responsables
 :::
 
 
 :::: {.columns}
 ::: {.column width="55%"}
-<iframe width="550" height="555" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_174.html"></iframe>
+<iframe width="550" height="555" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_174.html"></iframe>
 :::
 ::: {.column width="45%"}
 <br>
@@ -937,8 +956,8 @@ Concernant la réduction des déchets, de nombreux commerçants s’inscrivent d
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : les commerces de proximité ont un triple rôle à jouer dans le cadre de la transition écologique : en plus de mettre en place des actions de réduction des déchets et de recyclage, ils peuvent réduire leurs consommations d’eau et d’électricité et ont un rôle de sensibilisation de leurs clients (et dans une moindre mesure de leurs fournisseurs). 
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité ont un triple rôle à jouer dans le cadre de la transition écologique : en plus de mettre en place des actions de réduction des déchets et de recyclage, ils peuvent réduire leurs consommations d’eau et d’électricité et ont un rôle de sensibilisation de leurs clients (et dans une moindre mesure de leurs fournisseurs). 
 </div>
 
 
@@ -950,8 +969,9 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 26% des commerçants donnent des conseils pratiques à leurs clients pour mettre en œuvre des pratiques de consommation plus responsable. Cela permet notamment d’éviter que certains déchets, par exemple d’emballages à usages uniques, soient produits. 
 
@@ -973,15 +993,18 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 <!-- empty column to create gap -->
 :::
 ::: {.column width="70%"}
-<FONT COLOR="#666666">
 
-> *“Les gens aiment bien les vitrines, ça leur fait un petit moment de poésie.”*
+###### “Les gens aiment bien les vitrines, ça leur fait un petit moment de poésie.”
 
-<div style="text-align: right">*-- Bijouterie, Paris --*</div>
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Bijouterie, Paris --</div>
+</FONT>
 
-> *“Depuis 10 ans, nous réclamions, avec les autres commerçants de la rue, des jardinières pour verdir cette rue et aussi lutter contre le stationnement sauvage. Depuis février 2024, des jardinières ont été installées. Nos clients apprécient énormément et nous aussi.”*
 
-<div style="text-align: right">*-- Épicerie, Rouen --*</div>
+###### “Depuis 10 ans, nous réclamions, avec les autres commerçants de la rue, des jardinières pour verdir cette rue et aussi lutter contre le stationnement sauvage. Depuis février 2024, des jardinières ont été installées. Nos clients apprécient énormément et nous aussi.”
+
+<FONT COLOR="#005A56">
+<div style="text-align: right; font-size: 1.5em; font-family: 'Din bold'">-- Épicerie, Rouen --</div>
 </FONT>
 :::
 ::::
@@ -995,7 +1018,7 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 Les commerçants contribuent de plusieurs manières à la propreté de la rue et à l'amélioration de l'espace public : **nettoyage des trottoirs, signalement des problèmes, décorations saisonnales, participation à des projets d’aménagement (y compris informels)...** Ces initiatives contribuent à la perception positive d’espaces piétons rendus plus agréables et sont un complément direct aux projets menés par les services municipaux.  
 
 <center>
-<iframe width="600" height="440" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_182.html"></iframe>
+<iframe width="600" height="440" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_182.html"></iframe>
 </center>
 
 Mettre en place des actions venant prendre soin de sa vitrine est la façon la plus évidente de contribuer à l’embellissement de la rue. La moitié des répondants indique s’impliquer particulièrement. Ils peuvent d’ailleurs être reconnus par des prix ou des concours organisés par les municipalités, les associations de commerçants, ou des acteurs nationaux (c’est par exemple le cas de [Petits Commerces, qui distingue la plus belle vitrine de Noël](https://www.petitscommerces.fr/laplusbellevitrinedenoel/)[^8]), qui encouragent l'émulation et valorisent les meilleures pratiques en matière de décoration et d'animation commerciale. 
@@ -1023,7 +1046,7 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 "Yeux sur la rue", pour reprendre la formule de Jane Jacobs, les commerçants sont également aux premières loges des éventuelles dégradations de l’espace public. **Plus de la moitié d’entre eux ont déjà interpellé les services de leur mairie** pour solliciter une intervention. Cela est cependant peu fréquent. Seuls 20% le font au moins une fois par mois. 
 :::
 ::: {.column width="50%"}
-<iframe width="550" height="545" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html"></iframe>
+<iframe width="550" height="545" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_183.html"></iframe>
 :::
 ::::
 
@@ -1034,7 +1057,7 @@ Des expérimentations d’accompagnement à l’embellissement des devantures, t
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">20%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">20%</p>
 des commerçants participant à l'enquête interpellent les services de leur mairie au moins une fois par mois
 :::
 
@@ -1044,7 +1067,7 @@ L’existence d’applications dans certaines collectivités facilite peut-être
 
 :::: {.columns}
 ::: {.column width="45%"}
-<iframe width="480" height="435" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_199.html"></iframe>
+<iframe width="480" height="435" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_199.html"></iframe>
 :::
 ::: {.column width="55%"}
 <br>
@@ -1058,14 +1081,14 @@ En plus de contribuer à **l’embellissement de la ville, les commerçants assu
 
 
 <center>
-<iframe width="650" height="553" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_213.html"></iframe>
+<iframe width="650" height="553" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_213.html"></iframe>
 </center>
 
 <br>
 
 :::: {.columns}
 ::: {.column width="55%"}
-<iframe width="600" height="457" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/patrimoine_216.html"></iframe>
+<iframe width="600" height="457" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/patrimoine_216.html"></iframe>
 :::
 ::: {.column width="45%"}
 <br>
@@ -1079,21 +1102,22 @@ Nous avons également mesuré les **apports des commerces à la préservation du
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">29%</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">29%</p>
 des commerçants participant à l'enquête apportent un soin particulier à la façade de l’immeuble dans lequel ils sont installés
 :::
 
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: #304B95; background-color: #d3dbe8;">
-**En résumé** : les commerces de proximité jouent un rôle important dans l’embellissement et la propreté des espaces publics, qu’il s’agisse de nettoyer les abords, décorer les vitrines, ou contribuer au verdissement et à l’entretien de leur environnement. Ils participent également en partie à préserver le patrimoine architectural et signalent les problèmes dans l’espace public.
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité jouent un rôle important dans l’embellissement et la propreté des espaces publics, qu’il s’agisse de nettoyer les abords, décorer les vitrines, ou contribuer au verdissement et à l’entretien de leur environnement. Ils participent également en partie à préserver le patrimoine architectural et signalent les problèmes dans l’espace public.
 </div>
 
 <br>
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #e8e8e8;">
-⚖️     <font size="5">**Mise en équivalence** </font>
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+
+<div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
 15% des commerces nettoient les abords du magasin plusieurs fois par jour. Cette activité, couplée à l’entretien de la devanture (ex : soin des plantes) leur prend environ 15min par jour. 
 
@@ -1163,7 +1187,7 @@ En 2023, la commune de Paris compte près de [61.000 commerces et services comme
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">139</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">139</p>
 réponses collectées à Paris
 :::
 
@@ -1176,12 +1200,12 @@ réponses collectées à Paris
 <center>
 
 
-<iframe width="440" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_217.html"></iframe>
-<iframe width="360" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_218.html"></iframe>
+<iframe width="440" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/comparaison_217.html"></iframe>
+<iframe width="360" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_218.html"></iframe>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_219.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_221.html"></iframe>
 
 
 </center>
@@ -1197,14 +1221,14 @@ réponses collectées à Paris
 
 <br>
 
-<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_223.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_224.html"></iframe>
+<iframe width="400" height="360" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_223.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_224.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_225.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_226.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_225.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_226.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/solidarites.png){width=60%}</font>
@@ -1218,13 +1242,13 @@ réponses collectées à Paris
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_230.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_230.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_231.html"></iframe>
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_232.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_229.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_232.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_229.html"></iframe>
 
 <br>
 
@@ -1245,8 +1269,8 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_234.html"></iframe>
-<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_235.html"></iframe>
+<iframe width="550" height="420" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_234.html"></iframe>
+<iframe width="650" height="370" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_235.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/sante_securite.png){width=60%}</font>
@@ -1261,13 +1285,13 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_237.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_238.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_237.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_238.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_239.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_239.html"></iframe>
 </center>
 
 ### <font style="margin-right: -250px;">![](../Questionnaire_effets_commerce/images/environnement.png){width=60%}</font>
@@ -1282,12 +1306,12 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="400" height="340" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_241.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_243.html"></iframe>
+<iframe width="400" height="340" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_241.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_243.html"></iframe>
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_242.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_242.html"></iframe>
 
 <br>
 
@@ -1306,18 +1330,18 @@ réponses collectées à Paris
 <br>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_246.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_247.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_248.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_250.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_248.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_250.html"></iframe>
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_249.html"></iframe>
 </center>
 
 :::
@@ -1339,7 +1363,7 @@ La commune de Saint-Ouen-sur-Seine compte [1.561 commerces et entreprises de ser
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">11</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">11</p>
 réponses collectées à Saint-Ouen
 :::
 
@@ -1351,13 +1375,13 @@ réponses collectées à Saint-Ouen
 
 <center>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_252.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_253.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_252.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_253.html"></iframe>
 
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_254.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_254.html"></iframe>
 
 </center>
 
@@ -1372,14 +1396,14 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_256.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_257.html"></iframe>
+<iframe width="400" height="360" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_256.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_257.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_cultu_258.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_259.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_cultu_258.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_259.html"></iframe>
 </center>
 
 
@@ -1394,13 +1418,13 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_263.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_264.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_263.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_264.html"></iframe>
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_265.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_262.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_265.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_262.html"></iframe>
 
 <br>
 
@@ -1419,8 +1443,8 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_267.html"></iframe>
-<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_268.html"></iframe>
+<iframe width="550" height="420" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_267.html"></iframe>
+<iframe width="650" height="370" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_268.html"></iframe>
 </center>
 
 
@@ -1435,13 +1459,13 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_270.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_271.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_270.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_271.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_272.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_272.html"></iframe>
 </center>
 
 
@@ -1456,12 +1480,12 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="340" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_274.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_276.html"></iframe>
+<iframe width="400" height="340" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_274.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_276.html"></iframe>
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_275.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_275.html"></iframe>
 
 <br>
 
@@ -1480,14 +1504,14 @@ réponses collectées à Saint-Ouen
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_279.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_280.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_279.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_280.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_281.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_283.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_281.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_283.html"></iframe>
 
 </center>
 
@@ -1519,7 +1543,7 @@ Le portrait de territoire de la **Métropole Rouen Normandie** porte sur ces 4 v
 <br>
 <br>
 <br>
-<p style="font-size: 50px; color: #304B95; font-weight: bold;">75</p>
+<p style="font-size: 70px; color: #EF3E43; font-family: 'Din bold'">75</p>
 réponses collectées à la Métropole Rouen Normandie
 :::
 
@@ -1531,13 +1555,13 @@ réponses collectées à la Métropole Rouen Normandie
 
 <center>
 
-<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_285.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_286.html"></iframe>
+<iframe width="400" height="360" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce_285.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/statut_286.html"></iframe>
 
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_287.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail_287.html"></iframe>
 
 
 </center>
@@ -1553,14 +1577,14 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-<iframe width="400" height="360" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_289.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_290.html"></iframe>
+<iframe width="400" height="360" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/discu_289.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/explications_290.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_291.html"></iframe>
-<iframe width="400" height="350" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_292.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/asso_quartier_291.html"></iframe>
+<iframe width="400" height="350" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/techniques_tradi_292.html"></iframe>
 </center>
 
 
@@ -1575,13 +1599,13 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_296.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_297.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nouvelles_296.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/social_297.html"></iframe>
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_298.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_295.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/redirection_298.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/precarite_295.html"></iframe>
 
 <br>
 
@@ -1600,8 +1624,8 @@ réponses collectées à la Métropole Rouen Normandie
 <br>
 
 
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_300.html"></iframe>
-<iframe width="650" height="370" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_301.html"></iframe>
+<iframe width="550" height="420" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/matrix_300.html"></iframe>
+<iframe width="650" height="370" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/events_301.html"></iframe>
 </center>
 
 
@@ -1616,13 +1640,13 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_303.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_304.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_303.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/accidents_304.html"></iframe>
 
 <br>
 
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_305.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/insecurite_305.html"></iframe>
 </center>
 
 
@@ -1637,12 +1661,12 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-<iframe width="400" height="410" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_307.html"></iframe>
-<iframe width="400" height="410" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_309.html"></iframe>
+<iframe width="400" height="410" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/factures_307.html"></iframe>
+<iframe width="400" height="410" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/cartons_309.html"></iframe>
 
 <br>
 
-<iframe width="550" height="450" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_308.html"></iframe>
+<iframe width="550" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/informel_308.html"></iframe>
 
 <br>
 
@@ -1660,25 +1684,25 @@ réponses collectées à la Métropole Rouen Normandie
 
 <br>
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_312.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_313.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/vitrine_312.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/mairie_313.html"></iframe>
 
 <br>
 
 
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_314.html"></iframe>
-<iframe width="400" height="320" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_316.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/nettoyage_314.html"></iframe>
+<iframe width="400" height="320" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_bar_316.html"></iframe>
 
 <br>
 
-<iframe width="550" height="420" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_315.html"></iframe>
+<iframe width="550" height="420" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/batiment_315.html"></iframe>
 </center>
 
 :::
 
 ## **Comparaison**
 
-<iframe frameborder="0" width="1050" height="1500" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html"></iframe>
+<iframe frameborder="0" width="1050" height="1500"  src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/tableau-recap_comparaison-territoires.html"></iframe>
 
 :::
 
