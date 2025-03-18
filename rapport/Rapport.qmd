@@ -106,7 +106,7 @@ Celui-ci a été lancé avec pour objectif de nommer et de quantifier ces effets
 La première phase du projet, menée d'août 2023 à avril 2024, a permis une avancée significative dans la compréhension des externalités du commerce de proximité. À travers une enquête de terrain approfondie auprès de plus de 200 commerçants, micro-commerçants et artisans, l'équipe a identifié et caractérisé 18 externalités, regroupées en 6 catégories : lien social, environnement, espace public, santé et sécurité, solidarité, et vie de quartier. 
 
 <p align="center">
- <img src="images/Roue_externalites.png" width = "600">
+ <img src="images/Roue_externalites.jpeg" width = "600">
 </p>
 
 Autrement dit, ces entretiens ont permis de mettre à jour que les commerçants endossent six rôles “informels”, au-delà de ceux qui leur sont habituellement attribués : 
@@ -158,7 +158,7 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 <!-- empty column to create gap -->
 :::
 ::: {.column width="45%"}
-<iframe width="550" height="400" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html"></iframe>
+<iframe width="550" height="390" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/categorie_commerce-4.html"></iframe>
 :::
 ::::
 
@@ -166,7 +166,7 @@ Celui-ci reflète par ailleurs une grande variété de types de commerce. Dans l
 
 :::: {.columns}
 ::: {.column width="48%"}
-<iframe width="750" height="465" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
+<iframe width="750" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/independance_commerces-5.html"></iframe>
 :::
 ::: {.column width="52%"}
 <br>
@@ -199,7 +199,7 @@ Ce lieu de vente est parfois partagé, notamment entre micro-commerçants. Ces d
 Plus de deux tiers des commerces ayant répondu à l’enquête ont au moins un salarié (ou sont composés de deux associés non-salariés). Environ la même proportion enregistre une fréquentation de moins de 50 clients par jour. **L’enquête met donc principalement en lumière les apports positifs  des “petits” commerces.** 
 :::
 ::: {.column width="45%"}
-<iframe width="1000" height="450" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
+<iframe width="1000" height="430" class="img-border-red" src="../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-ggiraph/travail-seul-11.html"></iframe>
 :::
 ::::
 
@@ -366,7 +366,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces proposent à la fois un espace d’échange du quotidien, de partage, et contribuent à faire vivre le tissu associatif local.
 </div>
 
@@ -374,7 +374,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -534,7 +534,7 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité sont des points d’échange informels avec les clients, mais également des relais vers des services adaptés à répondre à des besoins spécifiques. Ils sont également en première ligne face à des personnes précaires.
 </div>
 
@@ -542,7 +542,7 @@ Il existe une différence marquée selon la taille de ville. **Les commerçants 
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #005A56; color: white;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -682,7 +682,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 ::::
 
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité sont des acteurs clés de la vie de quartier, tissant des réseaux d’entraide professionnelle et sociale entre commerçants et habitants. Ils soutiennent les dynamiques locales par des services réciproques, des liens de sociabilité, et l’organisation d’événements.
 </div>
 
@@ -690,7 +690,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #005A56; color: white;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -794,7 +794,7 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>L'impact des commerces de proximité sur la sécurité se manifeste à plusieurs niveaux : prévention par leur simple présence et l'affluence qu'ils génèrent, intervention en cas de situations d’insécurité ou d’incidents, accueil des personnes qui ont besoin d’un lieu sûr.
 </div>
 
@@ -802,7 +802,7 @@ Enfin, **les commerces peuvent être des espaces de refuge**. Au-delà de leur c
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #005A56; color: white;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -956,7 +956,7 @@ Concernant la réduction des déchets, de nombreux commerçants s’inscrivent d
 
 <br>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité ont un triple rôle à jouer dans le cadre de la transition écologique : en plus de mettre en place des actions de réduction des déchets et de recyclage, ils peuvent réduire leurs consommations d’eau et d’électricité et ont un rôle de sensibilisation de leurs clients (et dans une moindre mesure de leurs fournisseurs). 
 </div>
 
@@ -969,7 +969,7 @@ Ces pratiques sont encouragées par des associations, parmi lesquelles Zero Wast
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #005A56; color: white;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -1107,7 +1107,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 :::
 
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #005A56;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; color: white; background-color: #EF3E43;">
 <div style="font-size: 1.5em; font-family: 'Din bold'">En résumé</div>Les commerces de proximité jouent un rôle important dans l’embellissement et la propreté des espaces publics, qu’il s’agisse de nettoyer les abords, décorer les vitrines, ou contribuer au verdissement et à l’entretien de leur environnement. Ils participent également en partie à préserver le patrimoine architectural et signalent les problèmes dans l’espace public.
 </div>
 
@@ -1115,7 +1115,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 </center>
 
-<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #EF3E43; color: white;">
+<div style="border: 0px; padding: 30px; border-radius: 15px; background-color: #005A56; color: white;">
 
 <div style="font-size: 1.5em; font-family: 'Din bold'">Mise en équivalence</div>
 
@@ -1712,6 +1712,14 @@ réponses collectées à la Métropole Rouen Normandie
 L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, Urbanis aménagement, la fondation Altavia ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
 L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 160 des 324 réponses. 
 
+L'échantillon a été déterminé par rapport à : 
+
+- une population totale de 300.000 commerces en France [d'après l'INSEE](https://www.insee.fr/fr/statistiques/4474959)
+- une marge d'erreur de 5%
+- un intervalle de confiance de 90%
+
+L'échantillon minimum est de 273 réponses. L'échantillon de l'enquête est composé de 50 réponses de plus.
+
 Les pourcentages sont exprimés en part des commerces répondants pour chacune des questions. Le traitement des données et l'analyse détaillée sont disponibles dans le [rapport d'analyse complète](https://datactivist.coop/excom/Questionnaire_effets_commerce/Questionnaire_effets_commerce.html).
 
 Les données brutes de l’enquête, anonymisées, sont disponibles [**ici**](https://github.com/datactivist/excom/blob/main/Questionnaire_effets_commerce/data/out/reponses_enquete_anonymisees.csv).
@@ -1730,6 +1738,6 @@ Le présent rapport, produit par Datactivist, est mis à disposition sous licenc
 
 Réalisé par [Datactivist](https://datactivist.coop/fr/)
 
-<FONT COLOR="#666666">*07/03/2025*</FONT>
+<FONT COLOR="#666666">*mars 2025*</FONT>
 
 </center>

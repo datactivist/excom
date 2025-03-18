@@ -151,7 +151,7 @@ img, iframe {
 
 blockquote {
   border-left: 4px solid white; /* couleur de la barre verticale pour citation (>) */
-  color: white;
+  color: white !important;
 }
 
 .img-border-red {
