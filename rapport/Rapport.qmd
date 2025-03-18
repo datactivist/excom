@@ -1,9 +1,9 @@
 ---
-title: "AU-DELÀ DU MARCHAND &nbsp;&nbsp; ![](images/logo_excom.png){width=20%}"
+title: "AU-DELÀ DU MARCHAND<br>"
 subtitle: "Mesurer la valeur du commerce de proximité"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Samuel Goëta
 date: 03/20/2025
-title-block-banner: "#EF3E43"
+title-block-banner: images/Banniere.png
 author-title: Auteurs
 published-title: Publication
 date-format: iso
@@ -1740,7 +1740,7 @@ réponses collectées à la Métropole Rouen Normandie
 
 # Notice technique
 
-L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, Urbanis aménagement, Altavia Foundation ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
+L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, Urbanis aménagement, Altavia Foundation ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de la France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
 L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 160 des 324 réponses. 
 
 L'échantillon a été déterminé par rapport à : 

@@ -51,7 +51,7 @@ h3[data-number]::before {
 
 /* Custom les titres et body */
 h1.title { /*titre général du document*/
-  color: white; /*couleur titre*/
+  color: transparent; /*couleur titre*/
   font-size: 3.2em; /*taille*/
   font-family: "Din bold"; /*police*/
   font-weight: bold; /*gras*/
@@ -61,7 +61,7 @@ h1.title { /*titre général du document*/
   padding-bottom: -30px; /*espace avant titre*/
 }
 .subtitle.lead{ /*sous-titre*/
-  color: white; /*couleur titre*/
+  color: transparent; /*couleur titre*/
   font-size: 2.7em; /*taille*/
   font-family: "Din light"; /*police*/
   padding-top: -50px; /*espace avant titre*/
