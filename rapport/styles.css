@@ -73,7 +73,7 @@ h1 { /*titre de niveau #1*/
   font-weight: bold; /*gras*/
   padding-left: 0px; /*alinéa, espace à gauche du titre*/
   padding-top: 20px; /*espace avant titre*/
-  padding-bottom: 10px; /*espace après titre*/
+  padding-bottom: 0px; /*espace après titre*/
   margin-top: 50px; /*espace avant ligne horizontale*/
 }
 h2 { /*titre de niveau #2*/
@@ -100,8 +100,8 @@ h4 { /*titre de niveau #4*/
   font-family: "Din light"; /*police*/
   font-weight: bold; /*gras*/
   padding-left: 0px; /*alinéa, espace à gauche du titre*/
-  padding-top: -20px; /*espace avant titre*/
-  padding-bottom: 10px; /*espace après titre*/
+  padding-top: -100px; /*espace avant titre*/
+  padding-bottom: 50px; /*espace après titre*/
 }
 h5 { /*titre de niveau #5*/
   color: #EF3E43; /*couleur titre*/
@@ -130,13 +130,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom l'apparence des hyperliens du doc */
 a:link { /*lien hyper texte*/
-    color: #EF3E43;
+    color: #005A56;
 }
 a:hover { /*souris au-dessus du lien hyper texte*/
-    color: #EF3E43;
+    color: #005A56;
 }
 a:visited { /*lien visité*/
-    color: #EF3E43;
+    color: #005A56;
 }
 
 img, iframe {
@@ -152,6 +152,10 @@ img, iframe {
 blockquote {
   border-left: 4px solid white; /* couleur de la barre verticale pour citation (>) */
   color: white !important;
+}
+
+.column-margin div[id^="fn"] p {
+  color: #005A56;  /* couleur du texte sous le chiffre gros en marge */
 }
 
 .img-border-red {
