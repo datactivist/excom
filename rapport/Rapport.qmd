@@ -452,7 +452,7 @@ De nombreux commerçants de proximité sont régulièrement au contact de person
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png){.img-border-red width=400}
+![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-57-1.png)
 :::
 ::: {.column width="5%"}
 <!-- empty column to create gap -->
