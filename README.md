@@ -11,5 +11,5 @@ Il s’inscrit au croisement des questionnements de cinq partenaires : la SEM Pa
 ### Le projet est composé de 3 phases : 
 
 1. **Mise en visibilité** : [livrable](https://nextcloud.datactivist.coop/s/Q2W7tz7TyLTmw4p)
-2. **Mise en données** : livrable
+2. **Mise en données** : [livrable](https://datactivist.coop/excom/rapport/Rapport.html)
 3. **Mise en équivalence monétaire** : livrable
