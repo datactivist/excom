@@ -2,11 +2,12 @@
 title: "AU-DELÀ DU MARCHAND<br>"
 subtitle: "Mesurer la valeur du commerce de proximité"
 author: Elise Ho-Pun-Cheung <br>Diane Thierry <br>Samuel Goëta
-date: 03/20/2025
+date: 03/28/2025
 title-block-banner: images/Banniere.png
 author-title: Auteurs
 published-title: Publication
-date-format: iso
+date-format: "MMMM YYYY"
+lang: fr
 format: 
   html:
     toc: true
@@ -50,11 +51,6 @@ font_add_google("Open sans", "Open sans")
 ```
 
 ```{css, echo = FALSE}
-#nav_logo { /*paramètres logo Data Publica en haut à gauche*/
-  width: 80%;
-  margin-top: 20px;
-  margin-left: -15px;
-}
 #TOC {
     background-color: #f9f9f9; /* Couleur de fond */
     border: 1px solid #ddd;   /* Bordure autour de la TOC */
@@ -91,7 +87,7 @@ font_add_google("Open sans", "Open sans")
 
 *[Télécharger cette étude en PDF](https://nextcloud.datactivist.coop/s/jxFWmm7CKqPtt5J)*
 
-![](images/photos_print/page 2.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/page 2.jpg)
 
 La tendance à [l'éloignement des commerces de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural), particulièrement hors des grandes villes, ne revêt pas qu'un enjeu économique. Les Français et Françaises qui vivent dans des communes ayant perdu leurs commerces  regrettent certes l'absence d'accès à un service marchand, mais pas seulement : il leur manque également les relations sociales du quotidien, essentielles dans la vie d'un quartier et qui ont un impact fort  sur  la qualité de vie des habitants. 
 
@@ -99,7 +95,7 @@ La tendance à [l'éloignement des commerces de proximité](https://www.avise.or
 
 Malgré l’importance du sujet, peu d’études ont fait la lumière sur les impacts d’un commerce sur la vie du territoire. Et les travaux académiques existants se concentrent souvent sur un aspect spécifique ou sur leurs impacts négatifs, sans proposer de vision complète et synthétique de leur rôle. Cette approche partielle ne permet ni de rendre visible ni de mesurer la valeur créée par les commerçants.
 
-[Dans un billet de 2019](https://medium.com/@emmanuelle.hoss/de-quoi-la-rentabilit%C3%A9-est-elle-le-nom-22938111ed9e), Emmanuelle Hoss (Paris Commerces) et Joël Gombin (opsci, ex-Datactivist), regrettaient que "*la rentabilité d’un projet telle qu’on l’entend communément aujourd’hui, ne prend compte ni les externalités négatives, ni les externalités positives. Elle fonctionne en mode binaire, sans se préoccuper des interactions et des conséquences engendrées par ses actions.*" 
+[Dans un billet de 2019](https://medium.com/@emmanuelle.hoss/de-quoi-la-rentabilit%C3%A9-est-elle-le-nom-22938111ed9e), Emmanuelle Hoss (Paris Commerces) et Joël Gombin (opsci, ex-Datactivist), regrettaient que "*la rentabilité d’un projet telle qu’on l’entend communément aujourd’hui, ne prenne en compte ni les externalités négatives, ni les externalités positives. Elle fonctionne en mode binaire, sans se préoccuper des interactions et des conséquences engendrées par ses actions.*" 
 
 ##### Ce constat a été le point de départ du projet de recherche-action EXCOM. 
 
@@ -258,7 +254,7 @@ Nous n’avons par ailleurs pas la matière empirique pour mesurer les externali
 
 <br>
 
-![](images/photos_print/animateurs de lien social.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/animateurs de lien social.jpg)
 
 # Animateurs de lien social {-}
 #### Créer des connexions au sein du quartier
@@ -303,8 +299,8 @@ Concrètement, **deux tiers des commerces entretiennent régulièrement des conv
 <br>
 <br>
 <div style="line-height: 1;">
-<p style="font-size: 120px; color: #EF3E43; font-family: 'Din bold'">20%</p>
-des commerçants participant à l'enquête ont plusieurs discussions d'ordre privé quotidiennement
+<p style="font-size: 120px; color: #EF3E43; font-family: 'Din bold'">68%</p>
+des commerçants participant à l'enquête ont plusieurs discussions d'ordre privé au moins une fois par semaine
 </div>
 :::
 
@@ -416,7 +412,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 <br>
 
-![](images/photos_print/Pilliers de la solidarité locale.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/Pilliers de la solidarité locale.jpg)
 
 # Piliers de la solidarité locale {-}
 #### Renforcer l’entraide et la cohésion entre les habitants
@@ -590,7 +586,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 <br>
 
-![](images/photos_print/Moteur de la vie de quartier.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/Moteur de la vie de quartier.jpg)
 
 # Moteurs de la vie de quartier {-}
 #### Dynamiser et animer le quotidien local
@@ -746,7 +742,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 <br>
 
-![](images/photos_print/Bonus/Garants de la santé et la sécurité.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/Bonus/Garants de la santé et la sécurité.jpg)
 
 # Garants de la santé et sécurité {-}
 #### Contribuer à la santé, à la sécurité et au confort des habitants
@@ -863,7 +859,7 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 <br>
 
-![](images/photos_print/Page 64.jpg)
+![Copyright : Boris Taieb](images/photos_print/Page 64.jpg)
 
 # Acteurs engagés pour l'environnement {-}
 #### Adopter des pratiques responsables pour un avenir durable
@@ -1015,7 +1011,7 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 
 <br>
 
-![](images/photos_print/Contributeurs à l_espace public.jpg)
+![Copyright : Matthieu Gauchet](images/photos_print/Contributeurs à l_espace public.jpg)
 
 # Contributeurs à l'espace public {-}
 #### Transformer les lieux urbains en espaces de rencontre et de convivialité
@@ -1184,7 +1180,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 <br>
 
-![](images/photos_print/Bonus/BTA_7078.jpg)
+![Copyright : Boris Taieb](images/photos_print/Bonus/BTA_7078.jpg)
 
 # Conclusion
 
@@ -1198,7 +1194,7 @@ Cet engagement a un prix ; c’est une charge assumée mais un coût encore igno
 
 <br>
 
-![](images/photos_print/Page 68.jpg)
+![Copyright : Boris Taieb](images/photos_print/Page 68.jpg)
 
 # Portraits de territoire
 
