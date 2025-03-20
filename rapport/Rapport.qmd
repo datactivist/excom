@@ -91,6 +91,8 @@ font_add_google("Open sans", "Open sans")
 
 *[Télécharger cette étude en PDF](https://nextcloud.datactivist.coop/s/jxFWmm7CKqPtt5J)*
 
+![](images/photos_print/page 2.jpg)
+
 La tendance à [l'éloignement des commerces de proximité](https://www.avise.org/actualites/le-maintien-des-commerces-de-proximite-en-milieu-rural), particulièrement hors des grandes villes, ne revêt pas qu'un enjeu économique. Les Français et Françaises qui vivent dans des communes ayant perdu leurs commerces  regrettent certes l'absence d'accès à un service marchand, mais pas seulement : il leur manque également les relations sociales du quotidien, essentielles dans la vie d'un quartier et qui ont un impact fort  sur  la qualité de vie des habitants. 
 
 ##### Mais comment mesurer concrètement ces apports ?
@@ -228,7 +230,7 @@ Pour plus de détails sur ces effets (comment nous les avons identifiés, ce qu�
 À la fin de chaque partie, nous proposons une mise en équivalence des bénéfices des commerces de proximité. Cela prendra deux formes : 
 
 - une **équivalence immatérielle** (ex : le service rendu par le commerçant équivaut à 2h de bénévolat par mois) 
-- une **équivalence monétaire** (ex : si ce temps était quantifié d’un point de vue financier, le service rendu par le commerçant équivaudrait à 1000€ par an) 
+- une **équivalence monétaire** (ex : si ce temps était quantifié d’un point de vue financier, le service rendu par le commerçant équivaudrait à 1.000€ par an) 
 
 **Nous nous concentrerons sur les commerces particulièrement investis sur une thématique**. Par exemple, nous montrerons que le temps passé par les commerçants très préoccupés par l’entretien de l’espace public (environ 20% des personnes interrogées dans le cadre de l’enquête) équivaut à 6h de travail d’un agent d’entretien municipal par mois. 
 **Notre calcul n’est donc pas une moyenne. Il quantifie les bénéfices générés par une minorité de “super” commerçants et commerçantes**. 
@@ -256,6 +258,7 @@ Nous n’avons par ailleurs pas la matière empirique pour mesurer les externali
 
 <br>
 
+![](images/photos_print/animateurs de lien social.jpg)
 
 # Animateurs de lien social {-}
 #### Créer des connexions au sein du quartier
@@ -391,7 +394,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 **Le travail d’un ou une “super” commerçante équivaut à 10h de bénévolat par mois au sein d’une association d’écoute (ex : SOS amitié).**
 
-**La valeur monétaire théorique de ce service d’écoute est de 6228€ par an et par commerce.**
+**La valeur monétaire théorique de ce service d’écoute est de 6.228€ par an et par commerce.**
 
 
 <br>
@@ -402,7 +405,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1.000 commerces. 
 
 > 6228 * 1000 * 0,2 = 1 245 500€
 
@@ -413,6 +416,7 @@ Dans l’ensemble, les commerces contribuent au **sentiment d’appartenance au 
 
 <br>
 
+![](images/photos_print/Pilliers de la solidarité locale.jpg)
 
 # Piliers de la solidarité locale {-}
 #### Renforcer l’entraide et la cohésion entre les habitants
@@ -564,7 +568,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 **Le travail d’un ou une “super” commerçante équivaut à 2h de bénévolat par mois au sein d’une association de solidarité (ex : Secours populaire).**
 
-**La valeur théorique monétaire de ces services d’entraide est d’environ 1293€ par an et par commerce.**
+**La valeur théorique monétaire de ces services d’entraide est d’environ 1.293€ par an et par commerce.**
 
 
 <br>
@@ -575,7 +579,7 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1.000 commerces. 
 
 > 1293 * 1000 * 0,2 = 258 500€
 
@@ -585,6 +589,8 @@ Le don de nourriture est l’une des formes d’aide les plus fréquentes. Estim
 </div>
 
 <br>
+
+![](images/photos_print/Moteur de la vie de quartier.jpg)
 
 # Moteurs de la vie de quartier {-}
 #### Dynamiser et animer le quotidien local
@@ -716,7 +722,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 **Le travail d’un ou une “super” commerçante équivaut à une petite subvention à une association locale & 2h de bénévolat dans une association.**
 
-**La valeur théorique monétaire de cette animation locale est d’environ 1446€ par an et par commerce.**
+**La valeur théorique monétaire de cette animation locale est d’environ 1.446€ par an et par commerce.**
 
 
 <br>
@@ -728,7 +734,7 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1.000 commerces. 
 
 > 1446 * 1000 * 0,2 = 289 100€
 
@@ -739,6 +745,8 @@ Enfin, **en plus de tisser des liens professionnels et interpersonnels à l’é
 </div>
 
 <br>
+
+![](images/photos_print/Bonus/Garants de la santé et la sécurité.jpg)
 
 # Garants de la santé et sécurité {-}
 #### Contribuer à la santé, à la sécurité et au confort des habitants
@@ -829,7 +837,7 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 **Le travail d’un ou une “super” commerçante équivaut à plus de 3 heures de temps d’un agent municipal par mois.** 
 
-**La valeur théorique monétaire de ce temps de surveillance et d’assistance est d’environ 2068€ par an et par commerce.**
+**La valeur théorique monétaire de ce temps de surveillance et d’assistance est d’environ 2.068€ par an et par commerce.**
 
 
 <br>
@@ -842,7 +850,7 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1.000 commerces. 
 
 > 2068 * 1000 * 0,2 = 413 500€
 
@@ -855,6 +863,7 @@ Par sa simple présence sur la rue, le commerce a un effet dissuasif et contribu
 
 <br>
 
+![](images/photos_print/Page 64.jpg)
 
 # Acteurs engagés pour l'environnement {-}
 #### Adopter des pratiques responsables pour un avenir durable
@@ -950,7 +959,7 @@ Enfin, la meilleure gestion des déchets est un sujet important pour les commer�
 :::
 ::::
 
-Environ 34% des répondants ont déclaré mettre en place des actions “autres” lorsque nous les avons interrogés sur leurs pratiques de recyclage. Ils ont fait remonter quelques pratiques que nous n’avions pas identifiées dans le questionnaire, par exemple : récupération des végétaux, dons d’invendu, reprise des lunettes, tri des métaux.  
+Environ 34% des répondants ont déclaré mettre en place des actions “autres” lorsque nous les avons interrogés sur leurs pratiques de recyclage. Ils ont fait remonter quelques pratiques que nous n’avions pas identifiées dans le questionnaire, par exemple : récupération des végétaux, dons d’invendus, reprise des lunettes, tri des métaux.  
 
 ::: {.column-margin}
 ![](../Questionnaire_effets_commerce/Questionnaire_effets_commerce_files/figure-html/unnamed-chunk-176-1.png)
@@ -1005,6 +1014,8 @@ Les données à disposition ne nous permettent pas de proposer une équivalence 
 </div>
 
 <br>
+
+![](images/photos_print/Contributeurs à l_espace public.jpg)
 
 # Contributeurs à l'espace public {-}
 #### Transformer les lieux urbains en espaces de rencontre et de convivialité
@@ -1148,7 +1159,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 **Le travail d’un ou une “super” commerçante équivaut à 5 heures de travail d’un agent d’entretien de l’espace public par mois.** 
 
-**La valeur théorique monétaire de ce temps d’entretien de l’espace est d’environ 3114€ par an et par commerce.**
+**La valeur théorique monétaire de ce temps d’entretien de l’espace est d’environ 3.114€ par an et par commerce.**
 
 
 <br>
@@ -1161,7 +1172,7 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 <u>Calcul à l’échelle d’un territoire (ville, quartier, rue…)</u> : *bénéfice d’un commerce* * *nombre de commerces total sur le territoire* * *taux de commerçants très investis (0,2)*
 
-<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1000 commerces. 
+<u>Exemple</u> : Prenons l’exemple d’une ville comptant 1.000 commerces. 
 
 > 3114 * 1000 * 0,15 = 467 063€
 
@@ -1173,17 +1184,21 @@ des commerçants participant à l'enquête apportent un soin particulier à la f
 
 <br>
 
+![](images/photos_print/Bonus/BTA_7078.jpg)
+
 # Conclusion
 
 Cette étude révèle le rôle complexe des commerces de proximité, qui constituent des points d’ancrage dans le tissu urbain et dont le rôle ne se limite pas à la production de valeur économique. Ils sont de véritables piliers du développement durable des villes, agissant simultanément sur les plans social, environnemental et économique.
 
 Parler, demander son chemin, trouver refuge quand on est suivi, signaler un problème, échanger une parole… Ces pratiques sociales simples mais essentielles trouvent encore un relais chez les commerçants. Certains d’entre eux assurent un service public de fait, sans y être contraints, par choix et par engagement. Ils veillent sur la propreté de leur rue, sur la sécurité de leur quartier, sur le tissu social de leur ville. En d’autres termes, ils endossent de nombreuses fonctions sociales, à des degrés divers. 
 
-Cet engagement a un prix ; c’est une charge assumée mais un coût encore ignoré. L'étude le démontre largement : pour une ville comptant 1000 commerces, la valeur de ces services rendus atteint presque les 3 millions d'euros annuels. Ce chiffre, bien que théorique, révèle l'ampleur du travail invisible réalisé par ces acteurs essentiels de la vie urbaine. Il met en lumière un paradoxe : alors que les commerces de proximité assument de fait des missions d'intérêt général, ce rôle social reste largement sous-évalué dans les politiques publiques. 
+Cet engagement a un prix ; c’est une charge assumée mais un coût encore ignoré. L'étude le démontre largement : pour une ville comptant 1.000 commerces, la valeur de ces services rendus atteint presque les 3 millions d'euros annuels. Ce chiffre, bien que théorique, révèle l'ampleur du travail invisible réalisé par ces acteurs essentiels de la vie urbaine. Il met en lumière un paradoxe : alors que les commerces de proximité assument de fait des missions d'intérêt général, ce rôle social reste largement sous-évalué dans les politiques publiques. 
 
 À l'heure où de nombreux centres-villes luttent contre la désertification commerciale, il devient urgent de reconnaître et de valoriser ces contributions qui, bien que non marchandes, sont essentielles à la vitalité de nos territoires. Car en perdant un commerce, c'est tout un écosystème social qui s'effrite, avec un coût bien réel pour la collectivité. L’enjeu pour les politiques publiques réside donc dans la préservation de ces lieux à la fonction structurante de l’espace urbain, pour leur donner les moyens de continuer à être des piliers du vivre-ensemble.
 
 <br>
+
+![](images/photos_print/Page 68.jpg)
 
 # Portraits de territoire
 
@@ -1201,7 +1216,7 @@ Notre enquête s’est cependant essentiellement concentrée sur des villes. Or 
 
 <br>
 
-En 2023, la commune de Paris compte près de [61.000 commerces et services commerciaux](https://presse.paris.fr/pages/20995), pour plus de [2.1 millions d'habitants](https://www.insee.fr/fr/statistiques/serie/001760155), soit environ 29 commerces pour 1.000 habitants.
+En 2023, la commune de Paris compte près de [61.000 commerces et services commerciaux](https://presse.paris.fr/pages/20995), pour plus de [2,1 millions d'habitants](https://www.insee.fr/fr/statistiques/serie/001760155), soit environ 29 commerces pour 1.000 habitants.
 
 139 réponses ont été collectées à Paris, soit 43% de l'échantillon des répondants à l'enquête.
 
@@ -1740,7 +1755,7 @@ réponses collectées à la Métropole Rouen Normandie
 
 # Notice technique
 
-L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, Urbanis aménagement, Altavia Foundation ainsi que la métropole de Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de la France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
+L’enquête sur les effets du commerce de proximité, en partenariat avec Paris Commerces, la fondation Urbanis, Urbanis aménagement, Altavia Foundation ainsi que la Métropole Rouen Normandie, a été diffusée sur une durée totale de 32 semaines entre le 4 avril et le 22 novembre 2024, auprès de commerces de la France entière. L’échantillon final représente 324 commerces dont 139 à Paris, 75 à la Métropole Rouen Normandie, 11 à St Ouen et 99 dans le reste de la France.
 L’enquête comportait 40 questions posées via un questionnaire en ligne sur l'outil Fillout. En plus d'une diffusion par mail, newsletter et réseaux sociaux, une partie de l'équipe s'est déplacée à Paris, St Ouen et Rouen du 22 au 24 octobre 2024 pour récolter 160 des 324 réponses. 
 
 L'échantillon a été déterminé par rapport à : 
